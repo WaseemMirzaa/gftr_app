@@ -100,7 +100,8 @@ class _InboxPageState extends State<InboxPage> {
                   thickness: 8,
                   radius: Radius.circular(16),
                   //--------------------------------CLOSED BY ME------------------------------------------------
-                  isAlwaysShown: true,
+                  // isAlwaysShown: true,
+                   thumbVisibility: true,
                   //--------------------------------CLOSED BY ME------------------------------------------------
                   child: ListView.builder(
                       controller: _scrollController,

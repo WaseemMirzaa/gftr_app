@@ -518,7 +518,9 @@ class _AddToState extends State<AddTo> {
                                                                 Radius.circular(
                                                                     16),
                                                             //--------------------------------CLOSED BY ME------------------------------------------------
-                                                            isAlwaysShown: true,
+                                                            // isAlwaysShown: true,
+                                                            thumbVisibility: true,
+
                                                             //--------------------------------CLOSED BY ME------------------------------------------------
                                                             controller:
                                                                 _secondController,
@@ -609,7 +611,8 @@ class _AddToState extends State<AddTo> {
                                                       radius:
                                                           Radius.circular(16),
                                                       //--------------------------------CLOSED BY ME------------------------------------------------
-                                                      isAlwaysShown: true,
+                                                      // isAlwaysShown: true,
+                                                       thumbVisibility: true,
                                                       //--------------------------------CLOSED BY ME------------------------------------------------
                                                       controller:
                                                           _firstController,

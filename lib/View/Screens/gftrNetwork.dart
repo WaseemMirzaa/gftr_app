@@ -384,7 +384,8 @@ GFTR
                             thickness: 8,
                             radius: Radius.circular(16),
                             //--------------------------------CLOSED BY ME------------------------------------------------
-                            isAlwaysShown: true,
+                            // isAlwaysShown: true,
+                             thumbVisibility: true,
                             //--------------------------------CLOSED BY ME------------------------------------------------
                             controller: _secondController,
                             child: ListView.builder(
@@ -727,7 +728,8 @@ GFTR
                             thickness: 8,
                             radius: Radius.circular(16),
                             //--------------------------------CLOSED BY ME------------------------------------------------
-                            isAlwaysShown: true,
+                            // isAlwaysShown: true,
+                             thumbVisibility: true,
                             //--------------------------------CLOSED BY ME------------------------------------------------
                             controller: _secondController,
                             child: ListView.builder(
@@ -815,7 +817,8 @@ GFTR
                                                                   thickness: 8,
                                                                   radius: Radius.circular(16),
                                                                   //--------------------------------CLOSED BY ME------------------------------------------------
-                                                                  isAlwaysShown: true,
+                                                                  // isAlwaysShown: true,
+                                                                   thumbVisibility: true,
                                                                   //--------------------------------CLOSED BY ME------------------------------------------------
                                                                   child: ListView.separated(
                                                                     padding: EdgeInsets.zero,
