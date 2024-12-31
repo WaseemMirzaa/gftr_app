@@ -200,7 +200,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                       radius: Radius.circular(16),
                                       //--------------------------------CLOSED BY ME------------------------------------------------
                                       // isAlwaysShown: true,
-                                       thumbVisibility: true,
+                                      thumbVisibility: true,
                                       //--------------------------------CLOSED BY ME------------------------------------------------
                                       controller: _secondController,
                                       child: ListView.builder(
@@ -213,156 +213,98 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                               horizontal: screenWidth(context,
                                                   dividedBy: 30)),
                                           child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.push(context,
-                                                  MaterialPageRoute(
-                                                builder: (context) {
-                                                  return giftr_details(index);
-                                                },
-                                              ));
-                                            },
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Container(
-                                                  height: 0.3,
-                                                  color: Colors.black,
-                                                ),
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: Row(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Container(
-                                                        alignment:
-                                                            Alignment.center,
-                                                        height: screenHeight(
-                                                            context,
-                                                            dividedBy: 10),
-                                                        width: screenWidth(
-                                                          context,
-                                                          dividedBy: 2.8,
-                                                        ),
-                                                        decoration: BoxDecoration(
-                                                            image: DecorationImage(
-                                                                image: NetworkImage(
-                                                                  "${ApiConstants.baseUrls}${gftrStoriesCubit.gftrStories?.data?.post?[index].image}",
-                                                                ),
-                                                                fit: BoxFit.cover)),
-                                                        child: Stack(
-                                                          children: [
-                                                            Text(
-                                                                gftrStoriesCubit
-                                                                        .gftrStories
-                                                                        ?.data
-                                                                        ?.post?[
-                                                                            index]
-                                                                        .title ??
-                                                                    "",
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                maxLines: 1,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                style: TextStyle(
-                                                                    fontSize: 13,
-                                                                    foreground: Paint()
-                                                                      ..style =
-                                                                          PaintingStyle
-                                                                              .stroke
-                                                                      ..strokeWidth =
-                                                                          2
-                                                                      ..color = Colors.black,
-                                                                    fontWeight: FontWeight.bold)),
-                                                            Text(
-                                                                gftrStoriesCubit
-                                                                        .gftrStories
-                                                                        ?.data
-                                                                        ?.post?[
-                                                                            index]
-                                                                        .title ??
-                                                                    "",
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                                maxLines: 1,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis,
-                                                                style: TextStyle(
-                                                                    fontSize:
-                                                                        13,
-                                                                    color: Colors
-                                                                        .white,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold)),
-                                                          ],
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        width: screenWidth(
-                                                            context,
-                                                            dividedBy: 50),
-                                                      ),
-                                                      Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .center,
-                                                        children: [
-                                                          Container(
-                                                            width: screenWidth(
-                                                                context,
-                                                                dividedBy:
-                                                                    1.95),
-                                                            child: Text(
-                                                              "${gftrStoriesCubit.gftrStories?.data?.post?[index].title}",
-                                                              maxLines: 1,
-                                                              overflow:
-                                                                  TextOverflow
-                                                                      .ellipsis,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 15,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .bold),
-                                                            ),
-                                                          ),
-                                                          SizedBox(
-                                                            width: screenWidth(
-                                                                context,
-                                                                dividedBy:
-                                                                    1.95),
-                                                            child: Text(
-                                                                "${gftrStoriesCubit.gftrStories?.data?.post?[index].content}",
-                                                                maxLines: 2,
-                                                                overflow:
-                                                                    TextOverflow
-                                                                        .ellipsis),
-                                                          ),
-                                                        ],
-                                                      )
-                                                    ],
+                                              onTap: () {
+                                                Navigator.push(context,
+                                                    MaterialPageRoute(
+                                                  builder: (context) {
+                                                    return giftr_details(index);
+                                                  },
+                                                ));
+                                              },
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    height:
+                                                        0.3, // Divider height
+                                                    color: Colors.black,
                                                   ),
-                                                ),
-                                                Container(
-                                                  height: 0.3,
-                                                  color: Colors.black,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
+                                                  Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            8.0),
+                                                    child: Container(
+                                                      height: screenHeight(
+                                                          context,
+                                                          dividedBy:
+                                                              8), // Height of the image container
+                                                      width: double
+                                                          .infinity, // Full width
+                                                      decoration: BoxDecoration(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                15), // Optional: rounded corners
+                                                        image: DecorationImage(
+                                                          image: NetworkImage(
+                                                            "${ApiConstants.baseUrls}${gftrStoriesCubit.gftrStories?.data?.post?[index].image}",
+                                                          ),
+                                                          fit: BoxFit
+                                                              .cover, // Make sure the image covers the container
+                                                        ),
+                                                      ),
+                                                      child: Align(
+                                                        alignment: Alignment
+                                                            .bottomLeft, // Align title to the bottom left
+                                                        child: Padding(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .all(12.0),
+                                                          child: Text(
+                                                            gftrStoriesCubit
+                                                                    .gftrStories
+                                                                    ?.data
+                                                                    ?.post?[
+                                                                        index]
+                                                                    .title ??
+                                                                "",
+                                                            style: TextStyle(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color: Colors
+                                                                  .white, // White text on top of the image
+                                                              shadows: [
+                                                                Shadow(
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.6),
+                                                                  offset:
+                                                                      Offset(
+                                                                          2, 2),
+                                                                  blurRadius: 4,
+                                                                ),
+                                                              ], // Optional: shadow for better visibility of text
+                                                            ),
+                                                            maxLines:
+                                                                2, // Limit to two lines
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    height:
+                                                        0.3, // Divider height
+                                                    color: Colors.black,
+                                                  ),
+                                                ],
+                                              )),
                                         ),
                                       ),
                                     ),

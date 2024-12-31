@@ -194,7 +194,8 @@ class _GfterStoriesState extends State<GfterStories>
                                             },
                                           ),
                                         ),
-                                        child: Container(
+                                        child: 
+                                        Container(
                                           height: 220,
                                           width: double.infinity,
                                           decoration: BoxDecoration(
