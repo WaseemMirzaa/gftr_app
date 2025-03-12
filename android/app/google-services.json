@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "373698090703",
+    "project_id": "gftr-75db6",
+    "storage_bucket": "gftr-75db6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:373698090703:android:dbf19e18752ab6177d89ba",
+        "android_client_info": {
+          "package_name": "com.example.gftr"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBL7dDO7IfnBzQism8R-k1JJYU-eDA05YA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
