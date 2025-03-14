@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gftr/View/Screens/google.dart';
 import 'package:gftr/ViewModel/Cubits/All_Giftss.dart';
 import 'package:gftr/ViewModel/Cubits/Calendar_post.dart';
@@ -36,63 +37,49 @@ import 'package:gftr/ViewModel/Cubits/upatedinvet.dart';
 import 'package:gftr/ViewModel/Cubits/verifyOtp.dart';
 import 'package:gftr/ViewModel/Cubits/view_users.dart';
 import 'package:gftr/ViewModel/Cubits/viewsetting.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:receive_sharing_intent/receive_sharing_intent.dart';
+import 'Helper/appConfig.dart';
 import 'Model/Instant_data.dart';
 import 'Model/Show_data_argument.dart';
-import 'View/Screens/LoginPage.dart';
 import 'ViewModel/Cubits/groupscubit.dart';
 import 'ViewModel/Cubits/inviteEmail_cubit.dart';
 import 'ViewModel/Cubits/notification.dart';
 import 'ViewModel/Cubits/pre-remiend.dart';
 import 'ViewModel/Cubits/verifyforgott.dart';
+import 'ViewModel/prefsService.dart';
 
-class SharedPrefsService {
-  Future<bool> isLoggedIn() async {
-    final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool('isLoggedIn') ?? false; // Default to false if not set
-  }
-
-  Future<void> setLoggedIn(bool value) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isLoggedIn', value);
-  }
-}
-
-// Define Routes
 const String homeRoute = "home";
 const String showDataRoute = "showData";
 
-// Initialize Data
 Future<InitData> init() async {
   String sharedText = "";
   String routeName = homeRoute;
-  String? sharedValue =
-      'REMOVE THIS LINE PLEASE'; // Placeholder, remove this line
-
-  sharedText = sharedValue;
-  routeName = showDataRoute;
+  //This shared intent work when application is closed
+  //-------------------CLOSED BY ME----------------
+  // String? sharedValue = await ReceiveSharingIntent.getInitialText();
+  String? sharedValue = 'REMOVE THIS LINE PLEASE';
+  //-------------------CLOSED BY ME----------------
+  if (sharedValue != null) {
+    sharedText = sharedValue;
+    routeName = showDataRoute;
+  }
   return InitData(sharedText, routeName);
 }
 
-// Main Function
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  SharedPrefsService prefsService = SharedPrefsService();
-  bool isUserLoggedIn = await prefsService.isLoggedIn(); // Preload login status
-  InitData initData = await init();
-
-  runApp(MyApp(initData: initData, isUserLoggedIn: isUserLoggedIn));
+  SystemChrome.setPreferredOrientations(
+          [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
+      .then((_) async {
+    InitData initData = await init();
+    runApp(MyApp(initData: initData));
+  });
 }
 
-// MyApp Widget
 class MyApp extends StatefulWidget {
+  MyApp({Key? key, required this.initData}) : super(key: key);
   final InitData initData;
-  final bool isUserLoggedIn;
-
-  MyApp({Key? key, required this.initData, required this.isUserLoggedIn})
-      : super(key: key);
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -100,17 +87,42 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final _navKey = GlobalKey<NavigatorState>();
   late StreamSubscription _intentDataStreamSubscription;
+  SharedPrefsService prefsService = SharedPrefsService();
 
   @override
   void initState() {
+    // TODO: implement initState
     super.initState();
-    // Commented out the sharing intent logic
+    // For sharing or opening urls/text coming from outside the app while the app is in the memory
+    //-------------------CLOSED BY ME----------------
+    // _intentDataStreamSubscription =
+    //     ReceiveSharingIntent.getTextStream().listen((String value) {
+    //   print("memory : $value");
+    //   _navKey.currentState!.pushNamed(
+    //     showDataRoute,
+    //     arguments: ShowDataArgument(value),
+    //   );
+    // });
+    //-------------------CLOSED BY ME----------------
+
+    //-------------------CLOSED BY ME----------------
+
+    // For sharing or opening urls/text coming from outside the app while the app is closed
+    // ReceiveSharingIntent.getInitialText().then((String? value) {
+    //   print("closed : $value");
+    //   _navKey.currentState!.pushNamed(
+    //     showDataRoute,
+    //     arguments: ShowDataArgument(value!),
+    //   );
+    // });
+
+    //-------------------CLOSED BY ME----------------
   }
 
   @override
   void dispose() {
-    _intentDataStreamSubscription.cancel();
     super.dispose();
+    _intentDataStreamSubscription.cancel();
   }
 
   @override
@@ -158,34 +170,49 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         child: MaterialApp(
           navigatorKey: _navKey,
           debugShowCheckedModeBanner: false,
-          initialRoute: widget.initData.routeName,
+          // home: SplashPage(),
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name) {
               case homeRoute:
-                return MaterialPageRoute(
-                    builder: (_) =>
-                        widget.isUserLoggedIn ? SplashPage() : LoginPage());
-
+                return MaterialPageRoute(builder: (_) => SplashPage());
               case showDataRoute:
-                if (settings.arguments != null) {
-                  final args = settings.arguments as ShowDataArgument;
-                  RegExp urlRegExp = RegExp(r'https?://[^\s]+');
-                  final match = urlRegExp.firstMatch(args.sharedText);
-                  String? dealUrl = match?.group(0);
-                  defauilUrl = dealUrl ?? '';
+                {
+                  if (settings.arguments != null) {
+                    print("you are here");
+                    final args = settings.arguments as ShowDataArgument;
+                    RegExp urlRegExp = RegExp(r'https?://[^\s]+');
+                    final match = urlRegExp.firstMatch(args.sharedText);
+                    String dealText = '';
+                    String? dealUrl = '';
+                    if (match != null) {
+                      // Extract the URL
+                      dealUrl = match.group(0);
 
-                  return MaterialPageRoute(
-                      builder: (_) =>
-                          widget.isUserLoggedIn ? GooglePage() : LoginPage());
-                } else {
-                  defauilUrl = widget.initData.sharedText;
-                  return MaterialPageRoute(
-                      builder: (_) =>
-                          widget.isUserLoggedIn ? GooglePage() : LoginPage());
+                      // Extract the deal text (excluding the URL)
+                      dealText =
+                          args.sharedText.substring(0, match.start).trim();
+                    }
+                    defauilUrl = dealUrl.toString();
+                    return MaterialPageRoute(builder: (_) => GooglePage());
+                  } else {
+                    print("Now you are here");
+                    defauilUrl = widget.initData.sharedText;
+                    return MaterialPageRoute(builder: (_) => GooglePage());
+                  }
                 }
             }
-            return null;
+            // print("condin :$_rought");
+            // if(_rought == 'Google'){
+            //   defauilUrl = _sharedText.toString();
+            //   print({"else defurl :$defauilUrl"});
+            //   return MaterialPageRoute(
+            //       builder: (_) => GooglePage());
+            // }else {
+            //   print("hello");
+            //   return MaterialPageRoute(builder: (_) => SplashPage());
+            // }
           },
+          initialRoute: widget.initData.routeName,
         ));
   }
 }
