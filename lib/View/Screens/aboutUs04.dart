@@ -15,7 +15,6 @@ class _AboutUs04State extends State<AboutUs04> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-
         decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(ImageConstants.welcomeBackGround),
@@ -25,8 +24,7 @@ class _AboutUs04State extends State<AboutUs04> {
             SizedBox(
               height: screenHeight(context, dividedBy: 12),
             ),
-            customText(
-                "How to...", Colors.white, 17, FontWeight.w400, poppins),
+            customText("How to", Colors.white, 17, FontWeight.w400, poppins),
             SizedBox(
               height: screenHeight(context, dividedBy: 7),
             ),
@@ -40,8 +38,8 @@ class _AboutUs04State extends State<AboutUs04> {
                   SizedBox(
                     width: screenWidth(context, dividedBy: 70),
                   ),
-                  customText("Them The Gift", Colors.white, 22,
-                      FontWeight.w400, poppins),
+                  customText("Them The Gift", Colors.white, 22, FontWeight.w400,
+                      poppins),
                 ],
               ),
             ),
@@ -50,8 +48,7 @@ class _AboutUs04State extends State<AboutUs04> {
                   EdgeInsets.only(left: screenWidth(context, dividedBy: 5)),
               child: Row(
                 children: [
-                  customText(
-                      "They", Colors.white, 28, FontWeight.bold, poppins,
+                  customText("They", Colors.white, 28, FontWeight.bold, poppins,
                       fontStyle: FontStyle.italic),
                   SizedBox(
                     width: screenWidth(context, dividedBy: 60),
@@ -62,8 +59,7 @@ class _AboutUs04State extends State<AboutUs04> {
                   SizedBox(
                     width: screenWidth(context, dividedBy: 60),
                   ),
-                  customText(
-                      "Get", Colors.white, 28, FontWeight.bold, poppins,
+                  customText("Get", Colors.white, 28, FontWeight.bold, poppins,
                       fontStyle: FontStyle.italic),
                 ],
               ),
@@ -80,8 +76,7 @@ class _AboutUs04State extends State<AboutUs04> {
                   EdgeInsets.only(left: screenWidth(context, dividedBy: 3)),
               child: Row(
                 children: [
-                  customText(
-                      "Get", Colors.white, 23, FontWeight.bold, poppins),
+                  customText("Get", Colors.white, 23, FontWeight.bold, poppins),
                   SizedBox(
                     width: screenWidth(context, dividedBy: 70),
                   ),
@@ -95,14 +90,13 @@ class _AboutUs04State extends State<AboutUs04> {
                   EdgeInsets.only(left: screenWidth(context, dividedBy: 9)),
               child: Row(
                 children: [
-                  customText(
-                      "You", Colors.white, 28, FontWeight.bold, poppins,
+                  customText("You", Colors.white, 28, FontWeight.bold, poppins,
                       fontStyle: FontStyle.italic),
                   SizedBox(
                     width: screenWidth(context, dividedBy: 60),
                   ),
-                  customText("Want To Be", Colors.white, 27, FontWeight.w400,
-                      poppins,
+                  customText(
+                      "Want To Be", Colors.white, 27, FontWeight.w400, poppins,
                       fontStyle: FontStyle.italic),
                   SizedBox(
                     width: screenWidth(context, dividedBy: 60),
@@ -121,9 +115,8 @@ class _AboutUs04State extends State<AboutUs04> {
             SizedBox(
               height: screenHeight(context, dividedBy: 30),
             ),
-            customText("And here’s how we did it…", Colors.white, 17,
+            customText("And here’s how we did it", Colors.white, 17,
                 FontWeight.w400, poppins),
-
           ],
         ),
       ),

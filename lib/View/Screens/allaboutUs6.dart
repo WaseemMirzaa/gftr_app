@@ -12,12 +12,10 @@ class AllAboutUs06 extends StatefulWidget {
 }
 
 class _AllAboutUs06State extends State<AllAboutUs06> {
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-
         decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(ImageConstants.welcomeBackGround),
@@ -26,12 +24,13 @@ class _AllAboutUs06State extends State<AllAboutUs06> {
           children: [
             Padding(
               padding:
-              EdgeInsets.only(top: screenHeight(context, dividedBy: 25)),
+                  EdgeInsets.only(top: screenHeight(context, dividedBy: 25)),
               child: customText(
                   'The Group', Colors.white, 18, FontWeight.bold, poppins),
             ),
             Container(
-              margin:  EdgeInsets.only(top: screenHeight(context, dividedBy: 80)),
+              margin:
+                  EdgeInsets.only(top: screenHeight(context, dividedBy: 80)),
               height: screenHeight(context, dividedBy: 2.5),
               width: screenWidth(context, dividedBy: 1),
               alignment: Alignment.center,
@@ -39,7 +38,8 @@ class _AllAboutUs06State extends State<AllAboutUs06> {
               child: Container(
                 width: screenWidth(context, dividedBy: 1.7),
                 child: customText(
-   "Video of adding friends from contact list, seeing the GFTR Group page, clicking on one user, seeing their saved gift ideas and selecting one to buy.",                      Colors.black,
+                    "Video of adding friends from contact list, seeing the GFTR Group page, clicking on one user, seeing their saved gift ideas and selecting one to buy.",
+                    Colors.black,
                     13,
                     FontWeight.w400,
                     poppins,
@@ -48,27 +48,23 @@ class _AllAboutUs06State extends State<AllAboutUs06> {
             ),
             Container(
               margin:
-              EdgeInsets.only(top: screenHeight(context, dividedBy: 15)),
+                  EdgeInsets.only(top: screenHeight(context, dividedBy: 15)),
               width: screenWidth(context, dividedBy: 1.4),
               child: customText(
-                  " Create your GFTR Group of Friends & Family you’d like to get gifts for (or from!), then check out their Gftr Wishlists to see what they’ve got their eye on...",
+                  " Create your GFTR Group of Friends & Family you’d like to get gifts for (or from!), then check out their Gftr Wishlists to see what they’ve got their eye on.",
                   Colors.white,
                   13,
                   FontWeight.w400,
                   poppins,
                   isTextAlign: true),
             ),
-         Padding(
-              padding:  EdgeInsets.only(top: screenHeight(context, dividedBy: 30)),
-              child: customText(
-                  "And, with a single click, give that gift!",
-                  Colors.white,
-                  13,
-                  FontWeight.w400,
-                  poppins,
+            Padding(
+              padding:
+                  EdgeInsets.only(top: screenHeight(context, dividedBy: 30)),
+              child: customText("And, with a single click, give that gift!",
+                  Colors.white, 13, FontWeight.w400, poppins,
                   isTextAlign: true),
             ),
-
           ],
         ),
       ),

@@ -1363,7 +1363,8 @@ class _SettingsPageState extends State<SettingsPage> {
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 20, vertical: 20),
                               child: Center(
-                                  child: Text("Are you sure to delete $text")),
+                                  child: Text(
+                                      "Are you sure you want to delete $text")),
                             ),
                             Container(
                               width: 200,
@@ -1652,6 +1653,68 @@ class _SettingsPageState extends State<SettingsPage> {
     setState(() {});
     birth_holiday_email();
     setState(() {});
+
+    fetchAccountPrivacyStatus().then((isPrivate) {
+      setState(() {
+        only_or_any = !isPrivate!; // If private, set to GFTR Group Only (false)
+      });
+    });
+  }
+
+  Future<bool?> fetchAccountPrivacyStatus() async {
+    // Fetch the account's privacy status (private or public)
+    // Replace this with your actual logic to fetch the privacy status
+    // For example, from an API or SharedPreferences
+    bool? isPrivate = await prefsService.getBoolData('isPrivate');
+    return isPrivate;
+  }
+
+  void _updatePrivacyOption(bool isPrivate) async {
+    setState(() {
+      only_or_any = !isPrivate; // Update the UI
+    });
+
+    // Save the updated preference to the backend or local storage
+    await prefsService.setBoolData('isPrivate', isPrivate);
+    await settingCubit.getSetting(
+      context: context,
+      isPrivate: isPrivate.toString(),
+    );
+  }
+
+  Widget privacyOptions2(String text, LinearGradient boxColor,
+      LinearGradient borderColor, bool checkFlag) {
+    return SizedBox(
+        height: screenHeight(context, dividedBy: 30),
+        child: Row(children: [
+          GestureDetector(
+            onTap: () {
+              if (text == "GFTR Group Only") {
+                _updatePrivacyOption(true); // Set account to private
+              } else if (text == "Any GFTR") {
+                _updatePrivacyOption(false); // Set account to public
+              }
+            },
+            child: Container(
+              height: screenHeight(context, dividedBy: 40),
+              width: screenHeight(context, dividedBy: 40),
+              decoration: BoxDecoration(
+                  gradient: boxColor,
+                  borderRadius: BorderRadius.circular(5),
+                  border: GradientBoxBorder(gradient: borderColor)),
+              alignment: Alignment.center,
+              child: Icon(
+                Icons.done_sharp,
+                color: Colors.white,
+                size: screenWidth(context, dividedBy: 30),
+              ),
+            ),
+          ),
+          const SizedBox(
+            width: 5,
+          ),
+          customText(text, Colors.black, 10, FontWeight.w400, poppins)
+        ]));
   }
 
   @override
@@ -1714,312 +1777,28 @@ class _SettingsPageState extends State<SettingsPage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        print(
-                                            "------------------------💥💥💥💥💥only_or_any : $only_or_any");
-                                        if (only_or_any == true) {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return SimpleDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20)),
-                                                children: [
-                                                  Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 20,
-                                                          vertical: 20),
-                                                      child: Center(
-                                                          child: Text(
-                                                              "Are you sure"))),
-                                                  Container(
-                                                    width: 200,
-                                                    height: 1,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                            color:
-                                                                Colors.black12,
-                                                            boxShadow: [
-                                                          BoxShadow(
-                                                              color: Colors
-                                                                  .black38,
-                                                              blurRadius: 5)
-                                                        ]),
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      InkWell(
-                                                        onTap: () async {
-                                                          setState(() {
-                                                            Navigator.pop(
-                                                                context);
-                                                          });
-                                                        },
-                                                        child: Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .only(top: 5),
-                                                          height: 20,
-                                                          width: 100,
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          8.0),
-                                                              child: customText(
-                                                                  "No",
-                                                                  ColorCodes
-                                                                      .greyText,
-                                                                  14,
-                                                                  FontWeight
-                                                                      .w400,
-                                                                  poppins)),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: screenWidth(
-                                                            context,
-                                                            dividedBy: 300),
-                                                        height: screenHeight(
-                                                            context,
-                                                            dividedBy: 20),
-                                                        decoration:
-                                                            const BoxDecoration(
-                                                                color: Colors
-                                                                    .black12,
-                                                                boxShadow: [
-                                                              BoxShadow(
-                                                                  color: Colors
-                                                                      .black38,
-                                                                  blurRadius: 5)
-                                                            ]),
-                                                      ),
-                                                      InkWell(
-                                                        onTap: () async {
-                                                          setState(() {
-                                                            only_or_any = false;
-                                                            prefsService
-                                                                .setBoolData(
-                                                                    'only_or_any',
-                                                                    only_or_any!);
-                                                            settingCubit.getSetting(
-                                                                context:
-                                                                    context,
-                                                                isPrivate:
-                                                                    only_or_any
-                                                                        .toString());
-                                                          });
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Container(
-                                                            margin:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 5),
-                                                            height: 20,
-                                                            width: 100,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        left:
-                                                                            8.0),
-                                                                child: customText(
-                                                                    "Yes",
-                                                                    ColorCodes
-                                                                        .greyText,
-                                                                    14,
-                                                                    FontWeight
-                                                                        .w400,
-                                                                    poppins))),
-                                                      )
-                                                    ],
-                                                  )
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        } else {
-                                          // Do nothing if already selected as GFTR Group Only
-                                        }
-                                      },
-                                      child: privacyOptions(
-                                        "GFTR Group Only",
-                                        only_or_any == false
-                                            ? coralTealColor
-                                            : whiteColor, // Set the color when false
-                                        only_or_any == false
-                                            ? transparentColor
-                                            : coralTealColor, // Set the border color when false
-                                        only_or_any!,
-                                      ),
+                                    privacyOptions2(
+                                      "GFTR Group Only",
+                                      only_or_any == false
+                                          ? coralTealColor
+                                          : whiteColor,
+                                      only_or_any == false
+                                          ? transparentColor
+                                          : coralTealColor,
+                                      only_or_any!,
                                     ),
                                     SizedBox(
                                         width: screenWidth(context,
                                             dividedBy: 10)),
-                                    GestureDetector(
-                                      onTap: () {
-                                        if (only_or_any == false) {
-                                          showDialog(
-                                            context: context,
-                                            builder: (context) {
-                                              return SimpleDialog(
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            20)),
-                                                children: [
-                                                  Padding(
-                                                      padding: const EdgeInsets
-                                                              .symmetric(
-                                                          horizontal: 20,
-                                                          vertical: 20),
-                                                      child: Center(
-                                                          child: Text(
-                                                              "Are you sure"))),
-                                                  Container(
-                                                    width: 200,
-                                                    height: 1,
-                                                    decoration:
-                                                        const BoxDecoration(
-                                                            color:
-                                                                Colors.black12,
-                                                            boxShadow: [
-                                                          BoxShadow(
-                                                              color: Colors
-                                                                  .black38,
-                                                              blurRadius: 5)
-                                                        ]),
-                                                  ),
-                                                  Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .spaceEvenly,
-                                                    children: [
-                                                      InkWell(
-                                                        onTap: () async {
-                                                          setState(() {
-                                                            Navigator.pop(
-                                                                context);
-                                                          });
-                                                        },
-                                                        child: Container(
-                                                          margin:
-                                                              const EdgeInsets
-                                                                  .only(top: 5),
-                                                          height: 20,
-                                                          width: 100,
-                                                          alignment:
-                                                              Alignment.center,
-                                                          child: Padding(
-                                                              padding:
-                                                                  const EdgeInsets
-                                                                          .only(
-                                                                      left:
-                                                                          8.0),
-                                                              child: customText(
-                                                                  "No",
-                                                                  ColorCodes
-                                                                      .greyText,
-                                                                  14,
-                                                                  FontWeight
-                                                                      .w400,
-                                                                  poppins)),
-                                                        ),
-                                                      ),
-                                                      Container(
-                                                        width: screenWidth(
-                                                            context,
-                                                            dividedBy: 300),
-                                                        height: screenHeight(
-                                                            context,
-                                                            dividedBy: 20),
-                                                        decoration:
-                                                            const BoxDecoration(
-                                                                color: Colors
-                                                                    .black12,
-                                                                boxShadow: [
-                                                              BoxShadow(
-                                                                  color: Colors
-                                                                      .black38,
-                                                                  blurRadius: 5)
-                                                            ]),
-                                                      ),
-                                                      InkWell(
-                                                        onTap: () async {
-                                                          setState(() {
-                                                            only_or_any = true;
-                                                            prefsService
-                                                                .setBoolData(
-                                                                    'only_or_any',
-                                                                    only_or_any!);
-                                                            settingCubit.getSetting(
-                                                                context:
-                                                                    context,
-                                                                isPrivate:
-                                                                    only_or_any
-                                                                        .toString());
-                                                          });
-                                                          Navigator.pop(
-                                                              context);
-                                                        },
-                                                        child: Container(
-                                                            margin:
-                                                                const EdgeInsets
-                                                                        .only(
-                                                                    top: 5),
-                                                            height: 20,
-                                                            width: 100,
-                                                            alignment: Alignment
-                                                                .center,
-                                                            child: Padding(
-                                                                padding:
-                                                                    const EdgeInsets
-                                                                            .only(
-                                                                        left:
-                                                                            8.0),
-                                                                child: customText(
-                                                                    "Yes",
-                                                                    ColorCodes
-                                                                        .greyText,
-                                                                    14,
-                                                                    FontWeight
-                                                                        .w400,
-                                                                    poppins))),
-                                                      )
-                                                    ],
-                                                  )
-                                                ],
-                                              );
-                                            },
-                                          );
-                                        } else {
-                                          // Do nothing if already selected as Any GFTR
-                                        }
-                                      },
-                                      child: privacyOptions(
-                                        "Any GFTR",
-                                        only_or_any == true
-                                            ? coralTealColor
-                                            : whiteColor, // Set the color when true
-                                        only_or_any == true
-                                            ? transparentColor
-                                            : coralTealColor, // Set the border color when true
-                                        !groupOnly,
-                                      ),
+                                    privacyOptions2(
+                                      "Any GFTR",
+                                      only_or_any == true
+                                          ? coralTealColor
+                                          : whiteColor,
+                                      only_or_any == true
+                                          ? transparentColor
+                                          : coralTealColor,
+                                      !groupOnly,
                                     ),
                                   ],
                                 ),

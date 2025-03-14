@@ -130,6 +130,13 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
   }
 
   _showAddEventDialog() async {
+    // Pre-fill the date field if a date is selected from the calendar
+    if (_selectedDate != null) {
+      descpController.text =
+          DateFormat('dd/MM/yyyy').format(_selectedDate!).toString();
+      _SelectedDate = formatDate(_selectedDate!);
+    }
+
     await showDialog(
       context: context,
       builder: (context) {
@@ -150,23 +157,25 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 onTap: () async {
                   DateTime? pickedDate = await DatePicker.showSimpleDatePicker(
                       context,
-                      initialDate: DateTime.now(),
+                      initialDate: _selectedDate ?? DateTime.now(),
                       firstDate: DateTime(1900),
                       titleText: 'Month | Date | Year',
                       lastDate: DateTime(2100),
                       dateFormat: "MM/dd/yyyy",
                       backgroundColor: Colors.black,
                       textColor: Colors.white);
-                  _SelectedDate = formatDate(pickedDate!);
-                  // _selectedDate = pickedDate;
-                  descpController.text =
-                      DateFormat('dd/MM/yyyy').format(pickedDate).toString();
-                  setState(() {});
+
+                  if (pickedDate != null) {
+                    _SelectedDate = formatDate(pickedDate);
+                    descpController.text =
+                        DateFormat('dd/MM/yyyy').format(pickedDate).toString();
+                    setState(() {});
+                  }
                 },
                 controller: descpController,
                 textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
-                    labelText: "choose your date",
+                    labelText: "Choose your date",
                     labelStyle: TextStyle(fontFamily: "poppins")),
               ),
               TextField(
@@ -199,7 +208,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 ),
                 InkWell(
                   onTap: () {
-                    if (titleController.text.isEmpty &&
+                    if (titleController.text.isEmpty ||
                         descpController.text.isEmpty) {
                       flutterToast("Please Enter Title & Date", false);
                     } else {
@@ -232,8 +241,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                           String encodedMap = json.encode(_events);
                           sharedPrefsService.setStringData(
                               "events", encodedMap);
-                          //  prefs.setString("events", encodedMap);
-                          //  setStringData(, encodedMap);
                           print(
                               "New Event for backend developer ${json.encode(_events)}");
                           titleController.clear();
@@ -241,7 +248,6 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                           Navigator.pop(context);
                         },
                       );
-                      //   print("New Event for backend developer${json.encode(mySelectedEvents)}");
                     }
                   },
                   child: Container(
@@ -267,6 +273,13 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
         ));
       },
     );
+
+    // Clear the controllers after dialog is closed
+    if (!mounted) return;
+    setState(() {
+      titleController.clear();
+      descpController.clear();
+    });
   }
 
   @override
@@ -329,7 +342,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
             child: TableCalendar(
               calendarFormat: _calendarFormat,
               firstDay: DateTime(2023),
-              lastDay: DateTime(2025),
+              lastDay: DateTime(2025, 12, 31), // Updated to December 31, 2025
               locale: 'en_US',
               focusedDay: _focusedDay,
               daysOfWeekHeight: 50,

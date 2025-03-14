@@ -31,7 +31,7 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
   TextEditingController folderNameC = TextEditingController();
   TextEditingController folderRenameC = TextEditingController();
   FolderSettingCubit folderSettingCubit = FolderSettingCubit();
-  List loader =[];
+  List loader = [];
   bool isPublic = true;
   addFolderNameDialog() {
     return SimpleDialog(
@@ -119,7 +119,8 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
       ],
     );
   }
-  renameDialog( String id,Fname ) {
+
+  renameDialog(String id, Fname) {
     folderRenameC.text = Fname;
     return SimpleDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
@@ -171,7 +172,7 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                 // folderRenameCubit.getFolderRename(context, folderName: reName.text, id: widget.id);
                 folderRenameCubit
                     .getFolderRename(context,
-                    folderName: folderRenameC.text, id: id)
+                        folderName: folderRenameC.text, id: id)
                     .then((value) {
                   Navigator.pop(context);
                   getGiftedViewCubit.getViewGift();
@@ -185,14 +186,14 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                 alignment: Alignment.center,
                 child: BlocBuilder<FolderRenameCubit, FolderRenameState>(
                     builder: (context, state) {
-                      if (state is FolderRenameLoading) {
-                        return spinkitLoader(context, ColorCodes.greyText);
-                      }
-                      return Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: customText("Save", ColorCodes.greyText, 14,
-                              FontWeight.w400, poppins));
-                    }),
+                  if (state is FolderRenameLoading) {
+                    return spinkitLoader(context, ColorCodes.greyText);
+                  }
+                  return Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: customText("Save", ColorCodes.greyText, 14,
+                          FontWeight.w400, poppins));
+                }),
               ),
             )
           ],
@@ -200,6 +201,7 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
       ],
     );
   }
+
   @override
   void initState() {
     // TODO: implement initState
@@ -286,11 +288,11 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                             itemBuilder: (context, index) {
                               final image = getGiftedViewCubit
                                   .viewGift?.publicData?[index].formdata;
-                              final valuess = getGiftedViewCubit.viewGift?.publicData?[index].folderName?.length;
+                              final valuess = getGiftedViewCubit.viewGift
+                                  ?.publicData?[index].folderName?.length;
                               return Column(children: [
                                 SizedBox(
-                                  height:
-                                      screenHeight(context, dividedBy: 4.5),
+                                  height: screenHeight(context, dividedBy: 4.5),
                                   width: screenWidth(context, dividedBy: 1.1),
                                   child: Column(
                                     mainAxisAlignment:
@@ -304,179 +306,272 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                                                   dividedBy: 50),
                                               right: screenWidth(context,
                                                   dividedBy: 50)),
-                                          child: Row(
-                                              children: [
-                                              valuess! >= 25 ?
-                                                Container(
-                                                  width: screenWidth(context,dividedBy: 3),
-                                                  child: customText(
-                                                      getGiftedViewCubit
-                                                              .viewGift
-                                                              ?.publicData?[
-                                                                  index]
-                                                              .folderName ??
-                                                          '',
-                                                      ColorCodes.greyText,
-                                                      16,
-                                                      FontWeight.w400,
-                                                      poppins,
-                                                    overflowText: true,
-                                                    maxLines: 1
-                                                  ),
-                                                ) :customText(
+                                          child: Row(children: [
+                                            valuess! >= 25
+                                                ? Container(
+                                                    width: screenWidth(context,
+                                                        dividedBy: 3),
+                                                    child: customText(
+                                                        getGiftedViewCubit
+                                                                .viewGift
+                                                                ?.publicData?[
+                                                                    index]
+                                                                .folderName ??
+                                                            '',
+                                                        ColorCodes.greyText,
+                                                        16,
+                                                        FontWeight.w400,
+                                                        poppins,
+                                                        overflowText: true,
+                                                        maxLines: 1),
+                                                  )
+                                                : customText(
                                                     getGiftedViewCubit
-                                                        .viewGift
-                                                        ?.publicData?[
-                                                    index]
-                                                        .folderName ??
+                                                            .viewGift
+                                                            ?.publicData?[index]
+                                                            .folderName ??
                                                         '',
                                                     ColorCodes.greyText,
                                                     16,
                                                     FontWeight.w400,
                                                     poppins,
                                                     overflowText: true,
-                                                    maxLines: 1
-                                                ),
-                                                SizedBox(width: screenWidth(context,dividedBy: 50),),
-                                                InkWell(
-                                                  onTap: () {
-                                                    showDialog(
-                                                        context: context, builder: (_) => renameDialog(getGiftedViewCubit.viewGift?.publicData?[index].id ?? '','${getGiftedViewCubit.viewGift?.publicData?[index].folderName}'));
-                                                  },
-                                                  child: Image.asset(
-                                                    ImageConstants.edit,
-                                                    color: Colors.black,
-                                                    height: screenHeight(context, dividedBy: 45),
-                                                    width: screenHeight(context, dividedBy: 45),
-                                                  ),
-                                                ),
-                                                Spacer(),
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    final id = getGiftedViewCubit.viewGift?.publicData?[index].id ?? '';
-                                                    loader.add(id);
-                                                    folderSettingCubit.getFolderSetting(context,
-                                                        troggle: false, id: id).then((value) {
-                                                      getGiftedViewCubit.getViewGift();
-                                                    });
-                                                    setState(() {});
-                                                    // showDialog(
-                                                    //     context: context,
-                                                    //     builder: (context) =>
-                                                    //         AddPublicDialog(
-                                                    //           id: getGiftedViewCubit
-                                                    //                   .viewGift
-                                                    //                   ?.publicData?[
-                                                    //                       index]
-                                                    //                   .id ??
-                                                    //               '',
-                                                    //           privet: false,
-                                                    //           public: true,
-                                                    //         ));
-                                                  },
-                                                  child: BlocBuilder<FolderSettingCubit,FolderSettingState>(builder: (context, state) {
-                                                    print("Make Private :$state");
-                                                    if(state is FolderSettingLoading){
-                                                      return loader.contains(getGiftedViewCubit.viewGift?.publicData?[index].id) ? spinkitLoader(context, ColorCodes.backgroundcolor) : customText("Make Private", Colors.black, 15, FontWeight.w100, poppins);
-                                                    }
-                                                    return customText("Make Private", Colors.black, 15, FontWeight.w100, poppins);
-                                                  },)
-                                                  // Image.asset(
-                                                  //   ImageConstants
-                                                  //       .editFolder,
-                                                  //   height: screenHeight(
-                                                  //       context,
-                                                  //       dividedBy: 40),
-                                                  //   width: screenHeight(
-                                                  //       context,
-                                                  //       dividedBy: 40),
-                                                  // ),
+                                                    maxLines: 1),
+                                            SizedBox(
+                                              width: screenWidth(context,
+                                                  dividedBy: 50),
+                                            ),
+                                            InkWell(
+                                              onTap: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder: (_) => renameDialog(
+                                                        getGiftedViewCubit
+                                                                .viewGift
+                                                                ?.publicData?[
+                                                                    index]
+                                                                .id ??
+                                                            '',
+                                                        '${getGiftedViewCubit.viewGift?.publicData?[index].folderName}'));
+                                              },
+                                              child: Image.asset(
+                                                ImageConstants.edit,
+                                                color: Colors.black,
+                                                height: screenHeight(context,
+                                                    dividedBy: 45),
+                                                width: screenHeight(context,
+                                                    dividedBy: 45),
+                                              ),
+                                            ),
+                                            Spacer(),
+                                            GestureDetector(onTap: () {
+                                              final id = getGiftedViewCubit
+                                                      .viewGift
+                                                      ?.publicData?[index]
+                                                      .id ??
+                                                  '';
+                                              loader.add(id);
+                                              folderSettingCubit
+                                                  .getFolderSetting(context,
+                                                      troggle: false, id: id)
+                                                  .then((value) {
+                                                getGiftedViewCubit
+                                                    .getViewGift();
+                                              });
+                                              setState(() {});
+                                              // showDialog(
+                                              //     context: context,
+                                              //     builder: (context) =>
+                                              //         AddPublicDialog(
+                                              //           id: getGiftedViewCubit
+                                              //                   .viewGift
+                                              //                   ?.publicData?[
+                                              //                       index]
+                                              //                   .id ??
+                                              //               '',
+                                              //           privet: false,
+                                              //           public: true,
+                                              //         ));
+                                            }, child: BlocBuilder<
+                                                    FolderSettingCubit,
+                                                    FolderSettingState>(
+                                              builder: (context, state) {
+                                                print("Make Private :$state");
+                                                if (state
+                                                    is FolderSettingLoading) {
+                                                  return loader.contains(
+                                                          getGiftedViewCubit
+                                                              .viewGift
+                                                              ?.publicData?[
+                                                                  index]
+                                                              .id)
+                                                      ? spinkitLoader(
+                                                          context,
+                                                          ColorCodes
+                                                              .backgroundcolor)
+                                                      : customText(
+                                                          "Make Private",
+                                                          Colors.black,
+                                                          15,
+                                                          FontWeight.w100,
+                                                          poppins);
+                                                }
+                                                return customText(
+                                                    "Make Private",
+                                                    Colors.black,
+                                                    15,
+                                                    FontWeight.w100,
+                                                    poppins);
+                                              },
+                                            )
+                                                // Image.asset(
+                                                //   ImageConstants
+                                                //       .editFolder,
+                                                //   height: screenHeight(
+                                                //       context,
+                                                //       dividedBy: 40),
+                                                //   width: screenHeight(
+                                                //       context,
+                                                //       dividedBy: 40),
+                                                // ),
                                                 )
-                                              ])),
+                                          ])),
                                       Dismissible(
                                         key: UniqueKey(),
-                                        direction:
-                                        DismissDirection.endToStart,
+                                        direction: DismissDirection.endToStart,
                                         confirmDismiss: (direction) {
-                                          return
-                                            showDialog(
-                                              context: context,
-                                              builder: (context) {
-                                                return SimpleDialog(
-                                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-                                                  children: [
-                                                    Padding(
-                                                        padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 20),
-                                                        child: Center(child: Text("Are you sure to delete ${getGiftedViewCubit.viewGift?.publicData?[index].folderName}"))
-                                                    ),
-                                                    Container(
-                                                      width: 200,
-                                                      height: 1,
-                                                      decoration: const BoxDecoration(
-                                                          color: Colors.black12,
-                                                          boxShadow: [BoxShadow(color: Colors.black38, blurRadius: 5)]),
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                                      children: [
-                                                        InkWell(
-                                                          onTap: () async {
-                                                            setState(() {
-
-                                                              Navigator.pop(context);
-                                                            });
-                                                          },
-                                                          child: Container(
-                                                            margin: const EdgeInsets.only(top: 5),
+                                          return showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return SimpleDialog(
+                                                shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            20)),
+                                                children: [
+                                                  Padding(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 20,
+                                                          vertical: 20),
+                                                      child: Center(
+                                                          child: Text(
+                                                              "Are you sure you want to delete ${getGiftedViewCubit.viewGift?.publicData?[index].folderName}"))),
+                                                  Container(
+                                                    width: 200,
+                                                    height: 1,
+                                                    decoration:
+                                                        const BoxDecoration(
+                                                            color:
+                                                                Colors.black12,
+                                                            boxShadow: [
+                                                          BoxShadow(
+                                                              color: Colors
+                                                                  .black38,
+                                                              blurRadius: 5)
+                                                        ]),
+                                                  ),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceEvenly,
+                                                    children: [
+                                                      InkWell(
+                                                        onTap: () async {
+                                                          setState(() {
+                                                            Navigator.pop(
+                                                                context);
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                          margin:
+                                                              const EdgeInsets
+                                                                  .only(top: 5),
+                                                          height: 20,
+                                                          width: 100,
+                                                          alignment:
+                                                              Alignment.center,
+                                                          child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .only(
+                                                                      left:
+                                                                          8.0),
+                                                              child: customText(
+                                                                  "No",
+                                                                  ColorCodes
+                                                                      .greyText,
+                                                                  14,
+                                                                  FontWeight
+                                                                      .w400,
+                                                                  poppins)),
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        width: screenWidth(
+                                                            context,
+                                                            dividedBy: 300),
+                                                        height: screenHeight(
+                                                            context,
+                                                            dividedBy: 20),
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                                color: Colors
+                                                                    .black12,
+                                                                boxShadow: [
+                                                              BoxShadow(
+                                                                  color: Colors
+                                                                      .black38,
+                                                                  blurRadius: 5)
+                                                            ]),
+                                                      ),
+                                                      InkWell(
+                                                        onTap: () async {
+                                                          getGiftedDeleteCubit
+                                                              .getDeleteGift(getGiftedViewCubit
+                                                                      .viewGift
+                                                                      ?.publicData?[
+                                                                          index]
+                                                                      .id ??
+                                                                  '')
+                                                              .then((value) {
+                                                            getGiftedViewCubit
+                                                                .getViewGift();
+                                                            setState(() {});
+                                                          });
+                                                          Navigator.pop(
+                                                              context);
+                                                        },
+                                                        child: Container(
+                                                            margin:
+                                                                const EdgeInsets
+                                                                        .only(
+                                                                    top: 5),
                                                             height: 20,
                                                             width: 100,
-                                                            alignment: Alignment.center,
+                                                            alignment: Alignment
+                                                                .center,
                                                             child: Padding(
-                                                                padding: const EdgeInsets.only(left: 8.0),
-                                                                child: customText("No", ColorCodes.greyText, 14,
-                                                                    FontWeight.w400, poppins)),
-                                                          ),
-                                                        ),
-                                                        Container(
-                                                          width: screenWidth(context,dividedBy: 300),
-                                                          height: screenHeight(context,dividedBy: 20),
-                                                          decoration: const BoxDecoration(
-                                                              color: Colors.black12,
-                                                              boxShadow: [BoxShadow(color: Colors.black38, blurRadius: 5)]),
-                                                        ),
-                                                        InkWell(
-                                                          onTap: () async {
-                                                            getGiftedDeleteCubit
-                                                                .getDeleteGift(
-                                                                getGiftedViewCubit
-                                                                    .viewGift
-                                                                    ?.publicData?[index]
-                                                                    .id ??
-                                                                    '')
-                                                                .then((value) {
-                                                              getGiftedViewCubit.getViewGift();
-                                                              setState(() {});
-                                                            });
-                                                            Navigator.pop(context);
-
-                                                          },
-                                                          child: Container(
-                                                              margin: const EdgeInsets.only(top: 5),
-                                                              height: 20,
-                                                              width: 100,
-                                                              alignment: Alignment.center,
-                                                              child: Padding(
-                                                                  padding: const EdgeInsets.only(left: 8.0),
-                                                                  child: customText("Yes", ColorCodes.greyText, 14,
-                                                                      FontWeight.w400, poppins))
-                                                          ),
-                                                        )
-                                                      ],
-                                                    )
-                                                  ],
-                                                );
-                                              },);
-
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                            .only(
+                                                                        left:
+                                                                            8.0),
+                                                                child: customText(
+                                                                    "Yes",
+                                                                    ColorCodes
+                                                                        .greyText,
+                                                                    14,
+                                                                    FontWeight
+                                                                        .w400,
+                                                                    poppins))),
+                                                      )
+                                                    ],
+                                                  )
+                                                ],
+                                              );
+                                            },
+                                          );
                                         },
                                         background: Container(
                                           padding: EdgeInsets.only(
@@ -485,7 +580,7 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                                           decoration: BoxDecoration(
                                               color: Colors.red,
                                               borderRadius:
-                                              BorderRadius.circular(10),
+                                                  BorderRadius.circular(10),
                                               boxShadow: [
                                                 BoxShadow(
                                                   color: Colors.grey.shade300,
@@ -505,17 +600,16 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        FolderViewPage(
-                                                            folderName:
+                                                    builder: (context) => FolderViewPage(
+                                                        folderName:
                                                             getGiftedViewCubit
-                                                                .viewGift
-                                                                ?.publicData?[
-                                                            index]
-                                                                .folderName ??
+                                                                    .viewGift
+                                                                    ?.publicData?[
+                                                                        index]
+                                                                    .folderName ??
                                                                 '',
-                                                            isPrivate: false,
-                                                            imageIndex: index)));
+                                                        isPrivate: false,
+                                                        imageIndex: index)));
                                           },
                                           child: Container(
                                               height: screenHeight(context,
@@ -527,14 +621,17 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                                                       BorderRadius.circular(10),
                                                   child: Row(
                                                     children: [
-                                                      if (image?.length == 0) ...[
+                                                      if (image?.length ==
+                                                          0) ...[
                                                         Expanded(
                                                           child: Container(
-                                                            height: screenHeight(
-                                                                context,
-                                                                dividedBy: 5.5),
-                                                            alignment:
-                                                                Alignment.center,
+                                                            height:
+                                                                screenHeight(
+                                                                    context,
+                                                                    dividedBy:
+                                                                        5.5),
+                                                            alignment: Alignment
+                                                                .center,
                                                             decoration:
                                                                 const BoxDecoration(
                                                                     image:
@@ -548,74 +645,85 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                                                             child: Image.asset(
                                                               ImageConstants
                                                                   .gftrLogo,
-                                                              fit: BoxFit.contain,
+                                                              fit: BoxFit
+                                                                  .contain,
                                                               height:
                                                                   screenHeight(
                                                                       context,
                                                                       dividedBy:
                                                                           20),
-                                                              width: screenWidth(
-                                                                  context,
-                                                                  dividedBy: 4.5),
+                                                              width:
+                                                                  screenWidth(
+                                                                      context,
+                                                                      dividedBy:
+                                                                          4.5),
                                                             ),
                                                           ),
                                                         ),
-                                                      ] else if (image?.length ==
+                                                      ] else if (image
+                                                              ?.length ==
                                                           1) ...[
                                                         Expanded(
                                                           child:
                                                               CachedNetworkImage(
-                                                            height: screenHeight(
-                                                                context,
-                                                                dividedBy: 5.5),
-                                                            imageUrl:
-                                                                getGiftedViewCubit
-                                                                        .viewGift
-                                                                        ?.publicData?[
-                                                                            index]
-                                                                        .formdata![
-                                                                            0]
-                                                                        .image ??
-                                                                    '',
-                                                            placeholder:
-                                                                (context, url) =>
-                                                                    customLoader(
-                                                                        context),
+                                                            height:
+                                                                screenHeight(
+                                                                    context,
+                                                                    dividedBy:
+                                                                        5.5),
+                                                            imageUrl: getGiftedViewCubit
+                                                                    .viewGift
+                                                                    ?.publicData?[
+                                                                        index]
+                                                                    .formdata![
+                                                                        0]
+                                                                    .image ??
+                                                                '',
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                customLoader(
+                                                                    context),
                                                             errorWidget: (context,
-                                                                    url, error) =>
+                                                                    url,
+                                                                    error) =>
                                                                 Center(
-                                                                    child: Image(
+                                                                    child:
+                                                                        Image(
                                                               image: AssetImage(
                                                                   "assets/images/No-image-available.png"),
                                                             )),
                                                           ),
                                                         ),
-                                                      ] else if (image?.length ==
+                                                      ] else if (image
+                                                              ?.length ==
                                                           2) ...[
                                                         Expanded(
                                                           child:
                                                               CachedNetworkImage(
                                                             fit: BoxFit.fill,
-                                                            height: screenHeight(
-                                                                context,
-                                                                dividedBy: 5.5),
-                                                            imageUrl:
-                                                                getGiftedViewCubit
-                                                                        .viewGift
-                                                                        ?.publicData?[
-                                                                            index]
-                                                                        .formdata![
-                                                                            0]
-                                                                        .image ??
-                                                                    '',
-                                                            placeholder:
-                                                                (context, url) =>
-                                                                    customLoader(
-                                                                        context),
+                                                            height:
+                                                                screenHeight(
+                                                                    context,
+                                                                    dividedBy:
+                                                                        5.5),
+                                                            imageUrl: getGiftedViewCubit
+                                                                    .viewGift
+                                                                    ?.publicData?[
+                                                                        index]
+                                                                    .formdata![
+                                                                        0]
+                                                                    .image ??
+                                                                '',
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                customLoader(
+                                                                    context),
                                                             errorWidget: (context,
-                                                                    url, error) =>
+                                                                    url,
+                                                                    error) =>
                                                                 Center(
-                                                                    child: Image(
+                                                                    child:
+                                                                        Image(
                                                               image: AssetImage(
                                                                   "assets/images/No-image-available.png"),
                                                             )),
@@ -640,26 +748,29 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                                                           child:
                                                               CachedNetworkImage(
                                                             fit: BoxFit.fill,
-                                                            height: screenHeight(
-                                                                context,
-                                                                dividedBy: 5.5),
-                                                            imageUrl:
-                                                                getGiftedViewCubit
-                                                                        .viewGift
-                                                                        ?.publicData?[
-                                                                            index]
-                                                                        .formdata![
-                                                                            1]
-                                                                        .image ??
-                                                                    '',
-                                                            placeholder:
-                                                                (context, url) =>
-                                                                    customLoader(
-                                                                        context),
+                                                            height:
+                                                                screenHeight(
+                                                                    context,
+                                                                    dividedBy:
+                                                                        5.5),
+                                                            imageUrl: getGiftedViewCubit
+                                                                    .viewGift
+                                                                    ?.publicData?[
+                                                                        index]
+                                                                    .formdata![
+                                                                        1]
+                                                                    .image ??
+                                                                '',
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                customLoader(
+                                                                    context),
                                                             errorWidget: (context,
-                                                                    url, error) =>
+                                                                    url,
+                                                                    error) =>
                                                                 Center(
-                                                                    child: Image(
+                                                                    child:
+                                                                        Image(
                                                               image: AssetImage(
                                                                   "assets/images/No-image-available.png"),
                                                             )),
@@ -680,32 +791,36 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                                                           //       dividedBy: 5.5),
                                                           // ),
                                                         ),
-                                                      ] else if (image?.length ==
+                                                      ] else if (image
+                                                              ?.length ==
                                                           3) ...[
                                                         Expanded(
                                                           child:
                                                               CachedNetworkImage(
                                                             fit: BoxFit.fill,
-                                                            height: screenHeight(
-                                                                context,
-                                                                dividedBy: 5.5),
-                                                            imageUrl:
-                                                                getGiftedViewCubit
-                                                                        .viewGift
-                                                                        ?.publicData?[
-                                                                            index]
-                                                                        .formdata![
-                                                                            0]
-                                                                        .image ??
-                                                                    '',
-                                                            placeholder:
-                                                                (context, url) =>
-                                                                    customLoader(
-                                                                        context),
+                                                            height:
+                                                                screenHeight(
+                                                                    context,
+                                                                    dividedBy:
+                                                                        5.5),
+                                                            imageUrl: getGiftedViewCubit
+                                                                    .viewGift
+                                                                    ?.publicData?[
+                                                                        index]
+                                                                    .formdata![
+                                                                        0]
+                                                                    .image ??
+                                                                '',
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                customLoader(
+                                                                    context),
                                                             errorWidget: (context,
-                                                                    url, error) =>
+                                                                    url,
+                                                                    error) =>
                                                                 Center(
-                                                                    child: Image(
+                                                                    child:
+                                                                        Image(
                                                               image: AssetImage(
                                                                   "assets/images/No-image-available.png"),
                                                             )),
@@ -730,26 +845,29 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                                                           child:
                                                               CachedNetworkImage(
                                                             fit: BoxFit.fill,
-                                                            height: screenHeight(
-                                                                context,
-                                                                dividedBy: 5.5),
-                                                            imageUrl:
-                                                                getGiftedViewCubit
-                                                                        .viewGift
-                                                                        ?.publicData?[
-                                                                            index]
-                                                                        .formdata![
-                                                                            1]
-                                                                        .image ??
-                                                                    '',
-                                                            placeholder:
-                                                                (context, url) =>
-                                                                    customLoader(
-                                                                        context),
+                                                            height:
+                                                                screenHeight(
+                                                                    context,
+                                                                    dividedBy:
+                                                                        5.5),
+                                                            imageUrl: getGiftedViewCubit
+                                                                    .viewGift
+                                                                    ?.publicData?[
+                                                                        index]
+                                                                    .formdata![
+                                                                        1]
+                                                                    .image ??
+                                                                '',
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                customLoader(
+                                                                    context),
                                                             errorWidget: (context,
-                                                                    url, error) =>
+                                                                    url,
+                                                                    error) =>
                                                                 Center(
-                                                                    child: Image(
+                                                                    child:
+                                                                        Image(
                                                               image: AssetImage(
                                                                   "assets/images/No-image-available.png"),
                                                             )),
@@ -774,26 +892,29 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                                                           child:
                                                               CachedNetworkImage(
                                                             fit: BoxFit.fill,
-                                                            height: screenHeight(
-                                                                context,
-                                                                dividedBy: 5.5),
-                                                            imageUrl:
-                                                                getGiftedViewCubit
-                                                                        .viewGift
-                                                                        ?.publicData?[
-                                                                            index]
-                                                                        .formdata![
-                                                                            2]
-                                                                        .image ??
-                                                                    '',
-                                                            placeholder:
-                                                                (context, url) =>
-                                                                    customLoader(
-                                                                        context),
+                                                            height:
+                                                                screenHeight(
+                                                                    context,
+                                                                    dividedBy:
+                                                                        5.5),
+                                                            imageUrl: getGiftedViewCubit
+                                                                    .viewGift
+                                                                    ?.publicData?[
+                                                                        index]
+                                                                    .formdata![
+                                                                        2]
+                                                                    .image ??
+                                                                '',
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                customLoader(
+                                                                    context),
                                                             errorWidget: (context,
-                                                                    url, error) =>
+                                                                    url,
+                                                                    error) =>
                                                                 Center(
-                                                                    child: Image(
+                                                                    child:
+                                                                        Image(
                                                               image: AssetImage(
                                                                   "assets/images/No-image-available.png"),
                                                             )),
@@ -819,26 +940,29 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                                                           child:
                                                               CachedNetworkImage(
                                                             fit: BoxFit.fill,
-                                                            height: screenHeight(
-                                                                context,
-                                                                dividedBy: 5.5),
-                                                            imageUrl:
-                                                                getGiftedViewCubit
-                                                                        .viewGift
-                                                                        ?.publicData?[
-                                                                            index]
-                                                                        .formdata![
-                                                                            0]
-                                                                        .image ??
-                                                                    '',
-                                                            placeholder:
-                                                                (context, url) =>
-                                                                    customLoader(
-                                                                        context),
+                                                            height:
+                                                                screenHeight(
+                                                                    context,
+                                                                    dividedBy:
+                                                                        5.5),
+                                                            imageUrl: getGiftedViewCubit
+                                                                    .viewGift
+                                                                    ?.publicData?[
+                                                                        index]
+                                                                    .formdata![
+                                                                        0]
+                                                                    .image ??
+                                                                '',
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                customLoader(
+                                                                    context),
                                                             errorWidget: (context,
-                                                                    url, error) =>
+                                                                    url,
+                                                                    error) =>
                                                                 Center(
-                                                                    child: Image(
+                                                                    child:
+                                                                        Image(
                                                               image: AssetImage(
                                                                   "assets/images/No-image-available.png"),
                                                             )),
@@ -863,26 +987,29 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                                                           child:
                                                               CachedNetworkImage(
                                                             fit: BoxFit.fill,
-                                                            height: screenHeight(
-                                                                context,
-                                                                dividedBy: 5.5),
-                                                            imageUrl:
-                                                                getGiftedViewCubit
-                                                                        .viewGift
-                                                                        ?.publicData?[
-                                                                            index]
-                                                                        .formdata![
-                                                                            1]
-                                                                        .image ??
-                                                                    '',
-                                                            placeholder:
-                                                                (context, url) =>
-                                                                    customLoader(
-                                                                        context),
+                                                            height:
+                                                                screenHeight(
+                                                                    context,
+                                                                    dividedBy:
+                                                                        5.5),
+                                                            imageUrl: getGiftedViewCubit
+                                                                    .viewGift
+                                                                    ?.publicData?[
+                                                                        index]
+                                                                    .formdata![
+                                                                        1]
+                                                                    .image ??
+                                                                '',
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                customLoader(
+                                                                    context),
                                                             errorWidget: (context,
-                                                                    url, error) =>
+                                                                    url,
+                                                                    error) =>
                                                                 Center(
-                                                                    child: Image(
+                                                                    child:
+                                                                        Image(
                                                               image: AssetImage(
                                                                   "assets/images/No-image-available.png"),
                                                             )),
@@ -906,26 +1033,29 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                                                           child:
                                                               CachedNetworkImage(
                                                             fit: BoxFit.fill,
-                                                            height: screenHeight(
-                                                                context,
-                                                                dividedBy: 5.5),
-                                                            imageUrl:
-                                                                getGiftedViewCubit
-                                                                        .viewGift
-                                                                        ?.publicData?[
-                                                                            index]
-                                                                        .formdata![
-                                                                            2]
-                                                                        .image ??
-                                                                    '',
-                                                            placeholder:
-                                                                (context, url) =>
-                                                                    customLoader(
-                                                                        context),
+                                                            height:
+                                                                screenHeight(
+                                                                    context,
+                                                                    dividedBy:
+                                                                        5.5),
+                                                            imageUrl: getGiftedViewCubit
+                                                                    .viewGift
+                                                                    ?.publicData?[
+                                                                        index]
+                                                                    .formdata![
+                                                                        2]
+                                                                    .image ??
+                                                                '',
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                customLoader(
+                                                                    context),
                                                             errorWidget: (context,
-                                                                    url, error) =>
+                                                                    url,
+                                                                    error) =>
                                                                 Center(
-                                                                    child: Image(
+                                                                    child:
+                                                                        Image(
                                                               image: AssetImage(
                                                                   "assets/images/No-image-available.png"),
                                                             )),
@@ -950,26 +1080,29 @@ class _GetGiftedPublicPageState extends State<GetGiftedPublicPage> {
                                                           child:
                                                               CachedNetworkImage(
                                                             fit: BoxFit.fill,
-                                                            height: screenHeight(
-                                                                context,
-                                                                dividedBy: 5.5),
-                                                            imageUrl:
-                                                                getGiftedViewCubit
-                                                                        .viewGift
-                                                                        ?.publicData?[
-                                                                            index]
-                                                                        .formdata![
-                                                                            3]
-                                                                        .image ??
-                                                                    '',
-                                                            placeholder:
-                                                                (context, url) =>
-                                                                    customLoader(
-                                                                        context),
+                                                            height:
+                                                                screenHeight(
+                                                                    context,
+                                                                    dividedBy:
+                                                                        5.5),
+                                                            imageUrl: getGiftedViewCubit
+                                                                    .viewGift
+                                                                    ?.publicData?[
+                                                                        index]
+                                                                    .formdata![
+                                                                        3]
+                                                                    .image ??
+                                                                '',
+                                                            placeholder: (context,
+                                                                    url) =>
+                                                                customLoader(
+                                                                    context),
                                                             errorWidget: (context,
-                                                                    url, error) =>
+                                                                    url,
+                                                                    error) =>
                                                                 Center(
-                                                                    child: Image(
+                                                                    child:
+                                                                        Image(
                                                               image: AssetImage(
                                                                   "assets/images/No-image-available.png"),
                                                             )),

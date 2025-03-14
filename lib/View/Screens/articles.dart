@@ -13,6 +13,7 @@ import 'package:gftr/View/Widgets/customLoader.dart';
 import 'package:gftr/View/Widgets/customText.dart';
 import 'package:gftr/ViewModel/Cubits/All_Giftss.dart';
 import 'package:gftr/ViewModel/Cubits/gftrStories.dart';
+import 'package:html/parser.dart' as htmlParser;
 
 class ArticlesPage extends StatefulWidget {
   const ArticlesPage({Key? key}) : super(key: key);
@@ -102,11 +103,11 @@ class _ArticlesPageState extends State<ArticlesPage> {
                             hintStyle: TextStyle(fontFamily: poppins),
                             border: InputBorder.none,
                             prefixIcon: Padding(
-                              padding: const EdgeInsets.all(10.0),
+                              padding: const EdgeInsets.all(15.0),
                               child: Image.asset(
                                 ImageConstants.search,
-                                height: 5,
-                                width: 5,
+                                height: 4,
+                                width: 4,
                                 color: ColorCodes.greyButton,
                               ),
                             ),
@@ -119,7 +120,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                       padding: EdgeInsets.only(
                           left: screenWidth(context, dividedBy: 30)),
                       child: SizedBox(
-                          width: screenWidth(context, dividedBy: 1.1),
+                          width: screenWidth(context, dividedBy: 1),
                           child: customText("Articles", Colors.black, 20,
                               FontWeight.w300, madeOuterSans)),
                     ),
@@ -247,54 +248,112 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                                                 15), // Optional: rounded corners
                                                         image: DecorationImage(
                                                           image: NetworkImage(
-                                                            "${ApiConstants.baseUrls}${gftrStoriesCubit.gftrStories?.data?.post?[index].image}",
+                                                            "${gftrStoriesCubit.gftrStories?.data?.post?[index].image}",
                                                           ),
                                                           fit: BoxFit
                                                               .cover, // Make sure the image covers the container
                                                         ),
                                                       ),
-                                                      child: Align(
-                                                        alignment: Alignment
-                                                            .bottomLeft, // Align title to the bottom left
-                                                        child: Padding(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .all(12.0),
-                                                          child: Text(
-                                                            gftrStoriesCubit
-                                                                    .gftrStories
-                                                                    ?.data
-                                                                    ?.post?[
-                                                                        index]
-                                                                    .title ??
-                                                                "",
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              color: Colors
-                                                                  .white, // White text on top of the image
-                                                              shadows: [
-                                                                Shadow(
+                                                      child: Stack(
+                                                        children: [
+                                                          // Center the HTML content (Plain text, max 1 line)
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .center,
+                                                            child: Padding(
+                                                              padding: const EdgeInsets
+                                                                      .symmetric(
+                                                                  horizontal:
+                                                                      12.0),
+                                                              child: Text(
+                                                                htmlParser
+                                                                        .parse(gftrStoriesCubit.gftrStories?.data?.post?[index].content ??
+                                                                            "")
+                                                                        .body
+                                                                        ?.text
+                                                                        .trim() ??
+                                                                    "", // Extract plain text from HTML
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 12,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w400,
                                                                   color: Colors
-                                                                      .black
-                                                                      .withOpacity(
-                                                                          0.6),
-                                                                  offset:
-                                                                      Offset(
-                                                                          2, 2),
-                                                                  blurRadius: 4,
+                                                                      .white,
+                                                                  shadows: [
+                                                                    Shadow(
+                                                                      color: Colors
+                                                                          .black
+                                                                          .withOpacity(
+                                                                              0.6),
+                                                                      offset:
+                                                                          Offset(
+                                                                              2,
+                                                                              2),
+                                                                      blurRadius:
+                                                                          4,
+                                                                    ),
+                                                                  ],
                                                                 ),
-                                                              ], // Optional: shadow for better visibility of text
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                                maxLines: 1,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis, // Show "..." if overflow
+                                                              ),
                                                             ),
-                                                            maxLines:
-                                                                2, // Limit to two lines
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
                                                           ),
-                                                        ),
+                                                          // Keep the title at the bottom left
+                                                          Align(
+                                                            alignment: Alignment
+                                                                .bottomLeft,
+                                                            child: Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                          .all(
+                                                                      12.0),
+                                                              child: Text(
+                                                                gftrStoriesCubit
+                                                                        .gftrStories
+                                                                        ?.data
+                                                                        ?.post?[
+                                                                            index]
+                                                                        .title ??
+                                                                    "",
+                                                                style:
+                                                                    TextStyle(
+                                                                  fontSize: 14,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .w500,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  shadows: [
+                                                                    Shadow(
+                                                                      color: Colors
+                                                                          .black
+                                                                          .withOpacity(
+                                                                              0.6),
+                                                                      offset:
+                                                                          Offset(
+                                                                              2,
+                                                                              2),
+                                                                      blurRadius:
+                                                                          4,
+                                                                    ),
+                                                                  ],
+                                                                ),
+                                                                maxLines: 2,
+                                                                overflow:
+                                                                    TextOverflow
+                                                                        .ellipsis,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                        ],
                                                       ),
                                                     ),
                                                   ),

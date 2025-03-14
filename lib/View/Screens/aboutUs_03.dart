@@ -27,9 +27,10 @@ class _AboutUs03State extends State<AboutUs03> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Padding(
-              padding: EdgeInsets.only(top: screenHeight(context,dividedBy: 10)),
+              padding:
+                  EdgeInsets.only(top: screenHeight(context, dividedBy: 10)),
               child: customText(
-                "Gift-Giving is a two-sided coin. \nWe call those sides...",
+                "Gift-Giving is a two-sided coin. \nWe call those sides",
                 Colors.white,
                 16,
                 FontWeight.w400,
@@ -37,17 +38,17 @@ class _AboutUs03State extends State<AboutUs03> {
                 isTextAlign: true,
               ),
             ),
-            SizedBox(height: screenHeight(context,dividedBy: 10)),
+            SizedBox(height: screenHeight(context, dividedBy: 10)),
             customText("GIFTING", Colors.white, 30, FontWeight.bold, poppins),
             customText("&", Colors.white, 20, FontWeight.w400, poppins),
             customText("GETTING", Colors.white, 30, FontWeight.bold, poppins),
-            SizedBox(height: screenHeight(context,dividedBy: 30)),
-            customText("(can't have one without the other...!)", Colors.white,
-                13, FontWeight.w400, poppins),
-            SizedBox(height: screenHeight(context,dividedBy: 10)),
+            SizedBox(height: screenHeight(context, dividedBy: 30)),
+            customText("(can't have one without the other!)", Colors.white, 13,
+                FontWeight.w400, poppins),
+            SizedBox(height: screenHeight(context, dividedBy: 10)),
             customText("And the same problems have faced", Colors.white, 16,
                 FontWeight.w400, poppins),
-            SizedBox(height:  screenHeight(context,dividedBy: 30)),
+            SizedBox(height: screenHeight(context, dividedBy: 30)),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -60,8 +61,8 @@ class _AboutUs03State extends State<AboutUs03> {
                     "GETTERS", Colors.white, 22, FontWeight.bold, poppins),
               ],
             ),
-            SizedBox(height: screenHeight(context,dividedBy: 30)),
-            customText("since the dawn of time....", Colors.white, 16,
+            SizedBox(height: screenHeight(context, dividedBy: 30)),
+            customText("since the dawn of time", Colors.white, 16,
                 FontWeight.w400, poppins),
           ],
         ),

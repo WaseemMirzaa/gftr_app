@@ -15,7 +15,6 @@ class _AboutUs05State extends State<AboutUs05> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-
         width: double.infinity,
         decoration: const BoxDecoration(
             image: DecorationImage(
@@ -41,14 +40,12 @@ class _AboutUs05State extends State<AboutUs05> {
             SizedBox(
               height: screenHeight(context, dividedBy: 13),
             ),
-            customText(
-                "Second: :", Colors.white, 20, FontWeight.w400, poppins),
+            customText("Second:", Colors.white, 20, FontWeight.w400, poppins),
             customText("Your Ultimate Gifting Guide", Colors.white, 23,
                 FontWeight.bold, poppins),
             SizedBox(
               height: screenHeight(context, dividedBy: 10),
             ),
-
           ],
         ),
       ),

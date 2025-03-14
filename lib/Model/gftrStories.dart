@@ -124,6 +124,7 @@ class BlogItem {
     this.content,
     this.price,
     this.platform,
+    this.platformlink,
     this.image,
     this.status,
     this.createdAt,
@@ -136,6 +137,7 @@ class BlogItem {
   String? content;
   String? price;
   String? platform;
+  String? platformlink;
   String? image;
   bool? status;
   DateTime? createdAt;
@@ -148,6 +150,8 @@ class BlogItem {
         content: json["content"] == null ? null : json["content"],
         price: json["price"] == null ? null : json["price"],
         platform: json["platform"] == null ? null : json["platform"],
+        platformlink:
+            json["platform_link"] == null ? null : json["platform_link"],
         image: json["image"] == null ? null : json["image"],
         status: json["status"] == null ? null : json["status"],
         createdAt: json["createdAt"] == null
