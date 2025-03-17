@@ -54,21 +54,21 @@ const String showDataRoute = "showData";
 Future<InitData> init() async {
   String sharedText = "";
   String routeName = homeRoute;
-  //This shared intent work when application is closed
-  //-------------------CLOSED BY ME----------------
-  // String? sharedValue = await ReceiveSharingIntent.getInitialText();
-  String? sharedValue = 'REMOVE THIS LINE PLEASE';
-  //-------------------CLOSED BY ME----------------
-  if (sharedValue != null) {
-    sharedText = sharedValue;
-    routeName = showDataRoute;
-  }
+
+  // Remove or comment out the shared value assignment since it's causing issues
+  // String? sharedValue = 'REMOVE THIS LINE PLEASE';
+  // if (sharedValue != null) {
+  //   sharedText = sharedValue;
+  //   routeName = showDataRoute;
+  // }
+
   return InitData(sharedText, routeName);
 }
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
       .then((_) async {
@@ -86,44 +86,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final _navKey = GlobalKey<NavigatorState>();
-  late StreamSubscription _intentDataStreamSubscription;
   SharedPrefsService prefsService = SharedPrefsService();
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    // For sharing or opening urls/text coming from outside the app while the app is in the memory
-    //-------------------CLOSED BY ME----------------
-    // _intentDataStreamSubscription =
-    //     ReceiveSharingIntent.getTextStream().listen((String value) {
-    //   print("memory : $value");
-    //   _navKey.currentState!.pushNamed(
-    //     showDataRoute,
-    //     arguments: ShowDataArgument(value),
-    //   );
-    // });
-    //-------------------CLOSED BY ME----------------
-
-    //-------------------CLOSED BY ME----------------
-
-    // For sharing or opening urls/text coming from outside the app while the app is closed
-    // ReceiveSharingIntent.getInitialText().then((String? value) {
-    //   print("closed : $value");
-    //   _navKey.currentState!.pushNamed(
-    //     showDataRoute,
-    //     arguments: ShowDataArgument(value!),
-    //   );
-    // });
-
-    //-------------------CLOSED BY ME----------------
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _intentDataStreamSubscription.cancel();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -170,49 +133,21 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         child: MaterialApp(
           navigatorKey: _navKey,
           debugShowCheckedModeBanner: false,
-          // home: SplashPage(),
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name) {
               case homeRoute:
                 return MaterialPageRoute(builder: (_) => SplashPage());
               case showDataRoute:
-                {
-                  if (settings.arguments != null) {
-                    print("you are here");
-                    final args = settings.arguments as ShowDataArgument;
-                    RegExp urlRegExp = RegExp(r'https?://[^\s]+');
-                    final match = urlRegExp.firstMatch(args.sharedText);
-                    String dealText = '';
-                    String? dealUrl = '';
-                    if (match != null) {
-                      // Extract the URL
-                      dealUrl = match.group(0);
-
-                      // Extract the deal text (excluding the URL)
-                      dealText =
-                          args.sharedText.substring(0, match.start).trim();
-                    }
-                    defauilUrl = dealUrl.toString();
-                    return MaterialPageRoute(builder: (_) => GooglePage());
-                  } else {
-                    print("Now you are here");
-                    defauilUrl = widget.initData.sharedText;
-                    return MaterialPageRoute(builder: (_) => GooglePage());
-                  }
+                if (widget.initData.sharedText.isNotEmpty) {
+                  defauilUrl = widget.initData.sharedText;
+                  return MaterialPageRoute(builder: (_) => GooglePage());
                 }
+                return MaterialPageRoute(builder: (_) => SplashPage());
+              default:
+                return MaterialPageRoute(builder: (_) => SplashPage());
             }
-            // print("condin :$_rought");
-            // if(_rought == 'Google'){
-            //   defauilUrl = _sharedText.toString();
-            //   print({"else defurl :$defauilUrl"});
-            //   return MaterialPageRoute(
-            //       builder: (_) => GooglePage());
-            // }else {
-            //   print("hello");
-            //   return MaterialPageRoute(builder: (_) => SplashPage());
-            // }
           },
-          initialRoute: widget.initData.routeName,
+          initialRoute: homeRoute, // Always start with homeRoute
         ));
   }
 }

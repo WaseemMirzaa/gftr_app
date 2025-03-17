@@ -1,16 +1,9 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gftr/ViewModel/Cubits/Google_login.dart';
-import 'package:http/http.dart' as http;
-import 'dart:io'; // Add this line,
-import 'package:gftr/Model/decryption.dart';
-import 'package:gftr/View/Screens/ManageBottom/gftrStoryViewPage.dart';
-import 'package:gftr/View/Screens/Mobile_Number.dart';
-import 'package:gftr/ViewModel/apiServices.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';

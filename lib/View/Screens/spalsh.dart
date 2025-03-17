@@ -8,6 +8,7 @@ import 'package:gftr/View/Screens/ManageBottom/gftrStoryViewPage.dart';
 import 'package:gftr/ViewModel/Cubits/setting_cubit.dart';
 import 'package:gftr/ViewModel/Cubits/viewsetting.dart';
 import 'package:gftr/ViewModel/prefsService.dart';
+
 class SplashPage extends StatefulWidget {
   @override
   State<SplashPage> createState() => _SplashPageState();
@@ -15,43 +16,51 @@ class SplashPage extends StatefulWidget {
 
 class _SplashPageState extends State<SplashPage> {
   SharedPrefsService prefsService = SharedPrefsService();
-  SettingCubit settingCubit =SettingCubit();
-  ViewSettingCubit viewSettingCubit =ViewSettingCubit();
+  SettingCubit settingCubit = SettingCubit();
+  ViewSettingCubit viewSettingCubit = ViewSettingCubit();
 
   @override
   void initState() {
     super.initState();
-      settingCubit = BlocProvider.of<SettingCubit>(context);
-      viewSettingCubit = BlocProvider.of<ViewSettingCubit>(context);
-      viewSettingCubit.getviewSetting();
-    splashTimer();
+    settingCubit = BlocProvider.of<SettingCubit>(context);
+    viewSettingCubit = BlocProvider.of<ViewSettingCubit>(context);
+    viewSettingCubit.getviewSetting();
+    checkLoginStatus();
   }
 
-  splashTimer() async {
-    SharedPrefsService prefsService = SharedPrefsService();
-    authorization = (await prefsService.getStringData("authToken"))!;
-    Selectbirtmsg = (await prefsService.getStringData("Selectbirtmsg"))!;
-    Selecthollymsg = (await prefsService.getStringData("Selecthollymsg"))!;
-    text_or_msg = (await prefsService.getStringData("text_or_msg"))!;
-    only_or_any = (await prefsService.getBoolData("only_or_any"))!;
-    Timer(const Duration(seconds: 3), () {
-      if (authorization.length > 1) {
-        setState(() {
+  Future<void> checkLoginStatus() async {
+    try {
+      String? token = await prefsService.getStringData("authToken");
+
+      // Set global variables
+      authorization = token ?? '';
+      Selectbirtmsg = (await prefsService.getStringData("Selectbirtmsg")) ?? '';
+      Selecthollymsg =
+          (await prefsService.getStringData("Selecthollymsg")) ?? '';
+      text_or_msg = (await prefsService.getStringData("text_or_msg")) ?? '';
+      only_or_any = (await prefsService.getBoolData("only_or_any")) ?? false;
+
+      Timer(const Duration(seconds: 3), () {
+        if (token != null && token.isNotEmpty) {
+          bottombarblack = true;
           Navigator.pushAndRemoveUntil(
               context,
               MaterialPageRoute(builder: (context) => GfterStoryViewPage()),
               (route) => false);
-        });
-      } else {
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(builder: (context) => const LoginPage()),
-            (route) => false);
-        setState(() {
-
-        });
-      }
-    });
+        } else {
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(builder: (context) => const LoginPage()),
+              (route) => false);
+        }
+      });
+    } catch (e) {
+      print("Error checking login status: $e");
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => const LoginPage()),
+          (route) => false);
+    }
   }
 
   @override

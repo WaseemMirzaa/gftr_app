@@ -70,5 +70,4 @@ class SignInCubit extends Cubit<SignInState> {
       flutterToast("Something went wrong!", false);
     }
   }
-
 }
