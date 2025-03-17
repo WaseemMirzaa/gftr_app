@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gftr/Helper/appConfig.dart';
 import 'package:flutter/material.dart';
@@ -31,6 +32,8 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> checkLoginStatus() async {
     try {
       String? token = await prefsService.getStringData("authToken");
+      bool hasSeenSplash =
+          await prefsService.getBoolData("has_seen_splash") ?? false;
 
       // Set global variables
       authorization = token ?? '';
@@ -40,22 +43,30 @@ class _SplashPageState extends State<SplashPage> {
       text_or_msg = (await prefsService.getStringData("text_or_msg")) ?? '';
       only_or_any = (await prefsService.getBoolData("only_or_any")) ?? false;
 
-      Timer(const Duration(seconds: 3), () {
-        if (token != null && token.isNotEmpty) {
-          bottombarblack = true;
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => GfterStoryViewPage()),
-              (route) => false);
-        } else {
-          Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(builder: (context) => const LoginPage()),
-              (route) => false);
-        }
-      });
+      if (!hasSeenSplash) {
+        // First time - show splash for 3 seconds
+        await prefsService.setBoolData("has_seen_splash", true);
+        Timer(const Duration(seconds: 3), () {
+          navigateToNextScreen(token);
+        });
+      } else {
+        // Skip splash animation
+        navigateToNextScreen(token);
+      }
     } catch (e) {
       print("Error checking login status: $e");
+      navigateToNextScreen(null);
+    }
+  }
+
+  void navigateToNextScreen(String? token) {
+    if (token != null && token.isNotEmpty) {
+      bottombarblack = true;
+      Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (context) => GfterStoryViewPage()),
+          (route) => false);
+    } else {
       Navigator.pushAndRemoveUntil(
           context,
           MaterialPageRoute(builder: (context) => const LoginPage()),
