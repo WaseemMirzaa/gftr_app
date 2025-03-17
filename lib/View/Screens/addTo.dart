@@ -216,26 +216,27 @@ class _AddToState extends State<AddTo> {
                                             mainAxisAlignment:
                                                 MainAxisAlignment.center,
                                             children: [
-                                              Center(
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                    left: screenWidth(context,
-                                                        dividedBy: 45),
-                                                  ),
-                                                  child: Container(
-                                                    alignment: Alignment.center,
-                                                    width: screenWidth(context,
-                                                        dividedBy: 3.6),
-                                                    child: Text(
+                                              Expanded(
+                                                child: Center(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        left: screenWidth(
+                                                            context,
+                                                            dividedBy: 45)),
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
                                                         dropDownFolderName,
                                                         maxLines: 1,
                                                         style: const TextStyle(
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            color:
-                                                                Colors.black54,
-                                                            fontSize: 14)),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          color: Colors.black54,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -251,25 +252,27 @@ class _AddToState extends State<AddTo> {
                                                     FontWeight.w100,
                                                     'Poppins'),
                                               ),
-                                              Center(
-                                                child: Padding(
-                                                  padding: EdgeInsets.only(
-                                                    right: screenWidth(context,
-                                                        dividedBy: 45),
-                                                  ),
-                                                  child: Container(
-                                                    alignment: Alignment.center,
-                                                    width: screenWidth(context,
-                                                        dividedBy: 3.6),
-                                                    child: Text(userNetwork,
+                                              Expanded(
+                                                child: Center(
+                                                  child: Padding(
+                                                    padding: EdgeInsets.only(
+                                                        right: screenWidth(
+                                                            context,
+                                                            dividedBy: 45)),
+                                                    child: Container(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        userNetwork,
                                                         maxLines: 1,
                                                         style: const TextStyle(
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                            color:
-                                                                Colors.black54,
-                                                            fontSize: 14)),
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
+                                                          color: Colors.black54,
+                                                          fontSize: 14,
+                                                        ),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
                                               ),
@@ -519,7 +522,8 @@ class _AddToState extends State<AddTo> {
                                                                     16),
                                                             //--------------------------------CLOSED BY ME------------------------------------------------
                                                             // isAlwaysShown: true,
-                                                            thumbVisibility: true,
+                                                            thumbVisibility:
+                                                                true,
 
                                                             //--------------------------------CLOSED BY ME------------------------------------------------
                                                             controller:
@@ -612,7 +616,7 @@ class _AddToState extends State<AddTo> {
                                                           Radius.circular(16),
                                                       //--------------------------------CLOSED BY ME------------------------------------------------
                                                       // isAlwaysShown: true,
-                                                       thumbVisibility: true,
+                                                      thumbVisibility: true,
                                                       //--------------------------------CLOSED BY ME------------------------------------------------
                                                       controller:
                                                           _firstController,
