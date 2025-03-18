@@ -17,7 +17,7 @@ class HTMLContentView extends StatelessWidget {
 
     return SingleChildScrollView(
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: const EdgeInsets.symmetric(horizontal: 12),
         child: Html(
           style: {
             'body': Style(
@@ -26,7 +26,7 @@ class HTMLContentView extends StatelessWidget {
               fontWeight: FontWeight.w400,
               lineHeight: LineHeight(1.5),
               color: Colors.black,
-              margin: Margins.symmetric(vertical: 8.0),
+              margin: Margins.symmetric(vertical: 5.0),
             ),
             'img': Style(
               alignment: Alignment.centerLeft,
@@ -44,14 +44,14 @@ class HTMLContentView extends StatelessWidget {
               fontFamily: 'Times New Roman',
               fontWeight: FontWeight.w700,
               color: Colors.black87,
-              margin: Margins.symmetric(vertical: 12.0),
+              margin: Margins.symmetric(vertical: 8.0),
             ),
             'h2': Style(
               fontSize: FontSize(18.0),
               fontFamily: 'Times New Roman',
               fontWeight: FontWeight.w600,
               color: Colors.black87,
-              margin: Margins.symmetric(vertical: 12.0),
+              margin: Margins.symmetric(vertical: 8.0),
             ),
           },
           data: modifiedContent,

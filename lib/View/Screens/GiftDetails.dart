@@ -92,394 +92,343 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                     } else if (state is GftrStoriesError) {
                       return const Text("No data Found");
                     } else if (state is GftrStoriesSuccess) {
-                      return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
-                        child: PageView.builder(
-                          controller: controller,
-                          itemCount:
-                              gftrStoriesCubit.gftrStories?.data?.post?.length,
-                          itemBuilder: (context, index) {
-                            final content = gftrStoriesCubit
-                                .gftrStories?.data?.post?[index].content;
-                            final title = gftrStoriesCubit
-                                .gftrStories?.data?.post?[index].title;
-                            final blogItemArray = gftrStoriesCubit
-                                .gftrStories?.data?.post?[index].blogItemArray;
-                            final type = gftrStoriesCubit
-                                .gftrStories?.data?.post?[index].blogType;
+                      return PageView.builder(
+                        controller: controller,
+                        itemCount:
+                            gftrStoriesCubit.gftrStories?.data?.post?.length,
+                        itemBuilder: (context, index) {
+                          final content = gftrStoriesCubit
+                              .gftrStories?.data?.post?[index].content;
+                          final title = gftrStoriesCubit
+                              .gftrStories?.data?.post?[index].title;
+                          final blogItemArray = gftrStoriesCubit
+                              .gftrStories?.data?.post?[index].blogItemArray;
+                          final type = gftrStoriesCubit
+                              .gftrStories?.data?.post?[index].blogType;
 
-                            if (type == 'normal') {
-                              return SingleChildScrollView(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      HTMLContentView(content: content ?? ""),
-                                      if (blogItemArray != null)
-                                        ...blogItemArray.map((blogItem) {
-                                          return Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              if (blogItem.image != null)
-                                                Container(
-                                                  width: double.infinity,
-                                                  height: 400,
-                                                  margin: const EdgeInsets.only(
-                                                      bottom: 20),
-                                                  decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                      image: NetworkImage(
-                                                          blogItem.image!),
-                                                      fit: BoxFit.cover,
-                                                    ),
+                          if (type == 'normal') {
+                            return SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child:
+                                        HTMLContentView(content: content ?? ""),
+                                  ),
+                                  if (blogItemArray != null)
+                                    ...blogItemArray.map((blogItem) {
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          if (blogItem.image != null)
+                                            Padding(
+                                              padding: EdgeInsets.all(20.0),
+                                              child: Container(
+                                                width: double.infinity,
+                                                height: 400,
+                                                margin: const EdgeInsets.only(
+                                                    bottom: 20),
+                                                decoration: BoxDecoration(
+                                                  image: DecorationImage(
+                                                    image: NetworkImage(
+                                                        blogItem.image!),
+                                                    fit: BoxFit.cover,
                                                   ),
-                                                ),
-                                              if (blogItem.title != null ||
-                                                  blogItem.content != null)
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 20),
-                                                  child: RichText(
-                                                    text: TextSpan(
-                                                      style: const TextStyle(
-                                                          fontSize: 16,
-                                                          color:
-                                                              Colors.black54),
-                                                      children: [
-                                                        if (blogItem.title !=
-                                                            null)
-                                                          TextSpan(
-                                                            text:
-                                                                "${blogItem.title!}, ",
-                                                            style:
-                                                                const TextStyle(
-                                                              fontSize: 15,
-                                                              fontFamily:
-                                                                  'Times New Roman',
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.black,
-                                                            ),
-                                                          ),
-                                                        if (blogItem.content !=
-                                                            null)
-                                                          TextSpan(
-                                                              text: blogItem
-                                                                  .content!,
-                                                              style: TextStyle(
-                                                                fontSize: 14,
-                                                                fontFamily:
-                                                                    'Times New Roman',
-                                                              )),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              if (blogItem.price != null)
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 10),
-                                                  child: RichText(
-                                                    text: TextSpan(
-                                                      style: const TextStyle(
-                                                        fontSize: 15,
-                                                        fontFamily:
-                                                            'Times New Roman',
-                                                        color: Colors.black,
-                                                      ),
-                                                      children: [
-                                                        TextSpan(
-                                                          text:
-                                                              '\$${blogItem.price ?? 'N/A'} at ',
-                                                        ),
-                                                        TextSpan(
-                                                          text: blogItem
-                                                                  .platform ??
-                                                              'Unknown',
-                                                          style:
-                                                              const TextStyle(
-                                                            color: Colors
-                                                                .blue, // Makes it look like a link
-                                                            decoration:
-                                                                TextDecoration
-                                                                    .underline,
-                                                          ),
-                                                          recognizer:
-                                                              TapGestureRecognizer()
-                                                                ..onTap = () {
-                                                                  if (blogItem.platformlink !=
-                                                                          null &&
-                                                                      blogItem
-                                                                          .platformlink!
-                                                                          .isNotEmpty) {
-                                                                    Navigator
-                                                                        .push(
-                                                                      context,
-                                                                      MaterialPageRoute(
-                                                                        builder:
-                                                                            (context) =>
-                                                                                WebViewScreen(url: blogItem.platformlink!),
-                                                                      ),
-                                                                    );
-                                                                  } else {
-                                                                    ScaffoldMessenger.of(
-                                                                            context)
-                                                                        .showSnackBar(
-                                                                      const SnackBar(
-                                                                          content:
-                                                                              Text("Platform URL not available")),
-                                                                    );
-                                                                  }
-                                                                },
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                ),
-                                              Align(
-                                                alignment:
-                                                    Alignment.centerRight,
-                                                child: ElevatedButton(
-                                                  onPressed: () async {
-                                                    if (blogItem.platformlink !=
-                                                            null &&
-                                                        blogItem.platformlink!
-                                                            .isNotEmpty) {
-                                                      // Start loading state (optional)
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        const SnackBar(
-                                                            content: Text(
-                                                                "Fetching product details...")),
-                                                      );
-
-                                                      try {
-                                                        final response =
-                                                            await http.get(Uri
-                                                                .parse(blogItem
-                                                                    .platformlink!));
-                                                        var document =
-                                                            responseToDocument(
-                                                                response);
-                                                        var metadata =
-                                                            MetadataParser
-                                                                .parse(
-                                                                    document);
-
-                                                        // Extract Title (limit length)
-                                                        String title =
-                                                            metadata.title ??
-                                                                "Untitled";
-                                                        if (title.length > 25) {
-                                                          title = title
-                                                              .substring(0, 25);
-                                                        }
-
-                                                        // Extract images from metadata and page body
-                                                        dom.Document html =
-                                                            dom.Document.html(
-                                                                response.body);
-                                                        List<String> images = html
-                                                            .querySelectorAll(
-                                                                'img')
-                                                            .map((e) =>
-                                                                e.attributes[
-                                                                    'src'] ??
-                                                                '')
-                                                            .where((src) =>
-                                                                src.startsWith(
-                                                                    'https://'))
-                                                            .toList();
-
-                                                        // Remove unwanted images
-                                                        List<String>
-                                                            filteredImages =
-                                                            images.where((img) {
-                                                          return !img.contains(
-                                                              RegExp(
-                                                                  r"gif|sticker|banner|adroll|logo|icons|resources|marketing|svg|transparent"));
-                                                        }).toList();
-
-                                                        String mainImage = metadata
-                                                                .image ??
-                                                            (filteredImages
-                                                                    .isNotEmpty
-                                                                ? filteredImages
-                                                                    .first
-                                                                : '');
-
-                                                        // Navigate to AddTo screen with extracted details
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                            builder:
-                                                                (context) =>
-                                                                    AddTo(
-                                                              imageUrl:
-                                                                  mainImage,
-                                                              webViewLink: blogItem
-                                                                  .platformlink!,
-                                                              sharedText: '',
-                                                              title: title,
-                                                              imagesList:
-                                                                  filteredImages,
-                                                            ),
-                                                          ),
-                                                        );
-                                                      } catch (e) {
-                                                        print(
-                                                            "Error fetching data: $e");
-                                                        ScaffoldMessenger.of(
-                                                                context)
-                                                            .showSnackBar(
-                                                          const SnackBar(
-                                                              content: Text(
-                                                                  "Failed to fetch product details")),
-                                                        );
-                                                      }
-                                                    } else {
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        const SnackBar(
-                                                            content: Text(
-                                                                "Platform URL not available")),
-                                                      );
-                                                    }
-                                                  },
-                                                  style:
-                                                      ElevatedButton.styleFrom(
-                                                    backgroundColor: Colors
-                                                        .black, // Button background color
-                                                    foregroundColor: Colors
-                                                        .white, // Text color
-                                                    padding: const EdgeInsets
-                                                        .symmetric(
-                                                      horizontal:
-                                                          10, // Reduced horizontal padding
-                                                      vertical:
-                                                          8, // Reduced vertical padding
-                                                    ),
-                                                    textStyle: const TextStyle(
-                                                      fontSize:
-                                                          12, // Reduced font size
-                                                      fontFamily:
-                                                          'Times New Roman',
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                    ),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              8), // Button border radius
-                                                    ),
-                                                  ),
-                                                  child:
-                                                      const Text('ADD TO GFTR'),
                                                 ),
                                               ),
-                                              const SizedBox(height: 10),
-                                            ],
-                                          );
-                                        }).toList(),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            } else if (type == 'magazine') {
-                              return SingleChildScrollView(
-                                child: Padding(
-                                  padding: const EdgeInsets.all(20.0),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text('$title',
-                                          style: TextStyle(
-                                              fontSize: 16,
-                                              fontWeight: FontWeight.bold)),
-                                      HTMLContentView(content: content ?? ""),
-                                      if (blogItemArray != null)
-                                        ...blogItemArray.map((blogItem) {
-                                          return Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              if (blogItem.image != null)
-                                                Container(
-                                                  width: double.infinity,
-                                                  height: 400,
-                                                  margin: const EdgeInsets.only(
-                                                      bottom: 20),
-                                                  decoration: BoxDecoration(
-                                                    image: DecorationImage(
-                                                      image: NetworkImage(
-                                                          blogItem.image!),
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                ),
-                                              if (blogItem.title != null ||
-                                                  blogItem.content != null)
-                                                Padding(
-                                                  padding:
-                                                      const EdgeInsets.only(
-                                                          bottom: 20),
-                                                  child: RichText(
-                                                    text: TextSpan(
-                                                      style: const TextStyle(
-                                                          fontSize: 14,
+                                            ),
+                                          if (blogItem.title != null ||
+                                              blogItem.content != null)
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.all(10.0),
+                                              child: RichText(
+                                                text: TextSpan(
+                                                  style: const TextStyle(
+                                                      fontSize: 16,
+                                                      color: Colors.black54),
+                                                  children: [
+                                                    if (blogItem.title != null)
+                                                      TextSpan(
+                                                        text:
+                                                            "${blogItem.title!}, ",
+                                                        style: const TextStyle(
+                                                          fontSize: 15,
                                                           fontFamily:
                                                               'Times New Roman',
-                                                          color:
-                                                              Colors.black54),
-                                                      children: [
-                                                        if (blogItem.title !=
-                                                            null)
-                                                          TextSpan(
-                                                            text:
-                                                                "${blogItem.title!}, ",
-                                                            style:
-                                                                const TextStyle(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .bold,
-                                                              color:
-                                                                  Colors.black,
-                                                            ),
-                                                          ),
-                                                        if (blogItem.content !=
-                                                            null)
-                                                          TextSpan(
-                                                              text: blogItem
-                                                                  .content!),
-                                                      ],
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
+                                                      ),
+                                                    if (blogItem.content !=
+                                                        null)
+                                                      TextSpan(
+                                                          text:
+                                                              blogItem.content!,
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            fontFamily:
+                                                                'Times New Roman',
+                                                          )),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          if (blogItem.price != null)
+                                            Padding(
+                                              padding: const EdgeInsets.all(10),
+                                              child: RichText(
+                                                text: TextSpan(
+                                                  style: const TextStyle(
+                                                    fontSize: 15,
+                                                    fontFamily:
+                                                        'Times New Roman',
+                                                    color: Colors.black,
+                                                  ),
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '\$${blogItem.price ?? 'N/A'} at ',
                                                     ),
+                                                    TextSpan(
+                                                      text: blogItem.platform ??
+                                                          'Unknown',
+                                                      style: const TextStyle(
+                                                        color: Colors
+                                                            .blue, // Makes it look like a link
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                      ),
+                                                      recognizer:
+                                                          TapGestureRecognizer()
+                                                            ..onTap = () {
+                                                              if (blogItem.platformlink !=
+                                                                      null &&
+                                                                  blogItem
+                                                                      .platformlink!
+                                                                      .isNotEmpty) {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) =>
+                                                                        WebViewScreen(
+                                                                            url:
+                                                                                blogItem.platformlink!),
+                                                                  ),
+                                                                );
+                                                              } else {
+                                                                ScaffoldMessenger.of(
+                                                                        context)
+                                                                    .showSnackBar(
+                                                                  const SnackBar(
+                                                                      content: Text(
+                                                                          "Platform URL not available")),
+                                                                );
+                                                              }
+                                                            },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
+                                          Align(
+                                            alignment: Alignment.centerRight,
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 15.0),
+                                              child: ElevatedButton(
+                                                onPressed: () async {
+                                                  if (blogItem.platformlink !=
+                                                          null &&
+                                                      blogItem.platformlink!
+                                                          .isNotEmpty) {
+                                                    // Start loading state (optional)
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      const SnackBar(
+                                                          content: Text(
+                                                              "Fetching product details...")),
+                                                    );
+
+                                                    try {
+                                                      final response = await http
+                                                          .get(Uri.parse(blogItem
+                                                              .platformlink!));
+                                                      var document =
+                                                          responseToDocument(
+                                                              response);
+                                                      var metadata =
+                                                          MetadataParser.parse(
+                                                              document);
+
+                                                      // Extract Title (limit length)
+                                                      String title =
+                                                          metadata.title ??
+                                                              "Untitled";
+                                                      if (title.length > 25) {
+                                                        title = title.substring(
+                                                            0, 25);
+                                                      }
+
+                                                      // Extract images from metadata and page body
+                                                      dom.Document html =
+                                                          dom.Document.html(
+                                                              response.body);
+                                                      List<String> images = html
+                                                          .querySelectorAll(
+                                                              'img')
+                                                          .map((e) =>
+                                                              e.attributes[
+                                                                  'src'] ??
+                                                              '')
+                                                          .where((src) =>
+                                                              src.startsWith(
+                                                                  'https://'))
+                                                          .toList();
+
+                                                      // Remove unwanted images
+                                                      List<String>
+                                                          filteredImages =
+                                                          images.where((img) {
+                                                        return !img.contains(RegExp(
+                                                            r"gif|sticker|banner|adroll|logo|icons|resources|marketing|svg|transparent"));
+                                                      }).toList();
+
+                                                      String mainImage = metadata
+                                                              .image ??
+                                                          (filteredImages
+                                                                  .isNotEmpty
+                                                              ? filteredImages
+                                                                  .first
+                                                              : '');
+
+                                                      // Navigate to AddTo screen with extracted details
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                          builder: (context) =>
+                                                              AddTo(
+                                                            imageUrl: mainImage,
+                                                            webViewLink: blogItem
+                                                                .platformlink!,
+                                                            sharedText: '',
+                                                            title: title,
+                                                            imagesList:
+                                                                filteredImages,
+                                                          ),
+                                                        ),
+                                                      );
+                                                    } catch (e) {
+                                                      print(
+                                                          "Error fetching data: $e");
+                                                      ScaffoldMessenger.of(
+                                                              context)
+                                                          .showSnackBar(
+                                                        const SnackBar(
+                                                            content: Text(
+                                                                "Failed to fetch product details")),
+                                                      );
+                                                    }
+                                                  } else {
+                                                    ScaffoldMessenger.of(
+                                                            context)
+                                                        .showSnackBar(
+                                                      const SnackBar(
+                                                          content: Text(
+                                                              "Platform URL not available")),
+                                                    );
+                                                  }
+                                                },
+                                                style: ElevatedButton.styleFrom(
+                                                  backgroundColor: Colors
+                                                      .black, // Button background color
+                                                  foregroundColor: Colors
+                                                      .white, // Text color
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                    horizontal:
+                                                        10, // Reduced horizontal padding
+                                                    vertical:
+                                                        8, // Reduced vertical padding
+                                                  ),
+                                                  textStyle: const TextStyle(
+                                                    fontSize:
+                                                        12, // Reduced font size
+                                                    fontFamily:
+                                                        'Times New Roman',
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            8), // Button border radius
                                                   ),
                                                 ),
-                                              const SizedBox(height: 10),
-                                            ],
-                                          );
-                                        }).toList(),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            } else {
-                              return const SizedBox();
-                            }
-                          },
-                        ),
+                                                child:
+                                                    const Text('ADD TO GFTR'),
+                                              ),
+                                            ),
+                                          ),
+                                          const SizedBox(height: 10),
+                                        ],
+                                      );
+                                    }).toList(),
+                                ],
+                              ),
+                            );
+                          } else if (type == 'magazine') {
+                            return SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  HTMLContentView(content: content ?? ""),
+                                  if (blogItemArray != null)
+                                    ...blogItemArray.map((blogItem) {
+                                      return Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          if (blogItem.image != null)
+                                            Container(
+                                              width: double.infinity,
+                                              height: 400,
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 15),
+                                              decoration: BoxDecoration(
+                                                image: DecorationImage(
+                                                  image: NetworkImage(
+                                                      blogItem.image!),
+                                                  fit: BoxFit.cover,
+                                                ),
+                                              ),
+                                            ),
+                                          if (blogItem.content != null)
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 10, right: 10),
+                                              child: Text(blogItem.content!,
+                                                  style: TextStyle(
+                                                      fontFamily:
+                                                          'Times New Roman',
+                                                      fontSize: 14)),
+                                            ),
+                                          const SizedBox(height: 10),
+                                        ],
+                                      );
+                                    }).toList(),
+                                ],
+                              ),
+                            );
+                          } else {
+                            return const SizedBox();
+                          }
+                        },
                       );
                     }
                     return const SizedBox();
