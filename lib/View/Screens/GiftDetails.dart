@@ -156,8 +156,7 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                                             "${blogItem.title!}, ",
                                                         style: const TextStyle(
                                                           fontSize: 15,
-                                                          fontFamily:
-                                                              'Times New Roman',
+                                                          fontFamily: 'Poppins',
                                                           fontWeight:
                                                               FontWeight.bold,
                                                           color: Colors.black,
@@ -169,10 +168,12 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                                           text:
                                                               blogItem.content!,
                                                           style: TextStyle(
-                                                            fontSize: 14,
-                                                            fontFamily:
-                                                                'Times New Roman',
-                                                          )),
+                                                              fontSize: 12,
+                                                              fontFamily:
+                                                                  'Poppins',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal)),
                                                   ],
                                                 ),
                                               ),
@@ -414,9 +415,10 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                                   left: 10, right: 10),
                                               child: Text(blogItem.content!,
                                                   style: TextStyle(
-                                                      fontFamily:
-                                                          'Times New Roman',
-                                                      fontSize: 12)),
+                                                      fontFamily: 'Poppins',
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.normal)),
                                             ),
                                           const SizedBox(height: 10),
                                         ],
