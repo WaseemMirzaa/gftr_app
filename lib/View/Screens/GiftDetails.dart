@@ -416,7 +416,7 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                                   style: TextStyle(
                                                       fontFamily:
                                                           'Times New Roman',
-                                                      fontSize: 14)),
+                                                      fontSize: 12)),
                                             ),
                                           const SizedBox(height: 10),
                                         ],
