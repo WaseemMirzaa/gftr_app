@@ -446,9 +446,16 @@ class _SettingsPageState extends State<SettingsPage> {
                                 autofocus: true,
                                 style: TextStyle(fontSize: 13),
                                 decoration: InputDecoration(
-                                    border: UnderlineInputBorder(
-                                  borderSide: BorderSide.none,
-                                )),
+                                  isCollapsed: true,
+                                  contentPadding: EdgeInsets.symmetric(
+                                      vertical: 12, horizontal: 10),
+                                  border: OutlineInputBorder(
+                                    borderSide: BorderSide.none,
+                                  ),
+                                  filled: true,
+                                  fillColor: Colors
+                                      .white, // Background color for input field
+                                ),
                               ),
                             ),
                           ),
@@ -538,9 +545,16 @@ class _SettingsPageState extends State<SettingsPage> {
                                   cursorHeight: 13,
                                   style: TextStyle(fontSize: 13),
                                   decoration: InputDecoration(
-                                      border: UnderlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius: BorderRadius.zero)),
+                                    isCollapsed: true,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 10),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors
+                                        .white, // Background color for input field
+                                  ),
                                 ),
                               ),
                             ),
@@ -587,9 +601,16 @@ class _SettingsPageState extends State<SettingsPage> {
                                   cursorHeight: 13,
                                   style: TextStyle(fontSize: 13),
                                   decoration: InputDecoration(
-                                      border: UnderlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius: BorderRadius.zero)),
+                                    isCollapsed: true,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 12, horizontal: 10),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors
+                                        .white, // Background color for input field
+                                  ),
                                 ),
                               ),
                             ),
@@ -684,9 +705,16 @@ class _SettingsPageState extends State<SettingsPage> {
                                   cursorColor: Colors.grey.shade600,
                                   cursorHeight: 13,
                                   decoration: InputDecoration(
-                                      border: UnderlineInputBorder(
-                                          borderSide: BorderSide.none,
-                                          borderRadius: BorderRadius.zero)),
+                                    isCollapsed: true,
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 11, horizontal: 10),
+                                    border: OutlineInputBorder(
+                                      borderSide: BorderSide.none,
+                                    ),
+                                    filled: true,
+                                    fillColor: Colors
+                                        .white, // Background color for input field
+                                  ),
                                 ),
                               ),
                             ),
