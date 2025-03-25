@@ -238,13 +238,25 @@ class _GfterStoriesState extends State<GfterStories>
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.all(12.0),
-                                              child: customText(
-                                                post.title ?? '',
-                                                Colors.white,
-                                                14,
-                                                FontWeight.w500,
-                                                poppins,
-                                                maxLines: 2,
+                                              child: Container(
+                                                height: 50,
+                                                width: 230,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.black
+                                                      .withOpacity(0.6),
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                ),
+                                                alignment: Alignment.centerLeft,
+                                                padding: EdgeInsets.all(12),
+                                                child: customText(
+                                                  post.title ?? '',
+                                                  Colors.white,
+                                                  14,
+                                                  FontWeight.w500,
+                                                  poppins,
+                                                  maxLines: 2,
+                                                ),
                                               ),
                                             ),
                                           ),
