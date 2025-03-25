@@ -99,8 +99,8 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                         itemBuilder: (context, index) {
                           final content = gftrStoriesCubit
                               .gftrStories?.data?.post?[index].content;
-                          final title = gftrStoriesCubit
-                              .gftrStories?.data?.post?[index].title;
+                          final title1 = gftrStoriesCubit
+                              .gftrStories?.data?.post?[index].title1;
                           final blogItemArray = gftrStoriesCubit
                               .gftrStories?.data?.post?[index].blogItemArray;
                           final type = gftrStoriesCubit
@@ -112,9 +112,17 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child:
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(title1!),
                                         HTMLContentView(content: content ?? ""),
+                                      ],
+                                    ),
                                   ),
                                   if (blogItemArray != null)
                                     ...blogItemArray.map((blogItem) {
@@ -142,8 +150,8 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                           if (blogItem.title != null ||
                                               blogItem.content != null)
                                             Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
+                                              padding: const EdgeInsets.only(
+                                                  right: 10.0, left: 10.0),
                                               child: RichText(
                                                 text: TextSpan(
                                                   style: const TextStyle(
@@ -174,64 +182,6 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                                               fontWeight:
                                                                   FontWeight
                                                                       .normal)),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          if (blogItem.price != null)
-                                            Padding(
-                                              padding: const EdgeInsets.all(10),
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  style: const TextStyle(
-                                                    fontSize: 15,
-                                                    fontFamily:
-                                                        'Times New Roman',
-                                                    color: Colors.black,
-                                                  ),
-                                                  children: [
-                                                    TextSpan(
-                                                      text:
-                                                          '\$${blogItem.price ?? 'N/A'} at ',
-                                                    ),
-                                                    TextSpan(
-                                                      text: blogItem.platform ??
-                                                          'Unknown',
-                                                      style: const TextStyle(
-                                                        color: Colors
-                                                            .blue, // Makes it look like a link
-                                                        decoration:
-                                                            TextDecoration
-                                                                .underline,
-                                                      ),
-                                                      recognizer:
-                                                          TapGestureRecognizer()
-                                                            ..onTap = () {
-                                                              if (blogItem.platformlink !=
-                                                                      null &&
-                                                                  blogItem
-                                                                      .platformlink!
-                                                                      .isNotEmpty) {
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder: (context) =>
-                                                                        WebViewScreen(
-                                                                            url:
-                                                                                blogItem.platformlink!),
-                                                                  ),
-                                                                );
-                                                              } else {
-                                                                ScaffoldMessenger.of(
-                                                                        context)
-                                                                    .showSnackBar(
-                                                                  const SnackBar(
-                                                                      content: Text(
-                                                                          "Platform URL not available")),
-                                                                );
-                                                              }
-                                                            },
-                                                    ),
                                                   ],
                                                 ),
                                               ),
@@ -276,39 +226,80 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                                             0, 25);
                                                       }
 
-                                                      // Extract images from metadata and page body
+                                                      // Use the current blogItem's image as the main image
+                                                      String mainImage =
+                                                          blogItem.image ?? '';
+
+                                                      // Add the current image to the filtered images list if it exists
+                                                      List<String>
+                                                          filteredImages = [];
+                                                      if (mainImage
+                                                          .isNotEmpty) {
+                                                        filteredImages
+                                                            .add(mainImage);
+                                                      }
+
+                                                      // Add additional images from the webpage
                                                       dom.Document html =
                                                           dom.Document.html(
                                                               response.body);
-                                                      List<String> images = html
-                                                          .querySelectorAll(
-                                                              'img')
-                                                          .map((e) =>
-                                                              e.attributes[
-                                                                  'src'] ??
-                                                              '')
-                                                          .where((src) =>
-                                                              src.startsWith(
-                                                                  'https://'))
+                                                      List<String> webImages =
+                                                          html
+                                                              .querySelectorAll(
+                                                                  'img')
+                                                              .map((e) {
+                                                                // Get both src and data-src attributes
+                                                                String? src =
+                                                                    e.attributes[
+                                                                        'src'];
+                                                                String?
+                                                                    dataSrc =
+                                                                    e.attributes[
+                                                                        'data-src'];
+                                                                String? srcset =
+                                                                    e.attributes[
+                                                                        'srcset'];
+
+                                                                // Return the first non-null value
+                                                                return src ??
+                                                                    dataSrc ??
+                                                                    srcset ??
+                                                                    '';
+                                                              })
+                                                              .where((src) => src
+                                                                  .isNotEmpty)
+                                                              .where((src) =>
+                                                                  src.startsWith('http://') ||
+                                                                  src.startsWith(
+                                                                      'https://') ||
+                                                                  src.startsWith(
+                                                                      '//'))
+                                                              .map((src) {
+                                                                // Convert protocol-relative URLs to https
+                                                                if (src
+                                                                    .startsWith(
+                                                                        '//')) {
+                                                                  return 'https:$src';
+                                                                }
+                                                                return src;
+                                                              })
+                                                              .where((img) => !img
+                                                                  .contains(RegExp(
+                                                                      r"gif|sticker|banner|adroll|logo|icons|resources|marketing|svg|transparent",
+                                                                      caseSensitive:
+                                                                          false)))
+                                                              .toList();
+
+                                                      // Remove duplicate images
+                                                      webImages = webImages
+                                                          .toSet()
                                                           .toList();
 
-                                                      // Remove unwanted images
-                                                      List<String>
-                                                          filteredImages =
-                                                          images.where((img) {
-                                                        return !img.contains(RegExp(
-                                                            r"gif|sticker|banner|adroll|logo|icons|resources|marketing|svg|transparent"));
-                                                      }).toList();
+                                                      // Add images to filtered list
+                                                      filteredImages
+                                                          .addAll(webImages);
 
-                                                      String mainImage = metadata
-                                                              .image ??
-                                                          (filteredImages
-                                                                  .isNotEmpty
-                                                              ? filteredImages
-                                                                  .first
-                                                              : '');
-
-                                                      // Navigate to AddTo screen with extracted details
+                                                      // Modified navigation to use push instead of pushReplacement
                                                       Navigator.push(
                                                         context,
                                                         MaterialPageRoute(
@@ -321,6 +312,8 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                                             title: title,
                                                             imagesList:
                                                                 filteredImages,
+                                                            isBack:
+                                                                true, // Add this parameter
                                                           ),
                                                         ),
                                                       );
@@ -375,6 +368,66 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                               ),
                                             ),
                                           ),
+                                          if (blogItem.price != null)
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  right: 10,
+                                                  left: 10,
+                                                  bottom: 10),
+                                              child: RichText(
+                                                text: TextSpan(
+                                                  style: const TextStyle(
+                                                    fontSize: 15,
+                                                    fontFamily: 'Poppins',
+                                                    color: Colors.black,
+                                                  ),
+                                                  children: [
+                                                    TextSpan(
+                                                      text:
+                                                          '\$${blogItem.price ?? 'N/A'} at ',
+                                                    ),
+                                                    TextSpan(
+                                                      text: blogItem.platform ??
+                                                          'Unknown',
+                                                      style: const TextStyle(
+                                                        color: Colors
+                                                            .blue, // Makes it look like a link
+                                                        decoration:
+                                                            TextDecoration
+                                                                .underline,
+                                                      ),
+                                                      recognizer:
+                                                          TapGestureRecognizer()
+                                                            ..onTap = () {
+                                                              if (blogItem.platformlink !=
+                                                                      null &&
+                                                                  blogItem
+                                                                      .platformlink!
+                                                                      .isNotEmpty) {
+                                                                Navigator.push(
+                                                                  context,
+                                                                  MaterialPageRoute(
+                                                                    builder: (context) =>
+                                                                        WebViewScreen(
+                                                                            url:
+                                                                                blogItem.platformlink!),
+                                                                  ),
+                                                                );
+                                                              } else {
+                                                                ScaffoldMessenger.of(
+                                                                        context)
+                                                                    .showSnackBar(
+                                                                  const SnackBar(
+                                                                      content: Text(
+                                                                          "Platform URL not available")),
+                                                                );
+                                                              }
+                                                            },
+                                                    ),
+                                                  ],
+                                                ),
+                                              ),
+                                            ),
                                           const SizedBox(height: 10),
                                         ],
                                       );
