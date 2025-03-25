@@ -119,7 +119,14 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                       crossAxisAlignment:
                                           CrossAxisAlignment.start,
                                       children: [
-                                        Text(title1!),
+                                        Text(
+                                          title1!,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            fontFamily: poppins,
+                                          ),
+                                        ),
                                         HTMLContentView(content: content ?? ""),
                                       ],
                                     ),
