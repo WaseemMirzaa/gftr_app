@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -193,248 +191,278 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                                 ),
                                               ),
                                             ),
-                                          Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 15.0),
-                                              child: ElevatedButton(
-                                                onPressed: () async {
-                                                  if (blogItem.platformlink !=
-                                                          null &&
-                                                      blogItem.platformlink!
-                                                          .isNotEmpty) {
-                                                    // Start loading state (optional)
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      const SnackBar(
-                                                          content: Text(
-                                                              "Fetching product details...")),
-                                                    );
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              if (blogItem.price != null)
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10,
+                                                          right: 10,
+                                                          left: 10,
+                                                          bottom: 10),
+                                                  child: RichText(
+                                                    text: TextSpan(
+                                                      style: const TextStyle(
+                                                        fontSize: 15,
+                                                        fontFamily: 'Poppins',
+                                                        color: Colors.black,
+                                                      ),
+                                                      children: [
+                                                        TextSpan(
+                                                          text:
+                                                              '\$${blogItem.price ?? 'N/A'} at ',
+                                                        ),
+                                                        TextSpan(
+                                                          text: blogItem
+                                                                  .platform ??
+                                                              'Unknown',
+                                                          style:
+                                                              const TextStyle(
+                                                            color: Colors
+                                                                .blue, // Makes it look like a link
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .underline,
+                                                          ),
+                                                          recognizer:
+                                                              TapGestureRecognizer()
+                                                                ..onTap = () {
+                                                                  if (blogItem.platformlink !=
+                                                                          null &&
+                                                                      blogItem
+                                                                          .platformlink!
+                                                                          .isNotEmpty) {
+                                                                    Navigator
+                                                                        .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                WebViewScreen(url: blogItem.platformlink!),
+                                                                      ),
+                                                                    );
+                                                                  } else {
+                                                                    ScaffoldMessenger.of(
+                                                                            context)
+                                                                        .showSnackBar(
+                                                                      const SnackBar(
+                                                                          content:
+                                                                              Text("Platform URL not available")),
+                                                                    );
+                                                                  }
+                                                                },
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 15.0),
+                                                  child: ElevatedButton(
+                                                    onPressed: () async {
+                                                      if (blogItem.platformlink !=
+                                                              null &&
+                                                          blogItem.platformlink!
+                                                              .isNotEmpty) {
+                                                        // Start loading state (optional)
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                              content: Text(
+                                                                  "Fetching product details...")),
+                                                        );
 
-                                                    try {
-                                                      final response = await http
-                                                          .get(Uri.parse(blogItem
-                                                              .platformlink!));
-                                                      var document =
-                                                          responseToDocument(
-                                                              response);
-                                                      var metadata =
-                                                          MetadataParser.parse(
-                                                              document);
+                                                        try {
+                                                          final response =
+                                                              await http.get(Uri
+                                                                  .parse(blogItem
+                                                                      .platformlink!));
+                                                          var document =
+                                                              responseToDocument(
+                                                                  response);
+                                                          var metadata =
+                                                              MetadataParser
+                                                                  .parse(
+                                                                      document);
 
-                                                      // Extract Title (limit length)
-                                                      String title =
-                                                          metadata.title ??
-                                                              "Untitled";
-                                                      if (title.length > 25) {
-                                                        title = title.substring(
-                                                            0, 25);
-                                                      }
+                                                          // Extract Title (limit length)
+                                                          String title =
+                                                              metadata.title ??
+                                                                  "Untitled";
+                                                          if (title.length >
+                                                              25) {
+                                                            title =
+                                                                title.substring(
+                                                                    0, 25);
+                                                          }
 
-                                                      // Use the current blogItem's image as the main image
-                                                      String mainImage =
-                                                          blogItem.image ?? '';
+                                                          // Use the current blogItem's image as the main image
+                                                          String mainImage =
+                                                              blogItem.image ??
+                                                                  '';
 
-                                                      // Add the current image to the filtered images list if it exists
-                                                      List<String>
-                                                          filteredImages = [];
-                                                      if (mainImage
-                                                          .isNotEmpty) {
-                                                        filteredImages
-                                                            .add(mainImage);
-                                                      }
+                                                          // Add the current image to the filtered images list if it exists
+                                                          List<String>
+                                                              filteredImages =
+                                                              [];
+                                                          if (mainImage
+                                                              .isNotEmpty) {
+                                                            filteredImages
+                                                                .add(mainImage);
+                                                          }
 
-                                                      // Add additional images from the webpage
-                                                      dom.Document html =
-                                                          dom.Document.html(
-                                                              response.body);
-                                                      List<String> webImages =
-                                                          html
-                                                              .querySelectorAll(
-                                                                  'img')
-                                                              .map((e) {
-                                                                // Get both src and data-src attributes
-                                                                String? src =
-                                                                    e.attributes[
-                                                                        'src'];
-                                                                String?
-                                                                    dataSrc =
-                                                                    e.attributes[
-                                                                        'data-src'];
-                                                                String? srcset =
-                                                                    e.attributes[
-                                                                        'srcset'];
+                                                          // Add additional images from the webpage
+                                                          dom.Document html =
+                                                              dom.Document.html(
+                                                                  response
+                                                                      .body);
+                                                          List<
+                                                                  String>
+                                                              webImages = html
+                                                                  .querySelectorAll(
+                                                                      'img')
+                                                                  .map((e) {
+                                                                    // Get both src and data-src attributes
+                                                                    String?
+                                                                        src =
+                                                                        e.attributes[
+                                                                            'src'];
+                                                                    String?
+                                                                        dataSrc =
+                                                                        e.attributes[
+                                                                            'data-src'];
+                                                                    String?
+                                                                        srcset =
+                                                                        e.attributes[
+                                                                            'srcset'];
 
-                                                                // Return the first non-null value
-                                                                return src ??
-                                                                    dataSrc ??
-                                                                    srcset ??
-                                                                    '';
-                                                              })
-                                                              .where((src) => src
-                                                                  .isNotEmpty)
-                                                              .where((src) =>
-                                                                  src.startsWith('http://') ||
-                                                                  src.startsWith(
-                                                                      'https://') ||
-                                                                  src.startsWith(
-                                                                      '//'))
-                                                              .map((src) {
-                                                                // Convert protocol-relative URLs to https
-                                                                if (src
-                                                                    .startsWith(
+                                                                    // Return the first non-null value
+                                                                    return src ??
+                                                                        dataSrc ??
+                                                                        srcset ??
+                                                                        '';
+                                                                  })
+                                                                  .where((src) =>
+                                                                      src
+                                                                          .isNotEmpty)
+                                                                  .where((src) =>
+                                                                      src.startsWith(
+                                                                          'http://') ||
+                                                                      src.startsWith(
+                                                                          'https://') ||
+                                                                      src.startsWith(
+                                                                          '//'))
+                                                                  .map((src) {
+                                                                    // Convert protocol-relative URLs to https
+                                                                    if (src.startsWith(
                                                                         '//')) {
-                                                                  return 'https:$src';
-                                                                }
-                                                                return src;
-                                                              })
-                                                              .where((img) => !img
-                                                                  .contains(RegExp(
+                                                                      return 'https:$src';
+                                                                    }
+                                                                    return src;
+                                                                  })
+                                                                  .where((img) => !img.contains(RegExp(
                                                                       r"gif|sticker|banner|adroll|logo|icons|resources|marketing|svg|transparent",
                                                                       caseSensitive:
                                                                           false)))
+                                                                  .toList();
+
+                                                          // Remove duplicate images
+                                                          webImages = webImages
+                                                              .toSet()
                                                               .toList();
 
-                                                      // Remove duplicate images
-                                                      webImages = webImages
-                                                          .toSet()
-                                                          .toList();
+                                                          // Add images to filtered list
+                                                          filteredImages.addAll(
+                                                              webImages);
 
-                                                      // Add images to filtered list
-                                                      filteredImages
-                                                          .addAll(webImages);
-
-                                                      // Modified navigation to use push instead of pushReplacement
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              AddTo(
-                                                            imageUrl: mainImage,
-                                                            webViewLink: blogItem
-                                                                .platformlink!,
-                                                            sharedText: '',
-                                                            title: title,
-                                                            imagesList:
-                                                                filteredImages,
-                                                            isBack:
-                                                                true, // Add this parameter
-                                                          ),
-                                                        ),
-                                                      );
-                                                    } catch (e) {
-                                                      print(
-                                                          "Error fetching data: $e");
-                                                      ScaffoldMessenger.of(
-                                                              context)
-                                                          .showSnackBar(
-                                                        const SnackBar(
-                                                            content: Text(
-                                                                "Failed to fetch product details")),
-                                                      );
-                                                    }
-                                                  } else {
-                                                    ScaffoldMessenger.of(
-                                                            context)
-                                                        .showSnackBar(
-                                                      const SnackBar(
-                                                          content: Text(
-                                                              "Platform URL not available")),
-                                                    );
-                                                  }
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors
-                                                      .black, // Button background color
-                                                  foregroundColor: Colors
-                                                      .white, // Text color
-                                                  padding: const EdgeInsets
-                                                      .symmetric(
-                                                    horizontal:
-                                                        10, // Reduced horizontal padding
-                                                    vertical:
-                                                        8, // Reduced vertical padding
-                                                  ),
-                                                  textStyle: const TextStyle(
-                                                    fontSize:
-                                                        12, // Reduced font size
-                                                    fontFamily:
-                                                        'Times New Roman',
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            8), // Button border radius
-                                                  ),
-                                                ),
-                                                child:
-                                                    const Text('ADD TO GFTR'),
-                                              ),
-                                            ),
-                                          ),
-                                          if (blogItem.price != null)
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  right: 10,
-                                                  left: 10,
-                                                  bottom: 10),
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  style: const TextStyle(
-                                                    fontSize: 15,
-                                                    fontFamily: 'Poppins',
-                                                    color: Colors.black,
-                                                  ),
-                                                  children: [
-                                                    TextSpan(
-                                                      text:
-                                                          '\$${blogItem.price ?? 'N/A'} at ',
-                                                    ),
-                                                    TextSpan(
-                                                      text: blogItem.platform ??
-                                                          'Unknown',
-                                                      style: const TextStyle(
-                                                        color: Colors
-                                                            .blue, // Makes it look like a link
-                                                        decoration:
-                                                            TextDecoration
-                                                                .underline,
+                                                          // Modified navigation to use push instead of pushReplacement
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      AddTo(
+                                                                imageUrl:
+                                                                    mainImage,
+                                                                webViewLink:
+                                                                    blogItem
+                                                                        .platformlink!,
+                                                                sharedText: '',
+                                                                title: title,
+                                                                imagesList:
+                                                                    filteredImages,
+                                                                isBack: true,
+                                                                price:
+                                                                    '\$${blogItem.price}', // Now this will work as price is an optional parameter
+                                                              ),
+                                                            ),
+                                                          );
+                                                        } catch (e) {
+                                                          print(
+                                                              "Error fetching data: $e");
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            const SnackBar(
+                                                                content: Text(
+                                                                    "Failed to fetch product details")),
+                                                          );
+                                                        }
+                                                      } else {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                              content: Text(
+                                                                  "Platform URL not available")),
+                                                        );
+                                                      }
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor: Colors
+                                                          .black, // Button background color
+                                                      foregroundColor: Colors
+                                                          .white, // Text color
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal:
+                                                            10, // Reduced horizontal padding
+                                                        vertical:
+                                                            8, // Reduced vertical padding
                                                       ),
-                                                      recognizer:
-                                                          TapGestureRecognizer()
-                                                            ..onTap = () {
-                                                              if (blogItem.platformlink !=
-                                                                      null &&
-                                                                  blogItem
-                                                                      .platformlink!
-                                                                      .isNotEmpty) {
-                                                                Navigator.push(
-                                                                  context,
-                                                                  MaterialPageRoute(
-                                                                    builder: (context) =>
-                                                                        WebViewScreen(
-                                                                            url:
-                                                                                blogItem.platformlink!),
-                                                                  ),
-                                                                );
-                                                              } else {
-                                                                ScaffoldMessenger.of(
-                                                                        context)
-                                                                    .showSnackBar(
-                                                                  const SnackBar(
-                                                                      content: Text(
-                                                                          "Platform URL not available")),
-                                                                );
-                                                              }
-                                                            },
+                                                      textStyle:
+                                                          const TextStyle(
+                                                        fontSize:
+                                                            12, // Reduced font size
+                                                        fontFamily:
+                                                            'Times New Roman',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                8), // Button border radius
+                                                      ),
                                                     ),
-                                                  ],
+                                                    child: const Text(
+                                                        'ADD TO GFTR'),
+                                                  ),
                                                 ),
                                               ),
-                                            ),
+                                            ],
+                                          ),
                                           const SizedBox(height: 10),
                                         ],
                                       );

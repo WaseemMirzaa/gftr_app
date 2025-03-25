@@ -22,6 +22,7 @@ class AddTo extends StatefulWidget {
   String sharedText;
   List imagesList;
   bool isBack;
+  final String? price;
   AddTo(
       {Key? key,
       required this.imagesList,
@@ -29,6 +30,7 @@ class AddTo extends StatefulWidget {
       this.isBack = false,
       required this.webViewLink,
       required this.sharedText,
+      this.price,
       required this.title})
       : super(key: key);
 
@@ -61,6 +63,7 @@ class _AddToState extends State<AddTo> {
   Future<void> Printe_data() async {
     img = widget.imageUrl;
     titleC.text = widget.title.toString();
+    priceC.text = widget.price ?? ''; // Add this line to set the price
     authorization = (await prefsService.getStringData("authToken"))!;
   }
 
