@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,7 +20,6 @@ import '../../Helper/html_converter.dart';
 
 class Gift_Ditails extends StatefulWidget {
   final int cur;
-
   const Gift_Ditails(this.cur, {Key? key}) : super(key: key);
 
   @override
@@ -57,16 +54,20 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
               Container(
                 height: screenHeight(context, dividedBy: 15),
                 child: Padding(
-                    padding: EdgeInsets.only(left: screenWidth(context, dividedBy: 40)),
+                    padding: EdgeInsets.only(
+                        left: screenWidth(context, dividedBy: 40)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
                           onTap: () => Navigator.pop(context),
-                          child: const Icon(Icons.arrow_back_ios_outlined, size: 20),
+                          child: const Icon(Icons.arrow_back_ios_outlined,
+                              size: 20),
                         ),
                         customText(
-                          gftrStoriesCubit.gftrStories?.data?.post?[curpage].title ?? 'Article',
+                          gftrStoriesCubit
+                                  .gftrStories?.data?.post?[curpage].title ??
+                              'Article',
                           Colors.black,
                           25,
                           FontWeight.bold,
@@ -91,12 +92,17 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                     } else if (state is GftrStoriesSuccess) {
                       return PageView.builder(
                         controller: controller,
-                        itemCount: gftrStoriesCubit.gftrStories?.data?.post?.length,
+                        itemCount:
+                            gftrStoriesCubit.gftrStories?.data?.post?.length,
                         itemBuilder: (context, index) {
-                          final content = gftrStoriesCubit.gftrStories?.data?.post?[index].content;
-                          final title = gftrStoriesCubit.gftrStories?.data?.post?[index].title;
-                          final blogItemArray = gftrStoriesCubit.gftrStories?.data?.post?[index].blogItemArray;
-                          final type = gftrStoriesCubit.gftrStories?.data?.post?[index].blogType;
+                          final content = gftrStoriesCubit
+                              .gftrStories?.data?.post?[index].content;
+                          final title1 = gftrStoriesCubit
+                              .gftrStories?.data?.post?[index].title1;
+                          final blogItemArray = gftrStoriesCubit
+                              .gftrStories?.data?.post?[index].blogItemArray;
+                          final type = gftrStoriesCubit
+                              .gftrStories?.data?.post?[index].blogType;
 
                           if (type == 'normal') {
                             return SingleChildScrollView(
@@ -104,13 +110,30 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: HTMLContentView(content: content ?? ""),
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          title1!,
+                                          style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 16,
+                                            fontFamily: poppins,
+                                          ),
+                                        ),
+                                        HTMLContentView(content: content ?? ""),
+                                      ],
+                                    ),
                                   ),
                                   if (blogItemArray != null)
                                     ...blogItemArray.map((blogItem) {
                                       return Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           if (blogItem.image != null)
                                             Padding(
@@ -118,165 +141,327 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                               child: Container(
                                                 width: double.infinity,
                                                 height: 400,
-                                                margin: const EdgeInsets.only(bottom: 20),
+                                                margin: const EdgeInsets.only(
+                                                    bottom: 20),
                                                 decoration: BoxDecoration(
                                                   image: DecorationImage(
-                                                    image: NetworkImage(blogItem.image!),
+                                                    image: NetworkImage(
+                                                        blogItem.image!),
                                                     fit: BoxFit.cover,
                                                   ),
                                                 ),
                                               ),
                                             ),
-                                          if (blogItem.title != null || blogItem.content != null)
+                                          if (blogItem.title != null ||
+                                              blogItem.content != null)
                                             Padding(
-                                              padding: const EdgeInsets.all(10.0),
-                                              child: RichText(
-                                                text: TextSpan(
-                                                  style: const TextStyle(fontSize: 16, color: Colors.black54),
-                                                  children: [
-                                                    if (blogItem.title != null)
-                                                      TextSpan(
-                                                        text: "${blogItem.title!}, ",
-                                                        style: const TextStyle(
-                                                          fontSize: 15,
-                                                          fontFamily: 'Poppins',
-                                                          fontWeight: FontWeight.bold,
-                                                          color: Colors.black,
-                                                        ),
-                                                      ),
-                                                    if (blogItem.content != null)
-                                                      TextSpan(
-                                                          text: blogItem.content!,
-                                                          style: TextStyle(fontSize: 12, fontFamily: 'Poppins', fontWeight: FontWeight.normal)),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                          if (blogItem.price != null)
-                                            Padding(
-                                              padding: const EdgeInsets.all(10),
+                                              padding: const EdgeInsets.only(
+                                                  right: 10.0, left: 10.0),
                                               child: RichText(
                                                 text: TextSpan(
                                                   style: const TextStyle(
-                                                    fontSize: 15,
-                                                    fontFamily: 'Times New Roman',
-                                                    color: Colors.black,
-                                                  ),
+                                                      fontSize: 16,
+                                                      color: Colors.black54),
                                                   children: [
-                                                    TextSpan(
-                                                      text: '\$${blogItem.price ?? 'N/A'} at ',
-                                                    ),
-                                                    TextSpan(
-                                                      text: blogItem.platform ?? 'Unknown',
-                                                      style: const TextStyle(
-                                                        color: Colors.blue, // Makes it look like a link
-                                                        decoration: TextDecoration.underline,
+                                                    if (blogItem.title != null)
+                                                      TextSpan(
+                                                        text:
+                                                            "${blogItem.title!}, ",
+                                                        style: const TextStyle(
+                                                          fontSize: 15,
+                                                          fontFamily: 'Poppins',
+                                                          fontWeight:
+                                                              FontWeight.bold,
+                                                          color: Colors.black,
+                                                        ),
                                                       ),
-                                                      recognizer: TapGestureRecognizer()
-                                                        ..onTap = () {
-                                                          if (blogItem.platformlink != null && blogItem.platformlink!.isNotEmpty) {
-                                                            Navigator.push(
-                                                              context,
-                                                              MaterialPageRoute(
-                                                                builder: (context) => WebViewScreen(url: blogItem.platformlink!),
-                                                              ),
-                                                            );
-                                                          } else {
-                                                            ScaffoldMessenger.of(context).showSnackBar(
-                                                              const SnackBar(content: Text("Platform URL not available")),
-                                                            );
-                                                          }
-                                                        },
-                                                    ),
+                                                    if (blogItem.content !=
+                                                        null)
+                                                      TextSpan(
+                                                          text:
+                                                              blogItem.content!,
+                                                          style: TextStyle(
+                                                              fontSize: 12,
+                                                              fontFamily:
+                                                                  'Poppins',
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .normal)),
                                                   ],
                                                 ),
                                               ),
                                             ),
-                                          Align(
-                                            alignment: Alignment.centerRight,
-                                            child: Padding(
-                                              padding: const EdgeInsets.only(right: 15.0),
-                                              child: ElevatedButton(
-                                                onPressed: () async {
-                                                  if (blogItem.platformlink != null && blogItem.platformlink!.isNotEmpty) {
-                                                    // Start loading state (optional)
-                                                    ScaffoldMessenger.of(context).showSnackBar(
-                                                      const SnackBar(content: Text("Fetching product details...")),
-                                                    );
-
-                                                    try {
-                                                      final response = await http.get(Uri.parse(blogItem.platformlink!));
-                                                      var document = responseToDocument(response);
-                                                      var metadata = MetadataParser.parse(document);
-
-                                                      // Extract Title (limit length)
-                                                      String title = metadata.title ?? "Untitled";
-                                                      if (title.length > 25) {
-                                                        title = title.substring(0, 25);
-                                                      }
-
-                                                      // Extract images from metadata and page body
-                                                      dom.Document html = dom.Document.html(response.body);
-                                                      List<String> images = html
-                                                          .querySelectorAll('img')
-                                                          .map((e) => e.attributes['src'] ?? '')
-                                                          .where((src) => src.startsWith('https://'))
-                                                          .toList();
-
-                                                      // Remove unwanted images
-                                                      List<String> filteredImages = images.where((img) {
-                                                        return !img
-                                                            .contains(RegExp(r"gif|sticker|banner|adroll|logo|icons|resources|marketing|svg|transparent"));
-                                                      }).toList();
-
-                                                      String mainImage = metadata.image ?? (filteredImages.isNotEmpty ? filteredImages.first : '');
-
-                                                      // Navigate to AddTo screen with extracted details
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                          builder: (context) => AddTo(
-                                                            imageUrl: mainImage,
-                                                            webViewLink: blogItem.platformlink!,
-                                                            sharedText: '',
-                                                            title: title,
-                                                            imagesList: filteredImages,
-                                                          ),
+                                          Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              if (blogItem.price != null)
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          top: 10,
+                                                          right: 10,
+                                                          left: 10,
+                                                          bottom: 10),
+                                                  child: RichText(
+                                                    text: TextSpan(
+                                                      style: const TextStyle(
+                                                        fontSize: 15,
+                                                        fontFamily: 'Poppins',
+                                                        color: Colors.black,
+                                                      ),
+                                                      children: [
+                                                        TextSpan(
+                                                          text:
+                                                              '\$${blogItem.price ?? 'N/A'} at ',
                                                         ),
-                                                      );
-                                                    } catch (e) {
-                                                      print("Error fetching data: $e");
-                                                      ScaffoldMessenger.of(context).showSnackBar(
-                                                        const SnackBar(content: Text("Failed to fetch product details")),
-                                                      );
-                                                    }
-                                                  } else {
-                                                    ScaffoldMessenger.of(context).showSnackBar(
-                                                      const SnackBar(content: Text("Platform URL not available")),
-                                                    );
-                                                  }
-                                                },
-                                                style: ElevatedButton.styleFrom(
-                                                  backgroundColor: Colors.black,
-                                                  // Button background color
-                                                  foregroundColor: Colors.white,
-                                                  // Text color
-                                                  padding: const EdgeInsets.symmetric(
-                                                    horizontal: 10, // Reduced horizontal padding
-                                                    vertical: 8, // Reduced vertical padding
-                                                  ),
-                                                  textStyle: const TextStyle(
-                                                    fontSize: 12, // Reduced font size
-                                                    fontFamily: 'Times New Roman',
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                                  shape: RoundedRectangleBorder(
-                                                    borderRadius: BorderRadius.circular(8), // Button border radius
+                                                        TextSpan(
+                                                          text: blogItem
+                                                                  .platform ??
+                                                              'Unknown',
+                                                          style:
+                                                              const TextStyle(
+                                                            color: Colors
+                                                                .blue, // Makes it look like a link
+                                                            decoration:
+                                                                TextDecoration
+                                                                    .underline,
+                                                          ),
+                                                          recognizer:
+                                                              TapGestureRecognizer()
+                                                                ..onTap = () {
+                                                                  if (blogItem.platformlink !=
+                                                                          null &&
+                                                                      blogItem
+                                                                          .platformlink!
+                                                                          .isNotEmpty) {
+                                                                    Navigator
+                                                                        .push(
+                                                                      context,
+                                                                      MaterialPageRoute(
+                                                                        builder:
+                                                                            (context) =>
+                                                                                WebViewScreen(url: blogItem.platformlink!),
+                                                                      ),
+                                                                    );
+                                                                  } else {
+                                                                    ScaffoldMessenger.of(
+                                                                            context)
+                                                                        .showSnackBar(
+                                                                      const SnackBar(
+                                                                          content:
+                                                                              Text("Platform URL not available")),
+                                                                    );
+                                                                  }
+                                                                },
+                                                        ),
+                                                      ],
+                                                    ),
                                                   ),
                                                 ),
-                                                child: const Text('ADD TO GFTR'),
+                                              Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.only(
+                                                          right: 15.0),
+                                                  child: ElevatedButton(
+                                                    onPressed: () async {
+                                                      if (blogItem.platformlink !=
+                                                              null &&
+                                                          blogItem.platformlink!
+                                                              .isNotEmpty) {
+                                                        // Start loading state (optional)
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                              content: Text(
+                                                                  "Fetching product details...")),
+                                                        );
+
+                                                        try {
+                                                          final response =
+                                                              await http.get(Uri
+                                                                  .parse(blogItem
+                                                                      .platformlink!));
+                                                          var document =
+                                                              responseToDocument(
+                                                                  response);
+                                                          var metadata =
+                                                              MetadataParser
+                                                                  .parse(
+                                                                      document);
+
+                                                          // Extract Title (limit length)
+                                                          String title =
+                                                              metadata.title ??
+                                                                  "Untitled";
+                                                          if (title.length >
+                                                              25) {
+                                                            title =
+                                                                title.substring(
+                                                                    0, 25);
+                                                          }
+
+                                                          // Use the current blogItem's image as the main image
+                                                          String mainImage =
+                                                              blogItem.image ??
+                                                                  '';
+
+                                                          // Add the current image to the filtered images list if it exists
+                                                          List<String>
+                                                              filteredImages =
+                                                              [];
+                                                          if (mainImage
+                                                              .isNotEmpty) {
+                                                            filteredImages
+                                                                .add(mainImage);
+                                                          }
+
+                                                          // Add additional images from the webpage
+                                                          dom.Document html =
+                                                              dom.Document.html(
+                                                                  response
+                                                                      .body);
+                                                          List<
+                                                                  String>
+                                                              webImages = html
+                                                                  .querySelectorAll(
+                                                                      'img')
+                                                                  .map((e) {
+                                                                    // Get both src and data-src attributes
+                                                                    String?
+                                                                        src =
+                                                                        e.attributes[
+                                                                            'src'];
+                                                                    String?
+                                                                        dataSrc =
+                                                                        e.attributes[
+                                                                            'data-src'];
+                                                                    String?
+                                                                        srcset =
+                                                                        e.attributes[
+                                                                            'srcset'];
+
+                                                                    // Return the first non-null value
+                                                                    return src ??
+                                                                        dataSrc ??
+                                                                        srcset ??
+                                                                        '';
+                                                                  })
+                                                                  .where((src) =>
+                                                                      src
+                                                                          .isNotEmpty)
+                                                                  .where((src) =>
+                                                                      src.startsWith(
+                                                                          'http://') ||
+                                                                      src.startsWith(
+                                                                          'https://') ||
+                                                                      src.startsWith(
+                                                                          '//'))
+                                                                  .map((src) {
+                                                                    // Convert protocol-relative URLs to https
+                                                                    if (src.startsWith(
+                                                                        '//')) {
+                                                                      return 'https:$src';
+                                                                    }
+                                                                    return src;
+                                                                  })
+                                                                  .where((img) => !img.contains(RegExp(
+                                                                      r"gif|sticker|banner|adroll|logo|icons|resources|marketing|svg|transparent",
+                                                                      caseSensitive:
+                                                                          false)))
+                                                                  .toList();
+
+                                                          // Remove duplicate images
+                                                          webImages = webImages
+                                                              .toSet()
+                                                              .toList();
+
+                                                          // Add images to filtered list
+                                                          filteredImages.addAll(
+                                                              webImages);
+
+                                                          // Modified navigation to use push instead of pushReplacement
+                                                          Navigator.push(
+                                                            context,
+                                                            MaterialPageRoute(
+                                                              builder:
+                                                                  (context) =>
+                                                                      AddTo(
+                                                                imageUrl:
+                                                                    mainImage,
+                                                                webViewLink:
+                                                                    blogItem
+                                                                        .platformlink!,
+                                                                sharedText: '',
+                                                                title: title,
+                                                                imagesList:
+                                                                    filteredImages,
+                                                                isBack: true,
+                                                                price:
+                                                                    '\$${blogItem.price}', // Now this will work as price is an optional parameter
+                                                              ),
+                                                            ),
+                                                          );
+                                                        } catch (e) {
+                                                          print(
+                                                              "Error fetching data: $e");
+                                                          ScaffoldMessenger.of(
+                                                                  context)
+                                                              .showSnackBar(
+                                                            const SnackBar(
+                                                                content: Text(
+                                                                    "Failed to fetch product details")),
+                                                          );
+                                                        }
+                                                      } else {
+                                                        ScaffoldMessenger.of(
+                                                                context)
+                                                            .showSnackBar(
+                                                          const SnackBar(
+                                                              content: Text(
+                                                                  "Platform URL not available")),
+                                                        );
+                                                      }
+                                                    },
+                                                    style: ElevatedButton
+                                                        .styleFrom(
+                                                      backgroundColor: Colors
+                                                          .black, // Button background color
+                                                      foregroundColor: Colors
+                                                          .white, // Text color
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                        horizontal:
+                                                            10, // Reduced horizontal padding
+                                                        vertical:
+                                                            8, // Reduced vertical padding
+                                                      ),
+                                                      textStyle:
+                                                          const TextStyle(
+                                                        fontSize:
+                                                            12, // Reduced font size
+                                                        fontFamily:
+                                                            'Times New Roman',
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                                8), // Button border radius
+                                                      ),
+                                                    ),
+                                                    child: const Text(
+                                                        'ADD TO GFTR'),
+                                                  ),
+                                                ),
                                               ),
-                                            ),
+                                            ],
                                           ),
                                           const SizedBox(height: 10),
                                         ],
@@ -295,25 +480,33 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                   if (blogItemArray != null)
                                     ...blogItemArray.map((blogItem) {
                                       return Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           if (blogItem.image != null)
                                             Container(
                                               width: double.infinity,
                                               height: 400,
-                                              margin: const EdgeInsets.only(bottom: 15),
+                                              margin: const EdgeInsets.only(
+                                                  bottom: 15),
                                               decoration: BoxDecoration(
                                                 image: DecorationImage(
-                                                  image: NetworkImage(blogItem.image!),
+                                                  image: NetworkImage(
+                                                      blogItem.image!),
                                                   fit: BoxFit.cover,
                                                 ),
                                               ),
                                             ),
                                           if (blogItem.content != null)
                                             Padding(
-                                              padding: const EdgeInsets.only(left: 10, right: 10),
-                                              child:
-                                                  Text(blogItem.content!, style: TextStyle(fontFamily: 'Poppins', fontSize: 12, fontWeight: FontWeight.normal)),
+                                              padding: const EdgeInsets.only(
+                                                  left: 10, right: 10),
+                                              child: Text(blogItem.content!,
+                                                  style: TextStyle(
+                                                      fontFamily: 'Poppins',
+                                                      fontSize: 12,
+                                                      fontWeight:
+                                                          FontWeight.normal)),
                                             ),
                                           const SizedBox(height: 10),
                                         ],
@@ -360,25 +553,6 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _controller = WebViewController()
-      ..setBackgroundColor(
-        const Color(0x00000000),
-      )
-      ..setJavaScriptMode(JavaScriptMode.unrestricted)
-      ..enableZoom(true)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
-          onPageFinished: (String url) {
-            setState(() {
-              isLoading = false;
-            });
-          },
-        ),
-      )
-      ..loadRequest(Uri.parse(widget.url));
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -406,7 +580,8 @@ class _WebViewScreenState extends State<WebViewScreen> {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(top: 8.0, left: 8, right: 15, bottom: 8),
+            padding:
+                const EdgeInsets.only(top: 8.0, left: 8, right: 15, bottom: 8),
             child: SizedBox(
                 height: screenHeight(context, dividedBy: 40),
                 child: Image.asset(
@@ -419,7 +594,20 @@ class _WebViewScreenState extends State<WebViewScreen> {
       body: Stack(
         children: [
           change
-              ? WebViewWidget(controller: _controller)
+              ? WebView(
+                  backgroundColor: const Color(0x00000000),
+                  initialUrl: widget.url,
+                  zoomEnabled: true,
+                  javascriptMode: JavascriptMode.unrestricted,
+                  onWebViewCreated: (controller) {
+                    _controller = controller;
+                  },
+                  onPageFinished: (String url) {
+                    setState(() {
+                      isLoading = false;
+                    });
+                  },
+                )
               : spinkitLoader(context, ColorCodes.coral),
           if (isLoading)
             Center(
@@ -432,53 +620,63 @@ class _WebViewScreenState extends State<WebViewScreen> {
               width: screenWidth(context),
               decoration: const BoxDecoration(
                   boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 5)],
-                  borderRadius: BorderRadius.only(topLeft: Radius.circular(23), topRight: Radius.circular(23)),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(23),
+                      topRight: Radius.circular(23)),
                   color: Colors.black),
-              child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-                Row(
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
-                    GestureDetector(
-                        child: const Icon(Icons.arrow_back_ios, color: Colors.white),
-                        onTap: () async {
-                          isBack = await _controller.canGoBack();
-                          if (isBack == true) {
-                            _controller.goBack();
-                          } else {
-                            Navigator.pop(context);
-                          }
-                          setState(() {});
-                        }),
-                    SizedBox(
-                      width: screenWidth(context, dividedBy: 20),
+                    Row(
+                      children: [
+                        GestureDetector(
+                            child: const Icon(Icons.arrow_back_ios,
+                                color: Colors.white),
+                            onTap: () async {
+                              isBack = await _controller.canGoBack();
+                              if (isBack == true) {
+                                _controller.goBack();
+                              } else {
+                                Navigator.pop(context);
+                              }
+                              setState(() {});
+                            }),
+                        SizedBox(
+                          width: screenWidth(context, dividedBy: 20),
+                        ),
+                        GestureDetector(
+                            child: const Icon(Icons.arrow_forward_ios_rounded,
+                                color: Colors.white),
+                            onTap: () async {
+                              bool canGoForward =
+                                  await _controller.canGoForward();
+                              if (canGoForward) {
+                                _controller.goForward();
+                                setState(() {});
+                              }
+                            }),
+                      ],
                     ),
                     GestureDetector(
-                        child: const Icon(Icons.arrow_forward_ios_rounded, color: Colors.white),
-                        onTap: () async {
-                          bool canGoForward = await _controller.canGoForward();
-                          if (canGoForward) {
-                            _controller.goForward();
-                            setState(() {});
-                          }
-                        }),
-                  ],
-                ),
-                GestureDetector(
-                  onTap: () async {
-                    setState(() {
-                      change = false;
-                    });
-                    String? currentUrl = await _controller.currentUrl();
-                    fetchData(url: currentUrl.toString());
-                  },
-                  child: Container(
-                    height: screenHeight(context, dividedBy: 18),
-                    width: screenWidth(context, dividedBy: 2.8),
-                    decoration: BoxDecoration(color: ColorCodes.coral, borderRadius: BorderRadius.circular(100)),
-                    alignment: Alignment.center,
-                    child: customText("Add To Gftr", Colors.white, 12, FontWeight.w100, poppins),
-                  ),
-                )
-              ]),
+                      onTap: () async {
+                        setState(() {
+                          change = false;
+                        });
+                        String? currentUrl = await _controller.currentUrl();
+                        fetchData(url: currentUrl.toString());
+                      },
+                      child: Container(
+                        height: screenHeight(context, dividedBy: 18),
+                        width: screenWidth(context, dividedBy: 2.8),
+                        decoration: BoxDecoration(
+                            color: ColorCodes.coral,
+                            borderRadius: BorderRadius.circular(100)),
+                        alignment: Alignment.center,
+                        child: customText("Add To Gftr", Colors.white, 12,
+                            FontWeight.w100, poppins),
+                      ),
+                    )
+                  ]),
             ),
           ),
         ],
@@ -493,10 +691,14 @@ class _WebViewScreenState extends State<WebViewScreen> {
       var data = MetadataParser.parse(reDocument);
 
       dom.Document html = dom.Document.html(response.body);
-      final allImages = html.querySelectorAll('img').map((e) => e.attributes['src'] ?? '').toList();
+      final allImages = html
+          .querySelectorAll('img')
+          .map((e) => e.attributes['src'] ?? '')
+          .toList();
 
       urlImage = data.image.toString();
-      productImage = allImages.where((element) => element.startsWith('https://')).toList();
+      productImage =
+          allImages.where((element) => element.startsWith('https://')).toList();
 
       // Filter out unwanted images
       productImage.removeWhere((element) =>
@@ -535,7 +737,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
       if (productImage.isEmpty || productImage.length <= 1) {
         try {
-          final String html = await _controller.runJavaScriptReturningResult('''
+          final String html = await _controller.evaluateJavascript('''
             // This JavaScript code will get all the image source URLs from the web page
             var images = document.getElementsByTagName('img');
             var urls = [];
@@ -543,10 +745,13 @@ class _WebViewScreenState extends State<WebViewScreen> {
               urls.push(images[i].src);
             }
             urls.join(';');
-          ''') as String;
+          ''');
 
-          List<String> imageUrls = html.split(';').where((url) => url.isNotEmpty).toList();
-          imageUrls = imageUrls.where((element) => element.startsWith('https://')).toList();
+          List<String> imageUrls =
+              html.split(';').where((url) => url.isNotEmpty).toList();
+          imageUrls = imageUrls
+              .where((element) => element.startsWith('https://'))
+              .toList();
 
           // Apply the same filters
           imageUrls.removeWhere((element) =>
@@ -582,7 +787,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
           Navigator.push(context, MaterialPageRoute(
             builder: (context) {
-              return AddTo(imageUrl: '', webViewLink: url, sharedText: '', title: title ?? '', imagesList: imageUrls);
+              return AddTo(
+                  imageUrl: '',
+                  webViewLink: url,
+                  sharedText: '',
+                  title: title ?? '',
+                  imagesList: imageUrls);
             },
           ));
 
@@ -593,7 +803,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
           print("Error executing JavaScript: $e");
           Navigator.push(context, MaterialPageRoute(
             builder: (context) {
-              return AddTo(imageUrl: urlImage.toString(), webViewLink: url, sharedText: '', title: title ?? '', imagesList: []);
+              return AddTo(
+                  imageUrl: urlImage.toString(),
+                  webViewLink: url,
+                  sharedText: '',
+                  title: title ?? '',
+                  imagesList: []);
             },
           ));
 
@@ -604,7 +819,12 @@ class _WebViewScreenState extends State<WebViewScreen> {
       } else {
         Navigator.push(context, MaterialPageRoute(
           builder: (context) {
-            return AddTo(imageUrl: urlImage.toString(), webViewLink: url, sharedText: '', title: title ?? '', imagesList: productImage);
+            return AddTo(
+                imageUrl: urlImage.toString(),
+                webViewLink: url,
+                sharedText: '',
+                title: title ?? '',
+                imagesList: productImage);
           },
         ));
 
