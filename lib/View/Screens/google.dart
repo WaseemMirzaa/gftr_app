@@ -36,7 +36,7 @@ class _GooglePageState extends State<GooglePage> {
   List<String> ProductImage = [];
   //  late final WebViewController _controller;
   // // final _controller = WebViewController();
-  late final WebViewController _controller;
+  WebViewController? _controller;
 
   String _productPrice = "";
   String _productImage = "";
@@ -98,7 +98,7 @@ class _GooglePageState extends State<GooglePage> {
     if (ProductImage.length <= 1) {
       print("Welcome to amazon");
       try {
-        final String html = await _controller.evaluateJavascript('''
+        final String html = await _controller!.runJavaScriptReturningResult('''
         // This JavaScript code will get all the image source URLs from the web page
         var images = document.getElementsByTagName('img');
         var urls = [];
@@ -106,7 +106,7 @@ class _GooglePageState extends State<GooglePage> {
           urls.push(images[i].src);
         }
         urls.join(';');
-      ''');
+      ''') as String;
         List<String> imageUrls = html.split(';').where((url) => url.isNotEmpty).toList();
         imageUrls = imageUrls.where((element) => element.startsWith('https://')).toList();
         imageUrls.removeWhere((element) => element.toString().contains("gif"));
@@ -188,6 +188,7 @@ class _GooglePageState extends State<GooglePage> {
       });
     }
 
+
     // // final Redocument = parser.parse(response.body);
     // // final imageElements = Redocument.querySelectorAll('img');
 
@@ -197,6 +198,28 @@ class _GooglePageState extends State<GooglePage> {
   }
   @override
   Widget build(BuildContext context) {
+
+    if(_controller == null) {
+      _controller = WebViewController()
+        ..setBackgroundColor(
+          const Color(0x00000000),
+        )
+        ..setJavaScriptMode(JavaScriptMode.unrestricted)
+        ..enableZoom(true)
+        ..setNavigationDelegate(
+          NavigationDelegate(
+            onProgress: (int progress) {
+              // Update loading bar.
+            },
+            onPageFinished: (String url) {
+              setState(() {
+                isLoading = false;
+              });
+            },
+          ),
+        )
+        ..loadRequest(Uri.parse(defauilUrl));
+    }
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -244,15 +267,7 @@ class _GooglePageState extends State<GooglePage> {
       ),
       body: Stack(children: [
         Change == true
-            ? WebView(
-          backgroundColor: const Color(0x00000000),
-          initialUrl: defauilUrl,
-          zoomEnabled: true,
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (controller) {
-            _controller = controller;
-          },
-        )
+            ? WebViewWidget(controller: _controller!)
             : spinkitLoader(context, ColorCodes.coral),
         // Container(
         //    margin: EdgeInsets.only(top: screenHeight(context,dividedBy: 60)),
@@ -322,7 +337,7 @@ class _GooglePageState extends State<GooglePage> {
                   GestureDetector(
                       child: Icon(Icons.arrow_back_ios,color: Colors.white,),
                       onTap: () async {
-                        isBack = await _controller.canGoBack();
+                        isBack = await _controller!.canGoBack();
                         isBack == false
                             ? Navigator.push(
                             context,
@@ -330,7 +345,7 @@ class _GooglePageState extends State<GooglePage> {
                               builder: (context) =>
                                   GetGiftedPublicViewPage(indexdata: 0),
                             ))
-                            : _controller.goBack();
+                            : _controller!.goBack();
                         setState(() {});
                       }),
                   SizedBox(
@@ -339,7 +354,7 @@ class _GooglePageState extends State<GooglePage> {
                   GestureDetector(
                       child: Icon(Icons.arrow_forward_ios_rounded,color: Colors.white,),
                       onTap: () {
-                        _controller.goForward();
+                        _controller!.goForward();
                         setState(() {});
                       }),
                 ],
@@ -349,7 +364,7 @@ class _GooglePageState extends State<GooglePage> {
                   setState(() {
                     Change = false;
                   });
-                  String? url = await _controller.currentUrl();
+                  String? url = await _controller!.currentUrl();
                   // String? url = await _controller.toString();
                   fetchData(url: url.toString());
                 },
