@@ -54,20 +54,16 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
               Container(
                 height: screenHeight(context, dividedBy: 15),
                 child: Padding(
-                    padding: EdgeInsets.only(
-                        left: screenWidth(context, dividedBy: 40)),
+                    padding: EdgeInsets.only(left: screenWidth(context, dividedBy: 40)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
                           onTap: () => Navigator.pop(context),
-                          child: const Icon(Icons.arrow_back_ios_outlined,
-                              size: 20),
+                          child: const Icon(Icons.arrow_back_ios_outlined, size: 20),
                         ),
                         customText(
-                          gftrStoriesCubit
-                                  .gftrStories?.data?.post?[curpage].title ??
-                              'Article',
+                          gftrStoriesCubit.gftrStories?.data?.post?[curpage].title ?? 'Article',
                           Colors.black,
                           25,
                           FontWeight.bold,
@@ -553,6 +549,25 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _controller = WebViewController()
+      ..setBackgroundColor(
+        const Color(0x00000000),
+      )
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..enableZoom(true)
+      ..setNavigationDelegate(
+        NavigationDelegate(
+          onProgress: (int progress) {
+            // Update loading bar.
+          },
+          onPageFinished: (String url) {
+            setState(() {
+              isLoading = false;
+            });
+          },
+        ),
+      )
+      ..loadRequest(Uri.parse(widget.url));
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -594,20 +609,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
       body: Stack(
         children: [
           change
-              ? WebView(
-                  backgroundColor: const Color(0x00000000),
-                  initialUrl: widget.url,
-                  zoomEnabled: true,
-                  javascriptMode: JavascriptMode.unrestricted,
-                  onWebViewCreated: (controller) {
-                    _controller = controller;
-                  },
-                  onPageFinished: (String url) {
-                    setState(() {
-                      isLoading = false;
-                    });
-                  },
-                )
+              ? WebViewWidget(controller: _controller)
               : spinkitLoader(context, ColorCodes.coral),
           if (isLoading)
             Center(
@@ -737,7 +739,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
       if (productImage.isEmpty || productImage.length <= 1) {
         try {
-          final String html = await _controller.evaluateJavascript('''
+          final String html = await _controller.runJavaScriptReturningResult('''
             // This JavaScript code will get all the image source URLs from the web page
             var images = document.getElementsByTagName('img');
             var urls = [];
@@ -745,7 +747,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
               urls.push(images[i].src);
             }
             urls.join(';');
-          ''');
+          ''').toString();
 
           List<String> imageUrls =
               html.split(';').where((url) => url.isNotEmpty).toList();
