@@ -1724,10 +1724,11 @@ class _SettingsPageState extends State<SettingsPage> {
           GestureDetector(
             onTap: () {
               if (text == "GFTR Group Only") {
-                _updatePrivacyOption(true); // Set account to private
-              } else if (text == "Any GFTR") {
-                _updatePrivacyOption(false); // Set account to public
+                _updatePrivacyOption(true);
               }
+              // else if (text == "Any GFTR") {
+              //   _updatePrivacyOption(false); // Set account to public
+              // }
             },
             child: Container(
               height: screenHeight(context, dividedBy: 40),
@@ -1821,19 +1822,22 @@ class _SettingsPageState extends State<SettingsPage> {
                                           : coralTealColor,
                                       only_or_any!,
                                     ),
-                                    SizedBox(
-                                        width: screenWidth(context,
-                                            dividedBy: 10)),
-                                    privacyOptions2(
-                                      "Any GFTR",
-                                      only_or_any == true
-                                          ? coralTealColor
-                                          : whiteColor,
-                                      only_or_any == true
-                                          ? transparentColor
-                                          : coralTealColor,
-                                      !groupOnly,
-                                    ),
+
+                                    // TODO: COMMENTED BY UMAIR DEV
+
+                                    // SizedBox(
+                                    //     width: screenWidth(context,
+                                    //         dividedBy: 10)),
+                                    // privacyOptions2(
+                                    //   "Any GFTR",
+                                    //   only_or_any == true
+                                    //       ? coralTealColor
+                                    //       : whiteColor,
+                                    //   only_or_any == true
+                                    //       ? transparentColor
+                                    //       : coralTealColor,
+                                    //   !groupOnly,
+                                    // ),
                                   ],
                                 ),
 
