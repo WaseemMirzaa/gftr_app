@@ -388,22 +388,20 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                                           Navigator.push(
                                                             context,
                                                             MaterialPageRoute(
-                                                              builder:
-                                                                  (context) =>
-                                                                      AddTo(
-                                                                imageUrl:
-                                                                    mainImage,
-                                                                webViewLink:
-                                                                    blogItem
-                                                                        .platformlink!,
-                                                                sharedText: '',
-                                                                title: title,
-                                                                imagesList:
-                                                                    filteredImages,
-                                                                isBack: true,
-                                                                price:
-                                                                    ' ${blogItem.price}',
-                                                              ),
+                                                              builder: (context) => AddTo(
+                                                                  imageUrl:
+                                                                      mainImage,
+                                                                  webViewLink:
+                                                                      blogItem
+                                                                          .platformlink!,
+                                                                  sharedText:
+                                                                      '',
+                                                                  title: title,
+                                                                  imagesList:
+                                                                      filteredImages,
+                                                                  isBack: true,
+                                                                  price: blogItem
+                                                                      .price),
                                                             ),
                                                           );
                                                         } catch (e) {
