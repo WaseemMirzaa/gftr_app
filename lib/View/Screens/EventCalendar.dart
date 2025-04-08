@@ -341,8 +341,8 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 color: Colors.black),
             child: TableCalendar(
               calendarFormat: _calendarFormat,
-              firstDay: DateTime(2023),
-              lastDay: DateTime(2025, 12, 31), // Updated to December 31, 2025
+              firstDay: DateTime(1900), // Set to a far past date
+              lastDay: DateTime(2100), // Set to a far future date
               locale: 'en_US',
               focusedDay: _focusedDay,
               daysOfWeekHeight: 50,
