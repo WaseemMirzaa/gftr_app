@@ -1682,18 +1682,25 @@ class _SettingsPageState extends State<SettingsPage> {
     birth_holiday_email();
     setState(() {});
 
+    // Set default to GFTR Group Only (private)
     fetchAccountPrivacyStatus().then((isPrivate) {
       setState(() {
-        only_or_any = !isPrivate!; // If private, set to GFTR Group Only (false)
+        only_or_any = false; // false means GFTR Group Only
       });
     });
   }
 
   Future<bool?> fetchAccountPrivacyStatus() async {
-    // Fetch the account's privacy status (private or public)
-    // Replace this with your actual logic to fetch the privacy status
-    // For example, from an API or SharedPreferences
     bool? isPrivate = await prefsService.getBoolData('isPrivate');
+    // If no preference is set yet, default to private (GFTR Group Only)
+    if (isPrivate == null) {
+      await prefsService.setBoolData('isPrivate', true);
+      await settingCubit.getSetting(
+        context: context,
+        isPrivate: "true",
+      );
+      return true;
+    }
     return isPrivate;
   }
 
@@ -1702,7 +1709,6 @@ class _SettingsPageState extends State<SettingsPage> {
       only_or_any = !isPrivate; // Update the UI
     });
 
-    // Save the updated preference to the backend or local storage
     await prefsService.setBoolData('isPrivate', isPrivate);
     await settingCubit.getSetting(
       context: context,

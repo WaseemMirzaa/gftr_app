@@ -244,8 +244,8 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                                           .infinity, // Full width
                                                       decoration: BoxDecoration(
                                                         borderRadius:
-                                                            BorderRadius.circular(
-                                                                15), // Optional: rounded corners
+                                                            BorderRadius
+                                                                .circular(15),
                                                         image: DecorationImage(
                                                           image: NetworkImage(
                                                             "${gftrStoriesCubit.gftrStories?.data?.post?[index].image}",
