@@ -9,6 +9,8 @@ import 'package:gftr/View/Screens/ManageBottom/getGiftedPublicView.dart';
 import 'package:gftr/View/Widgets/flutterToast.dart';
 import 'package:gftr/ViewModel/apiServices.dart';
 
+import '../../View/Screens/google.dart';
+
 abstract class AddToState {}
 
 class AddToStateInitials extends AddToState {}
@@ -27,10 +29,11 @@ class AddToCubit extends Cubit<AddToState> {
       required String price,
       required String notes,
       required String image,
-       String? userId,
-      required String webViewLink ,
+      String? userId,
+      required String webViewLink,
       required bool starredGift,
-      required String id}) async {
+      required String id,
+      bool isFromGooglePage = false}) async {
     emit(AddToStateLoading());
     Map<String, dynamic> body = {
       "decData": {
@@ -41,23 +44,29 @@ class AddToCubit extends Cubit<AddToState> {
         "userIdView": userId,
         "starredGift": starredGift,
         "id": id,
-        "webViewLink":webViewLink
+        "webViewLink": webViewLink
       }
     };
     Encryption? response = await DioClient().encryptData(body);
     if (response != null && response.status!) {
       log('Id : $id');
-      Decryption? data = await DioClient()
-          .decryptData(ApiConstants.addtoForm, response.data!);
+      Decryption? data =
+          await DioClient().decryptData(ApiConstants.addtoForm, response.data!);
       if (data != null) {
         AddForm? addForm = await DioClient().addForm(data.data!);
         if (addForm?.addToData != null) {
-          // flutterToast(addForm!.message!, true);
           emit(AddToStateSuccess());
-          Navigator.push(
+          if (isFromGooglePage) {
+            // If coming from Google page, set the default URL and create new instance
+            defauilUrl = webViewLink;
+            Navigator.pushReplacement(
               context,
-              MaterialPageRoute(
-                  builder: (context) => GetGiftedPublicViewPage(indexdata: 0)));
+              MaterialPageRoute(builder: (context) => GooglePage()),
+            );
+          } else {
+            // For other pages, just pop back
+            Navigator.pop(context);
+          }
         } else {
           emit(AddToStateError());
           flutterToast("Something went wrong!" ?? 'Not Add Data', false);

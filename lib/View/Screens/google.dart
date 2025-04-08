@@ -26,17 +26,29 @@ class GooglePage extends StatefulWidget {
 }
 
 class _GooglePageState extends State<GooglePage> {
+  late WebViewController _controller;
+  bool Change = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize WebView with default URL
+    initializeWebView();
+  }
+
+  void initializeWebView() {
+    setState(() {
+      Change = true;
+    });
+  }
+
   String? urlImage;
   String? Title;
   bool? isBack;
   bool isLoading = true;
-  bool Change = true;
   String? pageContent;
   var loadingPercentage = 0;
   List<String> ProductImage = [];
-  //  late final WebViewController _controller;
-  // // final _controller = WebViewController();
-  late final WebViewController _controller;
 
   String _productPrice = "";
   String _productImage = "";
@@ -49,6 +61,7 @@ class _GooglePageState extends State<GooglePage> {
 
     return filteredImages;
   }
+
   Future fetchData({required String url}) async {
     print(' url : ${url}');
     print("Welcome to other preformat");
@@ -62,32 +75,48 @@ class _GooglePageState extends State<GooglePage> {
         .map((e) => e.attributes['src'] ?? '')
         .toList();
     urlImage = data.image.toString();
-    ProductImage = _allimages.where((element) => element.startsWith('https://')).toList();
+    ProductImage =
+        _allimages.where((element) => element.startsWith('https://')).toList();
     //  List filteredImages = filterUnsportingImages(ProductImage);
     ProductImage.removeWhere((element) => element.toString().contains("gif"));
-    ProductImage.removeWhere((element) => element.toString().contains("sticker"));
-    ProductImage.removeWhere((element) => element.toString().contains("https://cdn.builder.io"));
-    ProductImage.removeWhere((element) => element.toString().contains("\$pdp_sw20\$"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("sticker"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("https://cdn.builder.io"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("\$pdp_sw20\$"));
     ProductImage.removeWhere((element) => element.toString().contains("/G/31"));
     ProductImage.removeWhere((element) => element.toString().contains("/I/01"));
     ProductImage.removeWhere((element) => element.toString().contains("I/11"));
-    ProductImage.removeWhere((element) => element.toString().contains("/m/v/3/"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("/m/v/3/"));
     ProductImage.removeWhere((element) => element.toString().contains("q=90"));
     ProductImage.removeWhere((element) => element.toString().contains("q=50"));
     ProductImage.removeWhere((element) => element.toString().contains("svg"));
-    ProductImage.removeWhere((element) => element.toString().contains("banner"));
-    ProductImage.removeWhere((element) => element.toString().contains("banner"));
-    ProductImage.removeWhere((element) => element.toString().contains("LT33a2OUi"));
-    ProductImage.removeWhere((element) => element.toString().contains("adroll"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("banner"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("banner"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("LT33a2OUi"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("adroll"));
     ProductImage.removeWhere((element) => element.toString().contains("Logo"));
-    ProductImage.removeWhere((element) => element.toString().contains("themes"));
-    ProductImage.removeWhere((element) => element.toString().contains("pageSource"));
-    ProductImage.removeWhere((element) => element.toString().contains("AC_SX96_SY48_QL70"));
-    ProductImage.removeWhere((element) => element.toString().contains("s-l140"));
-    ProductImage.removeWhere((element) => element.toString().contains("marketing"));
-    ProductImage.removeWhere((element) => element.toString().contains("transparent"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("themes"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("pageSource"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("AC_SX96_SY48_QL70"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("s-l140"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("marketing"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("transparent"));
     ProductImage.removeWhere((element) => element.toString().contains("icons"));
-    ProductImage.removeWhere((element) => element.toString().contains("resources"));
+    ProductImage.removeWhere(
+        (element) => element.toString().contains("resources"));
     ProductImage.removeWhere((element) => element.toString().contains("BwE"));
     //  print("filteredImages :$filteredImages");
     if (data.title.toString().length <= 25) {
@@ -107,37 +136,57 @@ class _GooglePageState extends State<GooglePage> {
         }
         urls.join(';');
       ''');
-        List<String> imageUrls = html.split(';').where((url) => url.isNotEmpty).toList();
-        imageUrls = imageUrls.where((element) => element.startsWith('https://')).toList();
+        List<String> imageUrls =
+            html.split(';').where((url) => url.isNotEmpty).toList();
+        imageUrls = imageUrls
+            .where((element) => element.startsWith('https://'))
+            .toList();
         imageUrls.removeWhere((element) => element.toString().contains("gif"));
-        imageUrls.removeWhere((element) => element.toString().contains("sticker"));
-        imageUrls.removeWhere((element) => element.toString().contains("https://cdn.builder.io"));
-        imageUrls.removeWhere((element) => element.toString().contains("\$pdp_sw20\$"));
-        imageUrls.removeWhere((element) => element.toString().contains("/G/31"));
-        imageUrls.removeWhere((element) => element.toString().contains("/I/01"));
+        imageUrls
+            .removeWhere((element) => element.toString().contains("sticker"));
+        imageUrls.removeWhere(
+            (element) => element.toString().contains("https://cdn.builder.io"));
+        imageUrls.removeWhere(
+            (element) => element.toString().contains("\$pdp_sw20\$"));
+        imageUrls
+            .removeWhere((element) => element.toString().contains("/G/31"));
+        imageUrls
+            .removeWhere((element) => element.toString().contains("/I/01"));
         imageUrls.removeWhere((element) => element.toString().contains("I/11"));
-        imageUrls.removeWhere((element) => element.toString().contains("/m/v/3/"));
+        imageUrls
+            .removeWhere((element) => element.toString().contains("/m/v/3/"));
         imageUrls.removeWhere((element) => element.toString().contains("q=90"));
         imageUrls.removeWhere((element) => element.toString().contains("svg"));
-        imageUrls.removeWhere((element) => element.toString().contains("banner"));
-        imageUrls.removeWhere((element) => element.toString().contains("banner"));
-        imageUrls.removeWhere((element) => element.toString().contains("LT33a2OUi"));
-        imageUrls.removeWhere((element) => element.toString().contains("adroll"));
+        imageUrls
+            .removeWhere((element) => element.toString().contains("banner"));
+        imageUrls
+            .removeWhere((element) => element.toString().contains("banner"));
+        imageUrls
+            .removeWhere((element) => element.toString().contains("LT33a2OUi"));
+        imageUrls
+            .removeWhere((element) => element.toString().contains("adroll"));
         imageUrls.removeWhere((element) => element.toString().contains("Logo"));
-        imageUrls.removeWhere((element) => element.toString().contains("themes"));
+        imageUrls
+            .removeWhere((element) => element.toString().contains("themes"));
         imageUrls.removeWhere((element) => element.toString().contains("63f"));
         imageUrls.removeWhere((element) => element.toString().contains("64d"));
-        imageUrls.removeWhere((element) => element.toString().contains("pageSource"));
+        imageUrls.removeWhere(
+            (element) => element.toString().contains("pageSource"));
         imageUrls.removeWhere((element) => element.toString().contains("64e"));
         imageUrls.removeWhere((element) => element.toString().contains("7b1"));
         imageUrls.removeWhere((element) => element.toString().contains("64c"));
         imageUrls.removeWhere((element) => element.toString().contains("bing"));
         imageUrls.removeWhere((element) => element.toString().contains("643"));
-        imageUrls.removeWhere((element) => element.toString().contains("s-l140"));
-        imageUrls.removeWhere((element) => element.toString().contains("marketing"));
-        imageUrls.removeWhere((element) => element.toString().contains("transparent"));
-        imageUrls.removeWhere((element) => element.toString().contains("icons"));
-        imageUrls.removeWhere((element) => element.toString().contains("resources"));
+        imageUrls
+            .removeWhere((element) => element.toString().contains("s-l140"));
+        imageUrls
+            .removeWhere((element) => element.toString().contains("marketing"));
+        imageUrls.removeWhere(
+            (element) => element.toString().contains("transparent"));
+        imageUrls
+            .removeWhere((element) => element.toString().contains("icons"));
+        imageUrls
+            .removeWhere((element) => element.toString().contains("resources"));
         imageUrls.removeWhere((element) => element.toString().contains("BwE"));
         print("imageUrls $imageUrls");
         //List filteredImages = filterUnsportingImages(imageUrls);
@@ -195,6 +244,7 @@ class _GooglePageState extends State<GooglePage> {
     //  //     .map((element) => element.attributes['src'] ?? '')
     //  //     .toList();
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -231,7 +281,8 @@ class _GooglePageState extends State<GooglePage> {
         ),
         actions: [
           Padding(
-            padding: const EdgeInsets.only(top: 8.0,left: 8,right: 15,bottom: 8),
+            padding:
+                const EdgeInsets.only(top: 8.0, left: 8, right: 15, bottom: 8),
             child: SizedBox(
                 height: screenHeight(context, dividedBy: 40),
                 // width: screenWidth(context,dividedBy: 20),
@@ -245,14 +296,14 @@ class _GooglePageState extends State<GooglePage> {
       body: Stack(children: [
         Change == true
             ? WebView(
-          backgroundColor: const Color(0x00000000),
-          initialUrl: defauilUrl,
-          zoomEnabled: true,
-          javascriptMode: JavascriptMode.unrestricted,
-          onWebViewCreated: (controller) {
-            _controller = controller;
-          },
-        )
+                backgroundColor: const Color(0x00000000),
+                initialUrl: defauilUrl,
+                zoomEnabled: true,
+                javascriptMode: JavascriptMode.unrestricted,
+                onWebViewCreated: (controller) {
+                  _controller = controller;
+                },
+              )
             : spinkitLoader(context, ColorCodes.coral),
         // Container(
         //    margin: EdgeInsets.only(top: screenHeight(context,dividedBy: 60)),
@@ -314,68 +365,77 @@ class _GooglePageState extends State<GooglePage> {
             decoration: BoxDecoration(
                 boxShadow: [BoxShadow(color: Colors.black45, blurRadius: 5)],
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(23), topRight: Radius.circular(23)),
+                    topLeft: Radius.circular(23),
+                    topRight: Radius.circular(23)),
                 color: Colors.black),
-            child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
-              Row(
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  GestureDetector(
-                      child: Icon(Icons.arrow_back_ios,color: Colors.white,),
-                      onTap: () async {
-                        isBack = await _controller.canGoBack();
-                        isBack == false
-                            ? Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  GetGiftedPublicViewPage(indexdata: 0),
-                            ))
-                            : _controller.goBack();
-                        setState(() {});
-                      }),
-                  SizedBox(
-                    width: screenWidth(context, dividedBy: 20),
+                  Row(
+                    children: [
+                      GestureDetector(
+                          child: Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white,
+                          ),
+                          onTap: () async {
+                            isBack = await _controller.canGoBack();
+                            isBack == false
+                                ? Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          GetGiftedPublicViewPage(indexdata: 0),
+                                    ))
+                                : _controller.goBack();
+                            setState(() {});
+                          }),
+                      SizedBox(
+                        width: screenWidth(context, dividedBy: 20),
+                      ),
+                      GestureDetector(
+                          child: Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            color: Colors.white,
+                          ),
+                          onTap: () {
+                            _controller.goForward();
+                            setState(() {});
+                          }),
+                    ],
                   ),
                   GestureDetector(
-                      child: Icon(Icons.arrow_forward_ios_rounded,color: Colors.white,),
-                      onTap: () {
-                        _controller.goForward();
-                        setState(() {});
-                      }),
-                ],
-              ),
-              GestureDetector(
-                onTap: () async {
-                  setState(() {
-                    Change = false;
-                  });
-                  String? url = await _controller.currentUrl();
-                  // String? url = await _controller.toString();
-                  fetchData(url: url.toString());
-                },
-                child: Container(
-                  height: screenHeight(context, dividedBy: 18),
-                  width: screenWidth(context, dividedBy: 2.8),
-                  decoration: BoxDecoration(
-                    // boxShadow: [
-                    //   BoxShadow(
-                    //     color: Colors.grey,
-                    //     blurRadius: 0.0,
-                    //     // spreadRadius: 0.0,
-                    //     offset: Offset(
-                    //       1.0,
-                    //       0.0,
-                    //     ),
-                    //   )
-                    // ],
-                      color: ColorCodes.coral,
-                      borderRadius: BorderRadius.circular(100)),
-                  alignment: Alignment.center,
-                  child: customText(
-                      "Add To Gftr", Colors.white, 12, FontWeight.w100, poppins),
-                ),
-              )
-            ]),
+                    onTap: () async {
+                      setState(() {
+                        Change = false;
+                      });
+                      String? url = await _controller.currentUrl();
+                      // String? url = await _controller.toString();
+                      fetchData(url: url.toString());
+                    },
+                    child: Container(
+                      height: screenHeight(context, dividedBy: 18),
+                      width: screenWidth(context, dividedBy: 2.8),
+                      decoration: BoxDecoration(
+                          // boxShadow: [
+                          //   BoxShadow(
+                          //     color: Colors.grey,
+                          //     blurRadius: 0.0,
+                          //     // spreadRadius: 0.0,
+                          //     offset: Offset(
+                          //       1.0,
+                          //       0.0,
+                          //     ),
+                          //   )
+                          // ],
+                          color: ColorCodes.coral,
+                          borderRadius: BorderRadius.circular(100)),
+                      alignment: Alignment.center,
+                      child: customText("Add To Gftr", Colors.white, 12,
+                          FontWeight.w100, poppins),
+                    ),
+                  )
+                ]),
           ),
         ),
       ]),
