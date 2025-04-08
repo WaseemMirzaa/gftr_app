@@ -117,7 +117,7 @@ class _ContactPageState extends State<ContactPage> {
                           left: screenWidth(context, dividedBy: 10),
                         ),
                         child: customText(
-                            "Drop us a line with any questions, comments or concernsand we’ll get right back to you!",
+                            "Drop us a line with any questions, comments or concerns and we’ll get right back to you!",
                             ColorCodes.greyText,
                             14,
                             FontWeight.w400,

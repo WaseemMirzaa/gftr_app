@@ -402,7 +402,7 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                                                     filteredImages,
                                                                 isBack: true,
                                                                 price:
-                                                                    '\$${blogItem.price}', // Now this will work as price is an optional parameter
+                                                                    ' ${blogItem.price}',
                                                               ),
                                                             ),
                                                           );
