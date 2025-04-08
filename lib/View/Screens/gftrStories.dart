@@ -146,28 +146,40 @@ class _GfterStoriesState extends State<GfterStories>
                                                 Positioned(
                                                   bottom: 10,
                                                   left: 10,
-                                                  child: Container(
-                                                    width: screenWidth(context,
-                                                        dividedBy: 1.6),
-                                                    padding: EdgeInsets.all(
-                                                        screenWidth(context,
-                                                            dividedBy: 30)),
-                                                    decoration: BoxDecoration(
-                                                      color: Colors.black54,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              10),
-                                                    ),
-                                                    child: customText(
-                                                      item.title ?? '',
-                                                      Colors.white,
-                                                      14,
-                                                      FontWeight.w500,
-                                                      poppins,
-                                                      maxLines: 2,
+                                                  child: IntrinsicWidth(
+                                                    child: Container(
+                                                      height: 55,
+                                                      padding:
+                                                          EdgeInsets.symmetric(
+                                                              horizontal: 16),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.black
+                                                            .withOpacity(0.6),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(10),
+                                                      ),
+                                                      alignment:
+                                                          Alignment.centerLeft,
+                                                      child: Text(
+                                                        item.title?.isNotEmpty ==
+                                                                true
+                                                            ? item.title!
+                                                            : 'Placeholder Title',
+                                                        style: TextStyle(
+                                                          color: Colors.white,
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          fontFamily: poppins,
+                                                        ),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
                                                     ),
                                                   ),
-                                                )
+                                                ),
                                               ],
                                             ),
                                           ),
@@ -238,24 +250,34 @@ class _GfterStoriesState extends State<GfterStories>
                                             child: Padding(
                                               padding:
                                                   const EdgeInsets.all(12.0),
-                                              child: Container(
-                                                height: 50,
-                                                width: 230,
-                                                decoration: BoxDecoration(
-                                                  color: Colors.black
-                                                      .withOpacity(0.6),
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                ),
-                                                alignment: Alignment.centerLeft,
-                                                padding: EdgeInsets.all(12),
-                                                child: customText(
-                                                  post.title ?? '',
-                                                  Colors.white,
-                                                  14,
-                                                  FontWeight.w500,
-                                                  poppins,
-                                                  maxLines: 2,
+                                              child: IntrinsicWidth(
+                                                child: Container(
+                                                  height: 55,
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black
+                                                        .withOpacity(0.6),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            12),
+                                                  ),
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  padding: const EdgeInsets
+                                                          .symmetric(
+                                                      horizontal: 12),
+                                                  child: Text(
+                                                    post.title ?? '',
+                                                    style: TextStyle(
+                                                      color: Colors.white,
+                                                      fontSize: 14,
+                                                      fontWeight:
+                                                          FontWeight.w500,
+                                                      fontFamily: poppins,
+                                                    ),
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                  ),
                                                 ),
                                               ),
                                             ),
