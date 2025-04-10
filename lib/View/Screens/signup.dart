@@ -30,7 +30,7 @@ class _SignUpState extends State<SignUp> {
     return SizedBox(height: screenHeight(context, dividedBy: 60));
   }
 
-   SignUpCubit signUpCubit = SignUpCubit();
+  SignUpCubit signUpCubit = SignUpCubit();
 
   FocusNode firstNameNode = FocusNode();
   FocusNode lastNameNode = FocusNode();
@@ -108,7 +108,7 @@ class _SignUpState extends State<SignUp> {
                           poppins),
                     ),
                     SizedBox(
-                      height: screenHeight(context, dividedBy: 30),
+                      height: screenHeight(context, dividedBy: 90),
                     ),
                     Expanded(
                       child: SingleChildScrollView(
@@ -208,57 +208,58 @@ class _SignUpState extends State<SignUp> {
                             Center(
                                 child: GestureDetector(
                                     onTap: () async {
-                                      String pattern = r'(^(?:[+0]9)?[0-9]{10,12}$)';
-                                    RegExp regExp = RegExp(pattern);
-                                    String _pattern1 = r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-                                    RegExp _regExp1 = RegExp(_pattern1);
-                                        if (firstName.text.isEmpty) {
-                                          flutterToast(
-                                              "Please enter firstname", false);
-                                        } else if (lastName.text.isEmpty) {
-                                          flutterToast(
-                                              "Please enter lastname", false);
-                                        } else if (phone.text.isEmpty) {
-                                          flutterToast(
-                                              "Please enter PhoneNumber",
-                                              false);
-                                        } else if (email.text.isEmpty) {
-                                          flutterToast(
-                                              "Please enter email", false);
-                                        } else if (!_regExp1.hasMatch(email.text)) {
-                                          flutterToast(
-                                              'Please enter valid Email',
-                                              false);
-                                        }
-                                        else if (password.text.isEmpty) {
-                                          flutterToast(
-                                              "Please enter password", false);
-                                        } else if (confirmPassword
-                                            .text.isEmpty) {
-                                          flutterToast(
-                                              "Please enter confirm password",
-                                              false);
-                                        } else if (password.text !=
-                                            confirmPassword.text) {
-                                          flutterToast(
-                                              "password not match", false);
-                                        } else if (countryCodeSelect == '') {
-                                          flutterToast(
-                                              "Please Select Country Code",
-                                              false);
-                                        } else if (!regExp.hasMatch(phone.text)) {
-                                          flutterToast(
-                                              'Please enter valid mobile number',
-                                              false);
-                                        } else {
-                                          signUpCubit.signUpService(
-                                              email: email.text,
-                                              firstname: firstName.text,
-                                              lastname: lastName.text,
-                                              phoneNumber: phone.text,
-                                              password: password.text,
-                                              confirmPassword : confirmPassword.text, context: context);
-                                        }
+                                      String pattern =
+                                          r'(^(?:[+0]9)?[0-9]{10,12}$)';
+                                      RegExp regExp = RegExp(pattern);
+                                      String _pattern1 =
+                                          r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+                                      RegExp _regExp1 = RegExp(_pattern1);
+                                      if (firstName.text.isEmpty) {
+                                        flutterToast(
+                                            "Please enter first name", false);
+                                      } else if (lastName.text.isEmpty) {
+                                        flutterToast(
+                                            "Please enter last name", false);
+                                      } else if (phone.text.isEmpty) {
+                                        flutterToast(
+                                            "Please enter Phone Number", false);
+                                      } else if (email.text.isEmpty) {
+                                        flutterToast(
+                                            "Please enter email", false);
+                                      } else if (!_regExp1
+                                          .hasMatch(email.text)) {
+                                        flutterToast(
+                                            'Please enter valid Email', false);
+                                      } else if (password.text.isEmpty) {
+                                        flutterToast(
+                                            "Please enter password", false);
+                                      } else if (confirmPassword.text.isEmpty) {
+                                        flutterToast(
+                                            "Please enter confirm password",
+                                            false);
+                                      } else if (password.text !=
+                                          confirmPassword.text) {
+                                        flutterToast(
+                                            "password not match", false);
+                                      } else if (countryCodeSelect == '') {
+                                        flutterToast(
+                                            "Please Select Country Code",
+                                            false);
+                                      } else if (!regExp.hasMatch(phone.text)) {
+                                        flutterToast(
+                                            'Please enter valid mobile number',
+                                            false);
+                                      } else {
+                                        signUpCubit.signUpService(
+                                            email: email.text,
+                                            firstname: firstName.text,
+                                            lastname: lastName.text,
+                                            phoneNumber: phone.text,
+                                            password: password.text,
+                                            confirmPassword:
+                                                confirmPassword.text,
+                                            context: context);
+                                      }
                                       setState(() {});
                                     },
                                     child: Container(

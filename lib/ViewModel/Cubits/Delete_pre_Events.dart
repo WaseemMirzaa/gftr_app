@@ -25,25 +25,22 @@ class DeletePreEventsCubit extends Cubit<DeletePreEventsState> {
   // ViewEventsCubit viewEventsCubit =ViewEventsCubit();
 
   Future<void> Delete_frdss(BuildContext context,
-      {required String c_id
-      }) async {
+      {required String c_id}) async {
     emit(DeletePreEventsLoading());
     Map<String, dynamic> body = {
-      "decData": {
-        "id":c_id
-      }
+      "decData": {"id": c_id}
     };
     print("Delete friends:${body}");
     Encryption? response = await DioClient().encryptData(body);
     if (response != null && response.status!) {
-      Decryption? data = await DioClient().decryptData(ApiConstants.Delete_Preevent, response.data!);
+      Decryption? data = await DioClient()
+          .decryptData(ApiConstants.Delete_Preevent, response.data!);
       if (data != null) {
-        Deleteeventes? _delteevent = await DioClient().DeletePreremainder(data.data!);
+        Deleteeventes? _delteevent =
+            await DioClient().DeletePreremainder(data.data!);
         if (_delteevent != null && _delteevent.status == true) {
-          flutterToast(_delteevent.message.toString(), true);
+          flutterToast("Event Removed Successfully", true); // Updated message
           emit(DeletePreEventsSuccess());
-
-          // flutterToast("your data success fully add", false);
         } else {
           emit(DeletePreEventsError());
           flutterToast(_delteevent!.message.toString(), false);

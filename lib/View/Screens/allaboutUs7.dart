@@ -106,7 +106,7 @@ class _AllAboutUs07State extends State<AllAboutUs07> {
                     EdgeInsets.only(top: screenHeight(context, dividedBy: 80)),
                 width: screenWidth(context, dividedBy: 1.35),
                 child: customText(
-                    "(And don’t worry. We’ve all forgotten the occasional birthday but not anymore! Just check your settings to make sure we will always remind you in plenty of time to get that perfect gift)",
+                    "(And don’t worry. We’ve all forgotten the occasional birthday... but not anymore! Just check your settings to make sure we will always remind you in plenty of time to get that perfect gift)",
                     Colors.white,
                     13,
                     FontWeight.w400,
