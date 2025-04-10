@@ -1840,6 +1840,9 @@ class _SettingsPageState extends State<SettingsPage> {
                                     // ),
                                   ],
                                 ),
+                                const SizedBox(height: 10),
+                                Text('Public account options coming soon!'),
+                                const SizedBox(height: 10),
 
                                 //-----------------Privacy-------------------
                               ],
