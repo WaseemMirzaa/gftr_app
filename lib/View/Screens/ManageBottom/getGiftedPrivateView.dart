@@ -49,7 +49,7 @@ class _GetGiftedPrivateViewPageState extends State<GetGiftedPrivateViewPage> {
         drawer: drawerWidget(context),
         floatingActionButton:widget.indexdata == 2
             ? null: FloatingActionButton(
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.transparent,
             child: Image.asset(ImageConstants.bottomNavFloat),
             onPressed: () {
               Navigator.pushReplacement(

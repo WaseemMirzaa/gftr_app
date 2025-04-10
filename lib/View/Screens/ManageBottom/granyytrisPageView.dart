@@ -55,7 +55,7 @@ class _GrannyTrishViePageState extends State<GrannyTrishViePage> {
         floatingActionButton: indexdata == 2
             ? null
             : FloatingActionButton(
-                backgroundColor: Colors.blue,
+            backgroundColor: Colors.transparent,
 
                 child: Image.asset(ImageConstants.bottomNavFloat),
                 onPressed: () {

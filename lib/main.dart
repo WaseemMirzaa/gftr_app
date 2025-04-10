@@ -128,6 +128,20 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           BlocProvider(create: (context) => Fetch_All_GiftsCubit()),
         ],
         child: MaterialApp(
+          theme: ThemeData(
+            scaffoldBackgroundColor: Colors.white,
+            canvasColor: Colors.white,
+            colorScheme: ColorScheme.light(
+              background: Colors.white,
+            ),
+
+            appBarTheme: AppBarTheme(
+              iconTheme: IconThemeData(color: Colors.white),
+              actionsIconTheme: IconThemeData(color: Colors.white),
+            ),
+            // Add this to ensure the background is white
+            // : Colors.white,
+          ),
           navigatorKey: _navKey,
           debugShowCheckedModeBanner: false,
           onGenerateRoute: (RouteSettings settings) {

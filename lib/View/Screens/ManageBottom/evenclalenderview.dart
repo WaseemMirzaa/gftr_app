@@ -38,7 +38,7 @@ class _CalanderViewPageState extends State<CalanderViewPage> {
             ? indexdata == 2
             ? null
             : FloatingActionButton(
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.transparent,
             child: Image.asset(ImageConstants.bottomNavFloat),
             onPressed: () {
               Navigator.pushReplacement(

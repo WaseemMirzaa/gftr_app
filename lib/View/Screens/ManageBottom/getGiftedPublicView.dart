@@ -53,7 +53,7 @@ class _GetGiftedPublicViewPageState extends State<GetGiftedPublicViewPage> {
         floatingActionButton:widget.indexdata == 2
             ? null
             : FloatingActionButton(
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.transparent,
             child: Image.asset(ImageConstants.bottomNavFloat),
             onPressed: () {
               Navigator.pushReplacement(

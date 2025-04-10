@@ -59,7 +59,7 @@ class _GfterStoryViewPageState extends State<GfterStoryViewPage> {
         floatingActionButton: indexdata == 2
             ? null
             : FloatingActionButton(
-            backgroundColor: Colors.black,
+            backgroundColor: Colors.transparent,
             child: bottombarblack == true
                 ? Image.asset(ImageConstants.gftrRoundBlack)
                 : Image.asset(ImageConstants.bottomNavFloat),

@@ -53,7 +53,7 @@ class _FolderViewPageState extends State<FolderViewPage> {
         floatingActionButton:indexdata == 2
             ? null
             : FloatingActionButton(
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.transparent,
             child: Image.asset(ImageConstants.bottomNavFloat),
             onPressed: () {
               // _handleSignIn();

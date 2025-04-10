@@ -56,7 +56,7 @@ class _ArticlsViewPageState extends State<ArticlsViewPage> {
             ?indexdata == 2
             ? null
             : FloatingActionButton(
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.transparent,
             child: Image.asset(ImageConstants.bottomNavFloat),
             onPressed: () {
               // _handleSignIn();

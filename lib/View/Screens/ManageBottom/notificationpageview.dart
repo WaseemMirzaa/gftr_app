@@ -53,7 +53,7 @@ class _NotificationPageViewState extends State<NotificationPageView> {
         floatingActionButton:indexdata == 2
             ? null
             : FloatingActionButton(
-            backgroundColor: Colors.blue,
+            backgroundColor: Colors.transparent,
             child: Image.asset(ImageConstants.bottomNavFloat),
             onPressed: () {
               // _handleSignIn();
