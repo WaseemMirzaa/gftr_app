@@ -438,7 +438,8 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                                       ),
                                                       textStyle:
                                                           const TextStyle(
-                                                        fontSize: 12,
+                                                        fontSize:
+                                                            12, // Reduced font size
                                                         fontFamily:
                                                             'Times New Roman',
                                                         fontWeight:
