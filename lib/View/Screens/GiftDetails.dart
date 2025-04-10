@@ -429,10 +429,8 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                                           .white, // Text color
                                                       padding: const EdgeInsets
                                                           .symmetric(
-                                                        horizontal:
-                                                            10, // Reduced horizontal padding
-                                                        vertical:
-                                                            8, // Reduced vertical padding
+                                                        horizontal: 10,
+                                                        vertical: 8,
                                                       ),
                                                       textStyle:
                                                           const TextStyle(

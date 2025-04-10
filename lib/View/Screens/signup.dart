@@ -204,7 +204,7 @@ class _SignUpState extends State<SignUp> {
                               ),
                             ),
                             SizedBox(
-                                height: screenHeight(context, dividedBy: 20)),
+                                height: screenHeight(context, dividedBy: 25)),
                             Center(
                                 child: GestureDetector(
                                     onTap: () async {
@@ -299,12 +299,12 @@ class _SignUpState extends State<SignUp> {
                                               poppins);
                                         })))),
                             SizedBox(
-                                height: screenHeight(context, dividedBy: 20)),
+                                height: screenHeight(context, dividedBy: 25)),
                             Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   customText(
-                                      "Already have an accounts?",
+                                      "Already have an accounts? ",
                                       ColorCodes.greyText,
                                       14,
                                       FontWeight.w100,
