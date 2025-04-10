@@ -90,11 +90,23 @@ class _ArticlesPageState extends State<ArticlesPage> {
                     },
                     controller: search,
                     onChanged: (val) {
-                      resultSearch = gftrStoriesCubit.gftrStories!.data!.post!
-                          .where((element) => element.title!
-                              .toLowerCase()
-                              .contains(val.toLowerCase()))
-                          .toList();
+                      if (val.isEmpty) {
+                        resultSearch = [];
+                      } else {
+                        // Get matching articles
+                        var matchingArticles = gftrStoriesCubit
+                                .gftrStories?.data?.post
+                                ?.where((article) =>
+                                    article.title
+                                        ?.toLowerCase()
+                                        .contains(val.toLowerCase()) ??
+                                    false)
+                                .toList() ??
+                            [];
+
+                        // Store the full article objects, not just titles
+                        resultSearch = matchingArticles;
+                      }
                       setState(() {});
                     },
                     decoration: InputDecoration(
@@ -130,50 +142,101 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   ? Expanded(
                       child: ListView.builder(
                           itemCount: resultSearch.length,
-                          itemBuilder: (context, index) => GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) =>
-                                            GfterStoryViewPage(),
+                          itemBuilder: (context, index) => Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        screenWidth(context, dividedBy: 30)),
+                                child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) {
+                                          return giftr_details(index);
+                                        },
                                       ));
-                                  bottombarblack = true;
-                                },
-                                child: Container(
-                                  alignment: Alignment.center,
-                                  height: screenHeight(context, dividedBy: 8.5),
-                                  margin: EdgeInsets.all(10),
-                                  decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                            color: Colors.black12,
-                                            blurRadius: 5)
-                                      ],
-                                      color: Colors.white,
-                                      borderRadius: BorderRadius.circular(15)),
-                                  child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        customText(
-                                            resultSearch[index].title,
-                                            Colors.black,
-                                            15,
-                                            FontWeight.bold,
-                                            poppins),
                                         Container(
-                                          height: screenHeight(context,
-                                              dividedBy: 13.5),
-                                          child: customText(
-                                              resultSearch[index].content,
-                                              Colors.black,
-                                              13,
-                                              FontWeight.w200,
-                                              poppins),
-                                        )
-                                      ]),
-                                ),
+                                          height: 0.3,
+                                          color: Colors.black,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            height: screenHeight(context,
+                                                dividedBy: 5),
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                  "${resultSearch[index].image}",
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            child: Stack(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomLeft,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            12.0),
+                                                    child: Container(
+                                                      padding: const EdgeInsets
+                                                              .symmetric(
+                                                          horizontal: 12,
+                                                          vertical: 8),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.black
+                                                            .withOpacity(0.6),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                      child: Text(
+                                                        resultSearch[index]
+                                                                .title ??
+                                                            "",
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors.white,
+                                                          shadows: [
+                                                            Shadow(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.6),
+                                                              offset:
+                                                                  Offset(2, 2),
+                                                              blurRadius: 4,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 0.3,
+                                          color: Colors.black,
+                                        ),
+                                      ],
+                                    )),
                               )))
                   : Column(
                       children: [
