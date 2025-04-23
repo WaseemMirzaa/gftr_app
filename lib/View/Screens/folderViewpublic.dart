@@ -77,9 +77,7 @@ class _FolderPublicViewState extends State<FolderPublicView> {
                             top: screenHeight(context, dividedBy: 100)),
                         itemBuilder: (context, index) {
                           return GestureDetector(
-                            onTap: () {
-
-                            },
+                            onTap: () {},
                             child: Column(children: [
                               Dismissible(
                                   key: UniqueKey(),
@@ -142,15 +140,17 @@ class _FolderPublicViewState extends State<FolderPublicView> {
                                         InkWell(
                                           onTap: () {
                                             defauilUrl = getGiftedViewCubit
-                                                .viewGift
-                                                ?.publicData?[widget.imageIndex]
-                                                .formdata?[index]
-                                                .webViewLink ??
+                                                    .viewGift
+                                                    ?.publicData?[
+                                                        widget.imageIndex]
+                                                    .formdata?[index]
+                                                    .webViewLink ??
                                                 '';
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) => GooglePage()));
+                                                    builder: (context) =>
+                                                        GooglePage()));
                                             setState(() {});
                                           },
                                           child: Container(
@@ -160,37 +160,35 @@ class _FolderPublicViewState extends State<FolderPublicView> {
                                               height: screenHeight(context,
                                                   dividedBy: 7),
                                               child: ClipRRect(
-                                                  borderRadius:
-                                                      const BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(
-                                                                  10),
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  10)),
-                                                  child: CachedNetworkImage(
-                                                    fit:  BoxFit.fill,
-                                                    height: 80,
-                                                    width: 180,
-                                                    imageUrl:   getGiftedViewCubit.viewGift?.publicData?[widget.imageIndex].formdata?[index].image ?? '',
-                                                    placeholder: (context, url) => spinkitLoader(context, ColorCodes.coral),
-                                                    errorWidget: (context, url, error) => Center(child: Image(image: AssetImage("assets/images/No-image-available.png"),)),
-                                                  ),
-                                                  // Image.network(
-                                                  //   getGiftedViewCubit
-                                                  //           .viewGift
-                                                  //           ?.publicData?[widget
-                                                  //               .imageIndex]
-                                                  //           .formdata?[index]
-                                                  //           .image ??
-                                                  //       '',  errorBuilder: (context, object, stacktrace) {
-                                                  //
-                                                  //   return Center(child: Image(image: AssetImage("assets/images/gift.png")));
-                                                  // },
-                                                  //   fit: BoxFit.fill,
-                                                  //   height: 80,
-                                                  //   width: 180,
-                                                  // )
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(10),
+                                                        bottomLeft:
+                                                            Radius.circular(
+                                                                10)),
+                                                child: CachedNetworkImage(
+                                                  fit: BoxFit.fill,
+                                                  height: 80,
+                                                  width: 180,
+                                                  imageUrl: getGiftedViewCubit
+                                                          .viewGift
+                                                          ?.publicData?[
+                                                              widget.imageIndex]
+                                                          .formdata?[index]
+                                                          .image ??
+                                                      '',
+                                                  placeholder: (context, url) =>
+                                                      spinkitLoader(context,
+                                                          ColorCodes.coral),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Center(
+                                                              child: Image(
+                                                    image: AssetImage(
+                                                        "assets/images/No-image-available.png"),
+                                                  )),
+                                                ),
                                               )),
                                         ),
                                         SizedBox(
@@ -204,20 +202,28 @@ class _FolderPublicViewState extends State<FolderPublicView> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(
-                                                height: screenHeight(context,dividedBy: 25),
-                                                width: screenWidth(context,dividedBy: 1.8),
+                                                height: screenHeight(context,
+                                                    dividedBy: 25),
+                                                width: screenWidth(context,
+                                                    dividedBy: 1.8),
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
                                                     SizedBox(
-                                                      width: screenWidth(context,dividedBy: 2),
+                                                      width: screenWidth(
+                                                          context,
+                                                          dividedBy: 2),
                                                       child: customText(
                                                           getGiftedViewCubit
-                                                              .viewGift
-                                                              ?.publicData?[
-                                                          widget.imageIndex]
-                                                              .formdata?[index]
-                                                              .title ??
+                                                                  .viewGift
+                                                                  ?.publicData?[
+                                                                      widget
+                                                                          .imageIndex]
+                                                                  .formdata?[
+                                                                      index]
+                                                                  .title ??
                                                               "",
                                                           overflowText: true,
                                                           Colors.black,
@@ -228,38 +234,61 @@ class _FolderPublicViewState extends State<FolderPublicView> {
                                                     ),
                                                     GestureDetector(
                                                       onTap: () async {
-                                                        await Share.share(getGiftedViewCubit
-                                                            .viewGift
-                                                            ?.publicData?[widget.imageIndex]
-                                                            .formdata?[index]
-                                                            .webViewLink ??
-                                                            '');
+                                                        await Share.share(
+                                                            getGiftedViewCubit
+                                                                    .viewGift
+                                                                    ?.publicData?[
+                                                                        widget
+                                                                            .imageIndex]
+                                                                    .formdata?[
+                                                                        index]
+                                                                    .webViewLink ??
+                                                                '');
                                                         setState(() {});
                                                       },
                                                       child: Image.asset(
-                                                          height: screenHeight(context,
+                                                          height: screenHeight(
+                                                              context,
                                                               dividedBy: 50),
-                                                          width: screenHeight(context,
+                                                          width: screenHeight(
+                                                              context,
                                                               dividedBy: 50),
-                                                              ImageConstants.share),
+                                                          ImageConstants.share),
                                                     ),
                                                   ],
                                                 ),
                                               ),
                                               Container(
-                                                height: screenHeight(context,dividedBy: 30),
-                                                width: screenWidth(context,dividedBy: 1.8),
+                                                height: screenHeight(context,
+                                                    dividedBy: 30),
+                                                width: screenWidth(context,
+                                                    dividedBy: 1.8),
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
-
                                                     customText(
                                                         "\$${getGiftedViewCubit.viewGift?.publicData?[widget.imageIndex].formdata?[index].price ?? ""}",
                                                         ColorCodes.greyText,
                                                         12,
                                                         FontWeight.w400,
                                                         poppins),
-                                                    Icon(Icons.star,size: 17,color: getGiftedViewCubit.viewGift?.publicData?[widget.imageIndex].formdata?[index].starredGift == true ?ColorCodes.coral:Colors.white,)
+                                                    Icon(
+                                                      Icons.star,
+                                                      size: 17,
+                                                      color: getGiftedViewCubit
+                                                                  .viewGift
+                                                                  ?.publicData?[
+                                                                      widget
+                                                                          .imageIndex]
+                                                                  .formdata?[
+                                                                      index]
+                                                                  .starredGift ==
+                                                              true
+                                                          ? ColorCodes.coral
+                                                          : Colors.white,
+                                                    )
                                                   ],
                                                 ),
                                               ),
