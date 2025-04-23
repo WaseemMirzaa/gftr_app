@@ -63,7 +63,7 @@ class _AddToState extends State<AddTo> {
   Future<void> Printe_data() async {
     img = widget.imageUrl;
     titleC.text = widget.title.toString();
-    priceC.text = widget.price ?? ''; // Add this line to set the price
+    priceC.text = widget.price ?? '';
     authorization = (await prefsService.getStringData("authToken"))!;
   }
 
