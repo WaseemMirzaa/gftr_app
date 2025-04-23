@@ -17,11 +17,11 @@ class CommonAuthTextField extends StatefulWidget {
   FocusNode focusNode;
   CommonAuthTextField(
       {Key? key,
-      required this.context,
-      required this.controller,
-      required this.hintText,
-      required this.iconPath,
-      required this.focusNode})
+        required this.context,
+        required this.controller,
+        required this.hintText,
+        required this.iconPath,
+        required this.focusNode})
       : super(key: key);
   @override
   State<CommonAuthTextField> createState() => _CommonAuthTextFieldState();
@@ -34,7 +34,6 @@ class _CommonAuthTextFieldState extends State<CommonAuthTextField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        // height: screenHeight(context, dividedBy: 19),
         alignment: Alignment.center,
         width: screenWidth(context),
         decoration: BoxDecoration(
@@ -51,17 +50,31 @@ class _CommonAuthTextFieldState extends State<CommonAuthTextField> {
             controller: widget.controller,
             focusNode: widget.focusNode,
             obscureText: ((widget.hintText == "Password" && hidePassword) ||
-                    (widget.hintText == "Confirm Password" &&
-                        hideConfirmPassword))
+                (widget.hintText == "Confirm Password" &&
+                    hideConfirmPassword))
                 ? true
                 : false,
             textInputAction: TextInputAction.next,
+            textAlignVertical: TextAlignVertical.center,
+            style: TextStyle(
+              fontSize: 14.0,
+              fontFamily: poppins,
+              fontWeight: FontWeight.w400,
+              color: Colors.black,
+            ),
             decoration: InputDecoration(
+                isDense: true,
+                contentPadding: const EdgeInsets.symmetric(vertical: 15),
                 border: InputBorder.none,
                 hintText: widget.hintText,
+                hintStyle: TextStyle(
+                  fontSize: 14.0,
+                  fontFamily: poppins,
+                  fontWeight: FontWeight.w400,
+                  color: ColorCodes.greyText,
+                ),
                 prefixIcon: Container(
-                    padding:
-                        EdgeInsets.all(screenWidth(context, dividedBy: 30)),
+                    padding: EdgeInsets.all(screenWidth(context, dividedBy: 30)),
                     child: Image.asset(
                       widget.iconPath,
                       height: 10,
@@ -69,53 +82,52 @@ class _CommonAuthTextFieldState extends State<CommonAuthTextField> {
                       fit: BoxFit.contain,
                     )),
                 suffixIcon: ((widget.hintText == "Password") ||
-                        (widget.hintText == "Confirm Password"))
+                    (widget.hintText == "Confirm Password"))
                     ? IconButton(
-                        icon: (widget.hintText == "Confirm Password")
-                            ? hideConfirmPassword
-                                ? Container(
-                                    height:
-                                        screenHeight(context, dividedBy: 20),
-                                    width: screenWidth(context, dividedBy: 20),
-                                    child: Image(
-                                        image: AssetImage(
-                                            ImageConstants.visibility_off)),
-                                  )
-                                : Container(
-                                    height:
-                                        screenHeight(context, dividedBy: 20),
-                                    width: screenWidth(context, dividedBy: 20),
-                                    child: Image(
-                                        image: AssetImage(
-                                            ImageConstants.visibility)),
-                                  )
-                            : hidePassword
-                                ? Container(
-                                    height:
-                                        screenHeight(context, dividedBy: 20),
-                                    width: screenWidth(context, dividedBy: 20),
-                                    child: Image(
-                                        image: AssetImage(
-                                            ImageConstants.visibility_off)),
-                                  )
-                                : Container(
-                                    height:
-                                        screenHeight(context, dividedBy: 20),
-                                    width: screenWidth(context, dividedBy: 20),
-                                    child: Image(
-                                        image: AssetImage(
-                                            ImageConstants.visibility)),
-                                  ),
-                        onPressed: () {
-                          if (widget.hintText == "Confirm Password") {
-                            hideConfirmPassword = !hideConfirmPassword;
-                          } else {
-                            hidePassword = !hidePassword;
-                          }
-                          setState(() {});
-                        })
-                    : null,
-                hintStyle: const TextStyle(color: ColorCodes.greyText))));
+                    icon: (widget.hintText == "Confirm Password")
+                        ? hideConfirmPassword
+                        ? Container(
+                      height:
+                      screenHeight(context, dividedBy: 20),
+                      width: screenWidth(context, dividedBy: 20),
+                      child: Image(
+                          image: AssetImage(
+                              ImageConstants.visibility_off)),
+                    )
+                        : Container(
+                      height:
+                      screenHeight(context, dividedBy: 20),
+                      width: screenWidth(context, dividedBy: 20),
+                      child: Image(
+                          image: AssetImage(
+                              ImageConstants.visibility)),
+                    )
+                        : hidePassword
+                        ? Container(
+                      height:
+                      screenHeight(context, dividedBy: 20),
+                      width: screenWidth(context, dividedBy: 20),
+                      child: Image(
+                          image: AssetImage(
+                              ImageConstants.visibility_off)),
+                    )
+                        : Container(
+                      height:
+                      screenHeight(context, dividedBy: 20),
+                      width: screenWidth(context, dividedBy: 20),
+                      child: Image(
+                          image: AssetImage(
+                              ImageConstants.visibility)),
+                    ),
+                    onPressed: () {
+                      if (widget.hintText == "Confirm Password") {
+                        hideConfirmPassword = !hideConfirmPassword;
+                      } else {
+                        hidePassword = !hidePassword;
+                      }
+                      setState(() {});
+                    })
+                    : null)));
   }
 }
 
@@ -129,12 +141,12 @@ class SimpleAuthTextField extends StatefulWidget {
 
   SimpleAuthTextField(
       {Key? key,
-      required this.context,
-      required this.controller,
-      required this.hintText,
-      required this.iconPath,
-      required this.focusNode,
-      this.numberKeyboard = false})
+        required this.context,
+        required this.controller,
+        required this.hintText,
+        required this.iconPath,
+        required this.focusNode,
+        this.numberKeyboard = false})
       : super(key: key);
   @override
   State<SimpleAuthTextField> createState() => _SimpleAuthTextFieldState();
@@ -146,37 +158,52 @@ class _SimpleAuthTextFieldState extends State<SimpleAuthTextField> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: screenWidth(context),
-      decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10),
-          boxShadow: [
-            BoxShadow(
-                offset: const Offset(1.0, 1.0),
-                spreadRadius: 1,
-                color: Colors.grey.shade300,
-                blurRadius: 3)
-          ]),
-      child: Container(
-        alignment: Alignment.center,
-        child: TextField(
-          keyboardType: widget.numberKeyboard == true
-              ? TextInputType.number
-              : TextInputType.text,
-          controller: widget.controller,
-          focusNode: widget.focusNode,
-          cursorColor: ColorCodes.greyText,
-          textInputAction: TextInputAction.next,
-          obscureText: ((widget.hintText == "Password" && hidePassword) ||
-                  (widget.hintText == "Confirm Password" &&
-                      hideConfirmPassword))
-              ? true
-              : false,
-          decoration: InputDecoration(
-              border: InputBorder.none,
-              hintText: widget.hintText,
-              prefixIcon: (widget.hintText == 'Phone Number')
-                  ? GestureDetector(
+        width: screenWidth(context),
+        decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(10),
+            boxShadow: [
+              BoxShadow(
+                  offset: const Offset(1.0, 1.0),
+                  spreadRadius: 1,
+                  color: Colors.grey.shade300,
+                  blurRadius: 3)
+            ]),
+        child: Container(
+            alignment: Alignment.center,
+            child: TextField(
+                keyboardType: widget.numberKeyboard == true
+                    ? TextInputType.number
+                    : TextInputType.text,
+                controller: widget.controller,
+                focusNode: widget.focusNode,
+                cursorColor: ColorCodes.greyText,
+                textInputAction: TextInputAction.next,
+                textAlignVertical: TextAlignVertical.center,
+                style: TextStyle(
+                  fontSize: 14.0,
+                  fontFamily: poppins,
+                  fontWeight: FontWeight.w400,
+                  color: Colors.black,
+                ),
+                obscureText: ((widget.hintText == "Password" && hidePassword) ||
+                    (widget.hintText == "Confirm Password" &&
+                        hideConfirmPassword))
+                    ? true
+                    : false,
+                decoration: InputDecoration(
+                    isDense: true,
+                    contentPadding: const EdgeInsets.symmetric(vertical: 15),
+                    border: InputBorder.none,
+                    hintText: widget.hintText,
+                    hintStyle: TextStyle(
+                      fontSize: 14.0,
+                      fontFamily: poppins,
+                      fontWeight: FontWeight.w400,
+                      color: ColorCodes.greyText,
+                    ),
+                    prefixIcon: (widget.hintText == 'Phone Number')
+                        ? GestureDetector(
                       onTap: () {
                         showCountryPicker(
                           context: context,
@@ -225,63 +252,58 @@ class _SimpleAuthTextFieldState extends State<SimpleAuthTextField> {
                             ]),
                       ),
                     )
-                  : Container(
-                      padding:
-                          EdgeInsets.all(screenWidth(context, dividedBy: 27)),
-                      height: screenHeight(context, dividedBy: 100),
-                      child: Image.asset(
-                        widget.iconPath,
-                        width: 15,
-                        height: 15,
-                      )),
-              suffixIcon: ((widget.hintText == "Password") ||
-                      (widget.hintText == "Confirm Password"))
-                  ? IconButton(
-                      icon: (widget.hintText == "Confirm Password")
-                          ? hideConfirmPassword
-                              ? Container(
-                                  height: screenHeight(context, dividedBy: 20),
-                                  width: screenWidth(context, dividedBy: 20),
-                                  child: Image(
-                                      image: AssetImage(
-                                          ImageConstants.visibility_off)),
-                                )
-                              : Container(
-                                  height: screenHeight(context, dividedBy: 20),
-                                  width: screenWidth(context, dividedBy: 20),
-                                  child: Image(
-                                      image: AssetImage(
-                                          ImageConstants.visibility)),
-                                )
-                          : hidePassword
-                              ? Container(
-                                  height: screenHeight(context, dividedBy: 20),
-                                  width: screenWidth(context, dividedBy: 20),
-                                  child: Image(
-                                      image: AssetImage(
-                                          ImageConstants.visibility_off)),
-                                )
-                              : Container(
-                                  height: screenHeight(context, dividedBy: 20),
-                                  width: screenWidth(context, dividedBy: 20),
-                                  child: Image(
-                                      image: AssetImage(
-                                          ImageConstants.visibility)),
-                                ),
-                      onPressed: () {
-                        if (widget.hintText == "Confirm Password") {
-                          hideConfirmPassword = !hideConfirmPassword;
-                        } else {
-                          hidePassword = !hidePassword;
-                        }
-                        setState(() {});
-                      })
-                  : null,
-              hintStyle:
-                  TextStyle(color: ColorCodes.greyText, fontFamily: poppins)),
-        ),
-      ),
-    );
+                        : Container(
+                        padding:
+                        EdgeInsets.all(screenWidth(context, dividedBy: 27)),
+                        height: screenHeight(context, dividedBy: 100),
+                        child: Image.asset(
+                          widget.iconPath,
+                          width: 15,
+                          height: 15,
+                        )),
+                    suffixIcon: ((widget.hintText == "Password") ||
+                        (widget.hintText == "Confirm Password"))
+                        ? IconButton(
+                        icon: (widget.hintText == "Confirm Password")
+                            ? hideConfirmPassword
+                            ? Container(
+                          height: screenHeight(context, dividedBy: 20),
+                          width: screenWidth(context, dividedBy: 20),
+                          child: Image(
+                              image: AssetImage(
+                                  ImageConstants.visibility_off)),
+                        )
+                            : Container(
+                          height: screenHeight(context, dividedBy: 20),
+                          width: screenWidth(context, dividedBy: 20),
+                          child: Image(
+                              image: AssetImage(
+                                  ImageConstants.visibility)),
+                        )
+                            : hidePassword
+                            ? Container(
+                          height: screenHeight(context, dividedBy: 20),
+                          width: screenWidth(context, dividedBy: 20),
+                          child: Image(
+                              image: AssetImage(
+                                  ImageConstants.visibility_off)),
+                        )
+                            : Container(
+                          height: screenHeight(context, dividedBy: 20),
+                          width: screenWidth(context, dividedBy: 20),
+                          child: Image(
+                              image: AssetImage(
+                                  ImageConstants.visibility)),
+                        ),
+                        onPressed: () {
+                          if (widget.hintText == "Confirm Password") {
+                            hideConfirmPassword = !hideConfirmPassword;
+                          } else {
+                            hidePassword = !hidePassword;
+                          }
+                          setState(() {});
+                        })
+                        : null))));
   }
 }
 
@@ -289,7 +311,6 @@ Widget ContectAuthTextField(BuildContext context,
     TextEditingController controller, String hintText, FocusNode focusNode,
     {bool? numberKeybord = false}) {
   return Container(
-      // height: screenHeight(context, dividedBy: 19),
       width: screenWidth(context),
       decoration: BoxDecoration(
           color: Colors.white,
@@ -310,8 +331,22 @@ Widget ContectAuthTextField(BuildContext context,
                   ? TextInputType.phone
                   : TextInputType.text,
               textInputAction: TextInputAction.next,
+              textAlignVertical: TextAlignVertical.center,
+              style: TextStyle(
+                fontSize: 14.0,
+                fontFamily: poppins,
+                fontWeight: FontWeight.w400,
+                color: Colors.black,
+              ),
               decoration: InputDecoration(
+                  isDense: true,
+                  contentPadding: const EdgeInsets.symmetric(vertical: 15),
                   border: InputBorder.none,
                   hintText: hintText,
-                  hintStyle: const TextStyle(color: ColorCodes.greyText)))));
+                  hintStyle: TextStyle(
+                    fontSize: 14.0,
+                    fontFamily: poppins,
+                    fontWeight: FontWeight.w400,
+                    color: ColorCodes.greyText,
+                  )))));
 }

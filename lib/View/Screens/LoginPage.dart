@@ -239,7 +239,7 @@ class _LoginPageState extends State<LoginPage> {
 
                                             if (phoneNumber.text.isEmpty) {
                                               flutterToast(
-                                                  "Please enter PhoneNumber",
+                                                  "Please enter Phone Number",
                                                   false);
                                             } else if (phoneNumber.text.length >
                                                 13) {

@@ -160,7 +160,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                                 if (!forgotPassCubit.isButtonClicked) {
                                   if (phoneNumber.text.isEmpty) {
                                     flutterToast(
-                                        "Please enter PhoneNumber", false);
+                                        "Please enter Phone Number", false);
                                   } else if (countryCodeSelect == '') {
                                     flutterToast(
                                         "Please Select Country Code", false);
