@@ -125,6 +125,7 @@ class _AllAboutUs07State extends State<AllAboutUs07> {
                   ),
                 ],
               ),
+              SizedBox(height: screenHeight(context, dividedBy: 30)),
               GestureDetector(
                 onTap: () {
                   // if (authorization.length > 1)
