@@ -509,7 +509,7 @@ GFTR
                                                   ImageConstants.askLogo,
                                                   width: 15,
                                                   height: 15),
-                                              Text("Asked",
+                                            Text("Asked",
                                                   style: const TextStyle(
                                                     fontSize: 12,
                                                     color: Color(0xffFFFFFF),
@@ -873,7 +873,8 @@ GFTR
                           },
                         ),
                       );
-                    } else if (state is MutualFrdsSuccess) {
+                    } 
+                    else if (state is MutualFrdsSuccess) {
                       return Scrollbar(
                         thickness: 8,
                         radius: Radius.circular(16),

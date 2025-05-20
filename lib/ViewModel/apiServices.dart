@@ -448,6 +448,7 @@ class DioClient {
     try {
       final userdata = await _dio.post(ApiConstants.decryptData, data: body);
       log("getBuilGroup : ${userdata.data}");
+      log("getBuilGroup : ${userdata.data['data']}");
       return BuildGroup.fromJson(userdata.data);
     } catch (e) {
       log("getBuilGroup : ${e.toString()}");
