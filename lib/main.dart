@@ -2,11 +2,13 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:gftr/NotificationService/notification_service.dart';
 import 'package:gftr/View/Screens/google.dart';
 import 'package:gftr/ViewModel/Cubits/All_Giftss.dart';
 import 'package:gftr/ViewModel/Cubits/Calendar_post.dart';
 import 'package:gftr/ViewModel/Cubits/Delete_frds.dart';
 import 'package:gftr/ViewModel/Cubits/Mutul_Friends.dart';
+import 'package:gftr/ViewModel/Cubits/fcm_token_cubit.dart';
 import 'package:gftr/ViewModel/Cubits/mobile_Auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gftr/View/Screens/spalsh.dart';
@@ -48,6 +50,7 @@ import 'ViewModel/prefsService.dart';
 const String homeRoute = "home";
 const String showDataRoute = "showData";
 
+
 Future<InitData> init() async {
   String sharedText = "";
   String routeName = homeRoute;
@@ -65,6 +68,14 @@ Future<InitData> init() async {
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  requestAndroidNotificationPermission();
+  final fcmCubit = FcmTokenCubit();
+
+FirebaseApi fa = FirebaseApi();
+
+  String fcmToken =  await fa.initNotifications();
+
+  fcmCubit.setFcmToken(fcmToken);
 
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
@@ -84,6 +95,8 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final _navKey = GlobalKey<NavigatorState>();
   SharedPrefsService prefsService = SharedPrefsService();
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -123,6 +136,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           BlocProvider(create: (context) => MessagnotiCubit()),
           BlocProvider(create: (context) => InviteEmialCubit()),
           BlocProvider(create: (context) => DeleteFriendsCubit()),
+          BlocProvider(create: (context) => FcmTokenCubit()),
           BlocProvider(create: (context) => CalendarPostsCubit()),
           BlocProvider(create: (context) => Mobile_AuthCubit()),
           BlocProvider(create: (context) => Fetch_All_GiftsCubit()),

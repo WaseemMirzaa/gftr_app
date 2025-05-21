@@ -84,6 +84,9 @@ dependencies:
   badges: any
   moment_dart: ^1.0.1
   flutter_image_compress: ^2.0.4
+  firebase_messaging: ^14.7.10
+  flutter_local_notifications: ^14.0.0+1
+  permission_handler: ^11.0.1
 
 #  googleappmeasurement: ^10.6.0
 

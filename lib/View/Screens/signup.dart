@@ -9,6 +9,7 @@ import 'package:gftr/View/Widgets/commonAuthenticationtextField.dart';
 import 'package:gftr/View/Widgets/customLoader.dart';
 import 'package:gftr/View/Widgets/customText.dart';
 import 'package:gftr/View/Widgets/flutterToast.dart';
+import 'package:gftr/ViewModel/Cubits/fcm_token_cubit.dart';
 import 'package:gftr/ViewModel/Cubits/signUp.dart';
 
 class SignUp extends StatefulWidget {
@@ -25,13 +26,13 @@ class _SignUpState extends State<SignUp> {
   TextEditingController phone = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController confirmPassword = TextEditingController();
-
+  String? fcmToken;
   Widget spaceBetweenFields() {
     return SizedBox(height: screenHeight(context, dividedBy: 60));
   }
 
   SignUpCubit signUpCubit = SignUpCubit();
-
+  FcmTokenCubit fcmTokenCubit = FcmTokenCubit();
   FocusNode firstNameNode = FocusNode();
   FocusNode lastNameNode = FocusNode();
   FocusNode phoneNode = FocusNode();
@@ -43,10 +44,20 @@ class _SignUpState extends State<SignUp> {
   void initState() {
     super.initState();
     signUpCubit = BlocProvider.of<SignUpCubit>(context);
+    loadFcmToken();
+  }
+
+
+  loadFcmToken()async{
+    fcmToken = fcmTokenCubit.getFcmToken();
   }
 
   @override
   Widget build(BuildContext context) {
+  
+      fcmToken = fcmTokenCubit.getFcmToken();
+
+
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(
@@ -258,6 +269,7 @@ class _SignUpState extends State<SignUp> {
                                             password: password.text,
                                             confirmPassword:
                                                 confirmPassword.text,
+                                                fcmToken: fcmToken ?? "No Token",
                                             context: context);
                                       }
                                       setState(() {});

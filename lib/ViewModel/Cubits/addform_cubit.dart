@@ -62,7 +62,7 @@ class AddToCubit extends Cubit<AddToState> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(builder: (context) => GooglePage()),
-            );
+            ); 
           } else {
             // For other pages, just pop back
             Navigator.pop(context);

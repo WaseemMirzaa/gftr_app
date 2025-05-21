@@ -32,13 +32,14 @@ class SignInCubit extends Cubit<SignInState> {
 
   SharedPrefsService prefsService = SharedPrefsService();
   Future<void> signInService(
-      String phoneNumber, String password, BuildContext context) async {
+      String phoneNumber, String password, String token, BuildContext context) async {
     emit(SignInLoading());
 
     Map<String, dynamic> body = {
       "decData": {
         "phoneNumber": "$countryCodeSelect$phoneNumber",
-        "password": password
+        "password": password, 
+        "fcmToken" : token
       }
     };
     Encryption? response = await DioClient().encryptData(body);

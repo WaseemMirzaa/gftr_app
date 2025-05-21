@@ -34,6 +34,7 @@ class SignUpCubit extends Cubit<SignUpState> {
       required String phoneNumber,
       required String password,
       required String confirmPassword,
+      required String fcmToken,
       required BuildContext context}) async {
     emit(SignUpLoading());
 
@@ -44,7 +45,8 @@ class SignUpCubit extends Cubit<SignUpState> {
         "lastname": lastname,
         "password": password,
         "phoneNumber": "$countryCodeSelect$phoneNumber",
-        "confirmPassword": confirmPassword
+        "confirmPassword": confirmPassword, 
+        "fcmToken" : fcmToken
      }
     };
     print("Body is $body");
