@@ -84,8 +84,10 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {});
   }
 
-  readFcmToken()async{
-    fcmToken = fcmTokenCubit.getFcmToken();
+  readFcmToken() async {
+    fcmToken = context.read<FcmTokenCubit>().getFcmToken();
+    // fcmTokenCubit.getFcmToken();
+    print("Token fetch From State $fcmToken");
   }
 
   @override
@@ -99,8 +101,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-  
-
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: Scaffold(

@@ -50,7 +50,6 @@ import 'ViewModel/prefsService.dart';
 const String homeRoute = "home";
 const String showDataRoute = "showData";
 
-
 Future<InitData> init() async {
   String sharedText = "";
   String routeName = homeRoute;
@@ -70,24 +69,27 @@ Future<void> main() async {
   await Firebase.initializeApp();
   requestAndroidNotificationPermission();
   final fcmCubit = FcmTokenCubit();
-
-FirebaseApi fa = FirebaseApi();
-
-  String fcmToken =  await fa.initNotifications();
-
+  FirebaseApi firebaseApi = FirebaseApi();
+  String fcmToken = await firebaseApi.initNotifications();
   fcmCubit.setFcmToken(fcmToken);
+  print("fcmToken from main page $fcmToken");
 
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
       .then((_) async {
     InitData initData = await init();
-    runApp(MyApp(initData: initData));
+    runApp(MyApp(
+      initData: initData,
+      fcmCubit: fcmCubit,
+    ));
   });
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({Key? key, required this.initData}) : super(key: key);
+  MyApp({Key? key, required this.initData, required this.fcmCubit})
+      : super(key: key);
   final InitData initData;
+  final FcmTokenCubit fcmCubit;
   @override
   State<MyApp> createState() => _MyAppState();
 }
@@ -96,12 +98,11 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final _navKey = GlobalKey<NavigatorState>();
   SharedPrefsService prefsService = SharedPrefsService();
 
-
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
         providers: [
+          BlocProvider.value(value: widget.fcmCubit),
           BlocProvider(create: (context) => MutualFrdsCubit()),
           BlocProvider(create: (context) => SignUpCubit()),
           BlocProvider(create: (context) => SignInCubit()),
@@ -136,7 +137,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           BlocProvider(create: (context) => MessagnotiCubit()),
           BlocProvider(create: (context) => InviteEmialCubit()),
           BlocProvider(create: (context) => DeleteFriendsCubit()),
-          BlocProvider(create: (context) => FcmTokenCubit()),
           BlocProvider(create: (context) => CalendarPostsCubit()),
           BlocProvider(create: (context) => Mobile_AuthCubit()),
           BlocProvider(create: (context) => Fetch_All_GiftsCubit()),

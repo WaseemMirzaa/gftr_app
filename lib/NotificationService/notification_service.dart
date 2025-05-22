@@ -5,7 +5,7 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 /// 🔹 Background FCM handler (runs on both iOS & Android)
-@pragma('vm:entry-point')          // <-- required on iOS after iOS 14 +
+@pragma('vm:entry-point') // <-- required on iOS after iOS 14 +
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   print('📩 BG Notification');
   _prettyLog(message);
@@ -34,7 +34,9 @@ class FirebaseApi {
   Future<String> initNotifications() async {
     // 1️⃣  Permissions
     final settings = await _firebaseMessaging.requestPermission(
-      alert: true, badge: true, sound: true,
+      alert: true,
+      badge: true,
+      sound: true,
     );
 
     if (settings.authorizationStatus == AuthorizationStatus.denied) {
@@ -43,16 +45,14 @@ class FirebaseApi {
     }
 
     // 2️⃣  FCM/APNs token
-    final fcmToken = Platform.isAndroid
-        ? await _firebaseMessaging.getToken()
-        : await _firebaseMessaging.getAPNSToken();
+    final fcmToken = await _firebaseMessaging.getToken();
 
     // 3️⃣  Listeners
     FirebaseMessaging.onMessageOpenedApp.listen(_handleFCMOpen);
     _firebaseMessaging.getInitialMessage().then(_handleFCMOpen);
 
-    await _initLocalNotifications();   // local-notif plumbing
-    await _initPushNotification();     // foreground FCM handler
+    await _initLocalNotifications(); // local-notif plumbing
+    await _initPushNotification(); // foreground FCM handler
 
     print(" fcmToken : $fcmToken");
     return fcmToken ?? 'No Token';
@@ -76,11 +76,12 @@ class FirebaseApi {
     const androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
 
     await _localNotifications.initialize(
-       InitializationSettings(android: androidInit, iOS: iosInit),
+      InitializationSettings(android: androidInit, iOS: iosInit),
 
       // Fires when user taps a notif from tray / Notification Center
       onDidReceiveNotificationResponse: (NotificationResponse response) {
-        print('🔔 (TAP) iOS NotificationResponse → payload: ${response.payload}');
+        print(
+            '🔔 (TAP) iOS NotificationResponse → payload: ${response.payload}');
       },
     );
 
@@ -95,8 +96,8 @@ class FirebaseApi {
 
   Future<void> _initPushNotification() async {
     FirebaseMessaging.onMessage.listen((message) {
-      _prettyLog(message);           // print payload on **all** platforms
-      _showLocal(message);           // mirror as local notif so iOS shows banner
+      _prettyLog(message); // print payload on **all** platforms
+      _showLocal(message); // mirror as local notif so iOS shows banner
     });
   }
 
@@ -125,7 +126,7 @@ class FirebaseApi {
           presentSound: true,
         ),
       ),
-      payload: m.data.toString(),   // 🔑 becomes response.payload above
+      payload: m.data.toString(), // 🔑 becomes response.payload above
     );
   }
 
@@ -147,7 +148,8 @@ class FirebaseApi {
         android: AndroidNotificationDetails(
           'high_importance_channel',
           'High Importance Notifications',
-          channelDescription: 'This channel is used for important notifications',
+          channelDescription:
+              'This channel is used for important notifications',
           importance: Importance.max,
           priority: Priority.high,
           icon: 'logo',
@@ -162,7 +164,6 @@ class FirebaseApi {
     );
   }
 }
-
 
 Future<void> requestAndroidNotificationPermission() async {
   if (Platform.isAndroid && await Permission.notification.isDenied) {

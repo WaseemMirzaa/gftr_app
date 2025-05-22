@@ -47,16 +47,15 @@ class _SignUpState extends State<SignUp> {
     loadFcmToken();
   }
 
-
-  loadFcmToken()async{
+  loadFcmToken() async {
     fcmToken = fcmTokenCubit.getFcmToken();
   }
 
   @override
   Widget build(BuildContext context) {
-  
-      fcmToken = fcmTokenCubit.getFcmToken();
+    fcmToken = fcmTokenCubit.getFcmToken();
 
+    print("fcmToken in Login Page $fcmToken");
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
@@ -269,7 +268,7 @@ class _SignUpState extends State<SignUp> {
                                             password: password.text,
                                             confirmPassword:
                                                 confirmPassword.text,
-                                                fcmToken: fcmToken ?? "No Token",
+                                            fcmToken: fcmToken ?? "No Token",
                                             context: context);
                                       }
                                       setState(() {});
