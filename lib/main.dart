@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gftr/NotificationService/notification_service.dart';
@@ -46,9 +47,11 @@ import 'ViewModel/Cubits/notification.dart';
 import 'ViewModel/Cubits/pre-remiend.dart';
 import 'ViewModel/Cubits/verifyforgott.dart';
 import 'ViewModel/prefsService.dart';
+import 'firebase_options.dart';
 
 const String homeRoute = "home";
 const String showDataRoute = "showData";
+final notificationRouteKey = GlobalKey<NavigatorState>();
 
 Future<InitData> init() async {
   String sharedText = "";
@@ -64,13 +67,25 @@ Future<InitData> init() async {
   return InitData(sharedText, routeName);
 }
 
+Future<void> handleBackgroundMessage(RemoteMessage message) async {
+  print('Handling background message: ${message.messageId}');
+}
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-  requestAndroidNotificationPermission();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  NotificationServices sp = NotificationServices();
+
+  FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+  // 3️⃣  Instantiate services / cubits
+  final notificationServices = NotificationServices();  // singleton
   final fcmCubit = FcmTokenCubit();
-  FirebaseApi firebaseApi = FirebaseApi();
-  String fcmToken = await firebaseApi.initNotifications();
+
+  // 4️⃣  Retrieve the token (can be null on first launch)
+  final String fcmToken = await notificationServices.messaging.getToken() ?? '';
+  print('🔑 FCM token (main): $fcmToken');
   fcmCubit.setFcmToken(fcmToken);
   print("fcmToken from main page $fcmToken");
 
@@ -98,8 +113,24 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   final _navKey = GlobalKey<NavigatorState>();
   SharedPrefsService prefsService = SharedPrefsService();
 
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initNotificationForeGround();
+  }
+
+
+    initNotificationForeGround()async{
+      await NotificationServices().initialise(context);
+    }
+
+  
+
   @override
   Widget build(BuildContext context) {
+    
     return MultiBlocProvider(
         providers: [
           BlocProvider.value(value: widget.fcmCubit),

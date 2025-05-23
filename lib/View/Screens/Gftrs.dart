@@ -29,6 +29,9 @@ import 'package:url_launcher/url_launcher.dart';
 class Gftrs extends StatefulWidget {
   @override
   State<Gftrs> createState() => _GftrsState();
+
+  static const route = "/gftr_group";
+
 }
 
 class _GftrsState extends State<Gftrs> {

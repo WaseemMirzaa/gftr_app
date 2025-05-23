@@ -36,7 +36,7 @@ android {
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = JavaVersion.VERSION_1_8
     }
 
     sourceSets {
@@ -63,10 +63,6 @@ android {
         }
     }
 
-    java {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
-    }
 
 }
 
@@ -75,10 +71,11 @@ flutter {
 }
 
 dependencies {
-    implementation "androidx.room:room-runtime:2.3.0"
-    annotationProcessor "androidx.room:room-compiler:2.3.0"
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation platform('com.google.firebase:firebase-bom:31.2.2')
     implementation 'com.google.firebase:firebase-analytics-ktx'
+    implementation 'com.google.firebase:firebase-messaging'
+    implementation "androidx.room:room-runtime:2.3.0"
+    annotationProcessor "androidx.room:room-compiler:2.3.0"
     implementation 'com.android.support:multidex:1.0.3'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
 }
