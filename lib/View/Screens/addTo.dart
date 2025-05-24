@@ -63,7 +63,7 @@ class _AddToState extends State<AddTo> {
   Future<void> Printe_data() async {
     img = widget.imageUrl;
     titleC.text = widget.title.toString();
-    priceC.text = widget.price ?? ''; // Add this line to set the price
+    priceC.text = widget.price ?? '';
     authorization = (await prefsService.getStringData("authToken"))!;
   }
 
@@ -133,10 +133,13 @@ class _AddToState extends State<AddTo> {
                             ), (route) => false);
                           }
                         },
-                        child: Icon(
-                          Icons.arrow_back_ios_outlined,
-                          size: 20,
-                          color: Colors.white,
+                        child: Padding(
+                          padding: const EdgeInsets.only(top: 12.0),
+                          child: Icon(
+                            Icons.arrow_back_ios_outlined,
+                            size: 20,
+                            color: Colors.white,
+                          ),
                         )),
                   ),
                 ],

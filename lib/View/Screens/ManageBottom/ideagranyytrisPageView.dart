@@ -53,7 +53,8 @@ class _IdeaGrannyTrishViePageState extends State<IdeaGrannyTrishViePage> {
             setState(() {});
           },
         ),
-        body: BottomNavBar(selectedIndex: selectedIndex,screenextra: IdeaGrannyTrish(PublicData: widget.PublicData ?? [],name: widget.Groupsname ?? ''),
+        body: BottomNavBar(selectedIndex: selectedIndex,
+          screenextra: IdeaGrannyTrish(PublicData: widget.PublicData ?? [],name: widget.Groupsname ?? ''),
           screenList:  [
             GetGiftedPublicPage(),
             InboxPage(),

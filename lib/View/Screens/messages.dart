@@ -15,7 +15,6 @@ import '../../Helper/appConfig.dart';
 import '../../Helper/imageConstants.dart';
 import 'package:flutter/foundation.dart' as foundation;
 
-
 class MessagesPage extends StatefulWidget {
   String userId;
   String userName;
@@ -23,9 +22,10 @@ class MessagesPage extends StatefulWidget {
   String Avatar;
   MessagesPage(
       {Key? key,
-        required this.userId,
-        required this.targetId,
-        required this.userName, required  this.Avatar})
+      required this.userId,
+      required this.targetId,
+      required this.userName,
+      required this.Avatar})
       : super(key: key);
 
   @override
@@ -34,7 +34,7 @@ class MessagesPage extends StatefulWidget {
 
 class _MessagesPageState extends State<MessagesPage> {
   TextEditingController messageController = TextEditingController();
-  FocusNode focusNode=FocusNode();
+  FocusNode focusNode = FocusNode();
   List messages = [];
   bool emojiShowing = false;
   bool? isConcted;
@@ -43,15 +43,18 @@ class _MessagesPageState extends State<MessagesPage> {
   // String? roomId;
   late IO.Socket socket;
 
-  StreamController<List<dynamic>> messageList = StreamController<List<dynamic>>();
+  StreamController<List<dynamic>> messageList =
+      StreamController<List<dynamic>>();
   Stream<List<dynamic>> userResponse2() {
-    socket.emit("getOldMessages", {"to": widget.targetId, "from": widget.userId});
+    socket
+        .emit("getOldMessages", {"to": widget.targetId, "from": widget.userId});
     return messageList.stream;
   }
 
   ScrollController _scrollController = ScrollController();
 
   void initSocket() async {
+    log("⚠️⚠️⚠️⚠️ Initializing socket connection");
     socket = IO.io(
         ApiConstants.baseUrlsSocket,
         OptionBuilder()
@@ -63,22 +66,37 @@ class _MessagesPageState extends State<MessagesPage> {
     socket.connect();
     socket.onConnect((_) {
       isConcted = socket.connected;
-      log("isConcted : $isConcted");
+      log("Socket connected: $isConcted 👍👍👍");
       print('Connection established');
     });
     isActive = socket.active;
+    log("Socket active status: $isActive 😊😊😊😊");
     //log("Active : $isActive");
-    socket.emit("getOldMessages", {"to": widget.targetId, "from": widget.userId});
+    socket
+        .emit("getOldMessages", {"to": widget.targetId, "from": widget.userId});
+    log("Requested old messages: to=${widget.targetId}, from=${widget.userId}]🎊🎊🎊");
     socket.on("data", (data) {
+      log("Received message data from socket 🎈🎈🎈🎈");
       messageList.sink.add(data);
+      log("Message data added to stream: ${data.length} messages 🎆🎆🎆🎆🎆🎆🎆");
       log("Show a notification to the user showNotification(${data})");
-      //  print("New message from ${data.widget.userId}: ${data.messages}");
-      // log(data.toString());
+      print("New message from ${data.widget.userId}: ${data.messages}");
+      log(data.toString());
       setState(() {});
     });
-    socket.onDisconnect((_) => print('Connection Disconnection'));
-    socket.onConnectError((err) => print('=====================================${err}'));
-    socket.onError((err) => print("err"));
+
+    socket.onDisconnect((_) {
+      log("Socket disconnected 🎊🎊🎊🎊🎊");
+      print('Connection Disconnection');
+    });
+    socket.onConnectError((err) {
+      log("Socket connection error: $err 🎁🎁🎁🎁");
+      print('=====================================${err}');
+    });
+    socket.onError((err) {
+      log("Socket error: $err 🧧🧧🧧");
+      print("err");
+    });
   }
 
   sendMesseage({
@@ -86,17 +104,21 @@ class _MessagesPageState extends State<MessagesPage> {
     required String toIdId,
     required String fromId,
   }) {
-    socket.emit(
-        "sendMessage", {
+    log("Sending message: '$message' to: $toIdId from: $fromId 🧧🧧🧧🧧🧧");
+    socket.emit("sendMessage", {
       'message': message,
       "to": toIdId,
       "from": fromId,
     });
+    log("Emitted sendMessage event🧧🧧🧧🧧🧧");
     socket.emit("getOldMessages", {"to": toIdId, "from": fromId});
+    log("Requested updated message history 🧧🧧🧧🧧🧧");
     socket.emit("newMessages", {"to": toIdId, "from": fromId});
+    log("Notified about new message 🧧🧧🧧🧧🧧");
     setState(() {});
   }
-  MessagnotiCubit messagnotiCubit =MessagnotiCubit();
+
+  MessagnotiCubit messagnotiCubit = MessagnotiCubit();
 
   @override
   void initState() {
@@ -135,7 +157,7 @@ class _MessagesPageState extends State<MessagesPage> {
           appBar: AppBar(
             leading: Padding(
               padding:
-              EdgeInsets.only(left: screenWidth(context, dividedBy: 13)),
+                  EdgeInsets.only(left: screenWidth(context, dividedBy: 13)),
               child: GestureDetector(
                 onTap: () {
                   Scaffold.of(context).openDrawer();
@@ -168,7 +190,7 @@ class _MessagesPageState extends State<MessagesPage> {
                 children: [
                   GestureDetector(
                     onTap: () {
-                      Navigator.pop(context,'refresh');
+                      Navigator.pop(context, 'refresh');
                     },
                     child: SizedBox(
                       width: screenWidth(context, dividedBy: 5.2),
@@ -182,15 +204,15 @@ class _MessagesPageState extends State<MessagesPage> {
                   ),
                   customText(widget.userName, Colors.black, 14, FontWeight.bold,
                       poppins),
-
                   Padding(
-                    padding: const EdgeInsets.only(right: 8.0,top: 4,bottom: 4),
+                    padding:
+                        const EdgeInsets.only(right: 8.0, top: 4, bottom: 4),
                     child: Container(
                       alignment: Alignment.center,
                       width: screenWidth(context, dividedBy: 10),
                       height: screenHeight(context, dividedBy: 20),
                       decoration: BoxDecoration(
-                        // color: ColorCodes.coral,
+                          // color: ColorCodes.coral,
                           border: GradientBoxBorder(
                             gradient: LinearGradient(
                                 colors: [ColorCodes.coral, ColorCodes.teal]),
@@ -201,11 +223,9 @@ class _MessagesPageState extends State<MessagesPage> {
                           borderRadius: BorderRadius.circular(30),
                           child: CircleAvatar(
                             backgroundImage: NetworkImage(widget.Avatar),
-                          )
-                      ),
+                          )),
                     ),
                   ),
-
                 ],
               ),
             ),
@@ -229,77 +249,88 @@ class _MessagesPageState extends State<MessagesPage> {
                   } else if (snapshot.hasData) {
                     return Expanded(
                         child: ListView.builder(
-                          shrinkWrap: true,
-                          controller: _scrollController,
-                          // controller: _scrollController,
-                          physics: AlwaysScrollableScrollPhysics(),
-                          itemCount: snapshot.data.length + 1,
-                          itemBuilder: (context, index) {
-                            if(index == snapshot.data.length){
-                              return Container(height: 70);
-                            }
-                            return Row(
-                              mainAxisAlignment:
+                      shrinkWrap: true,
+                      controller: _scrollController,
+                      // controller: _scrollController,
+                      physics: AlwaysScrollableScrollPhysics(),
+                      itemCount: snapshot.data.length + 1,
+                      itemBuilder: (context, index) {
+                        if (index == snapshot.data.length) {
+                          return Container(height: 70);
+                        }
+                        return Row(
+                          mainAxisAlignment:
                               snapshot.data[index]['from'] == widget.userId
                                   ? MainAxisAlignment.end
                                   : MainAxisAlignment.start,
-                              children: [
-                                Flexible(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                    snapshot.data[index]['from'] == widget.userId
-                                        ? CrossAxisAlignment.end
-                                        : CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                        // width:screenWidth(context,dividedBy: 1.1),
-                                          margin: const EdgeInsets.symmetric(
-                                            vertical: 4,
-                                            horizontal: 16,
-                                          ),
-                                          padding: const EdgeInsets.symmetric(
-                                            vertical: 10,
-                                            horizontal: 10,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: snapshot.data[index]['from'] ==
-                                                widget.userId
-                                                ? ColorCodes.teal
-                                                : Colors.grey.shade400,
-                                            borderRadius: snapshot.data[index]
+                          children: [
+                            Flexible(
+                              child: Column(
+                                crossAxisAlignment: snapshot.data[index]
                                             ['from'] ==
-                                                widget.userId
-                                                ? BorderRadius.only(
-                                              topRight: Radius.circular(30),
-                                              topLeft: Radius.circular(30),
-                                              bottomLeft: Radius.circular(30),
-                                            )
-                                                : BorderRadius.only(
-                                              topRight: Radius.circular(30),
-                                              topLeft: Radius.circular(30),
-                                              bottomRight: Radius.circular(30),
-                                            ),
-                                          ),
-                                          child:Text(
-                                            snapshot.data[index]['message'],
-                                            style: TextStyle(
-                                                color: snapshot.data[index]['from'] == widget.userId ? Colors.white : Colors.black,
-                                                fontFamily: poppins),
-                                          )
+                                        widget.userId
+                                    ? CrossAxisAlignment.end
+                                    : CrossAxisAlignment.start,
+                                children: [
+                                  Container(
+                                      // width:screenWidth(context,dividedBy: 1.1),
+                                      margin: const EdgeInsets.symmetric(
+                                        vertical: 4,
+                                        horizontal: 16,
                                       ),
-                                      Padding(
-                                        padding: snapshot.data[index]['from'] == widget.userId ? EdgeInsets.only(right: 15) :EdgeInsets.only(left: 15),
-                                        child: customText(snapshot.data[index]['time'], ColorCodes.greyText, 10, FontWeight.w100, 'poppins'),
-                                      )
-                                    ],
-                                  ),
-
-                                ),
-
-                              ],
-                            );
-                          },
-                        ));
+                                      padding: const EdgeInsets.symmetric(
+                                        vertical: 10,
+                                        horizontal: 10,
+                                      ),
+                                      decoration: BoxDecoration(
+                                        color: snapshot.data[index]['from'] ==
+                                                widget.userId
+                                            ? ColorCodes.teal
+                                            : Colors.grey.shade400,
+                                        borderRadius: snapshot.data[index]
+                                                    ['from'] ==
+                                                widget.userId
+                                            ? BorderRadius.only(
+                                                topRight: Radius.circular(30),
+                                                topLeft: Radius.circular(30),
+                                                bottomLeft: Radius.circular(30),
+                                              )
+                                            : BorderRadius.only(
+                                                topRight: Radius.circular(30),
+                                                topLeft: Radius.circular(30),
+                                                bottomRight:
+                                                    Radius.circular(30),
+                                              ),
+                                      ),
+                                      child: Text(
+                                        snapshot.data[index]['message'],
+                                        style: TextStyle(
+                                            color: snapshot.data[index]
+                                                        ['from'] ==
+                                                    widget.userId
+                                                ? Colors.white
+                                                : Colors.black,
+                                            fontFamily: poppins),
+                                      )),
+                                  Padding(
+                                    padding: snapshot.data[index]['from'] ==
+                                            widget.userId
+                                        ? EdgeInsets.only(right: 15)
+                                        : EdgeInsets.only(left: 15),
+                                    child: customText(
+                                        snapshot.data[index]['time'],
+                                        ColorCodes.greyText,
+                                        10,
+                                        FontWeight.w100,
+                                        'poppins'),
+                                  )
+                                ],
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    ));
                   }
                   return Expanded(
                       child: Center(
@@ -349,14 +380,16 @@ class _MessagesPageState extends State<MessagesPage> {
                       onTap: () {
                         if (messageController.text.isNotEmpty) {
                           setState(() {
-                            _scrollController.animateTo(_scrollController.position.maxScrollExtent, duration: Duration(milliseconds: 100), curve: Curves.easeOut);
+                            _scrollController.animateTo(
+                                _scrollController.position.maxScrollExtent,
+                                duration: Duration(milliseconds: 100),
+                                curve: Curves.easeOut);
                           });
                           // messages.insert(0, messageController.text.trim());
                           sendMesseage(
                               message: messageController.text.trim(),
                               toIdId: widget.targetId,
-                              fromId: widget.userId
-                          );
+                              fromId: widget.userId);
                           messageController.clear();
                           setState(() {});
                         }
@@ -376,7 +409,7 @@ class _MessagesPageState extends State<MessagesPage> {
                         columns: 7,
                         emojiSizeMax: 32 *
                             (foundation.defaultTargetPlatform ==
-                                TargetPlatform.android
+                                    TargetPlatform.android
                                 ? 1.30
                                 : 1.0),
                         verticalSpacing: 0,

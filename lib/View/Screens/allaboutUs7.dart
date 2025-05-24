@@ -30,6 +30,7 @@ class _AllAboutUs07State extends State<AllAboutUs07> {
     return Scaffold(
       body: Container(
         height: double.infinity,
+        width: double.infinity,
         decoration: const BoxDecoration(
             image: DecorationImage(
                 image: AssetImage(ImageConstants.welcomeBackGround),
@@ -37,50 +38,18 @@ class _AllAboutUs07State extends State<AllAboutUs07> {
         child: SingleChildScrollView(
           child: Column(
             children: [
+              Container(
+                height: screenHeight(context, dividedBy: 4.6),
+                width: screenWidth(context, dividedBy: 2),
+                child: Image.asset(
+                  ImageConstants.textWithLogo,
+                ),
+              ),
               Padding(
                 padding:
                     EdgeInsets.only(top: screenHeight(context, dividedBy: 25)),
                 child: customText(
-                    'The Guide', Colors.white, 18, FontWeight.bold, poppins),
-              ),
-              Container(
-                margin:
-                    EdgeInsets.only(top: screenHeight(context, dividedBy: 80)),
-                height: screenHeight(context, dividedBy: 2.5),
-                width: screenWidth(context, dividedBy: 1),
-                alignment: Alignment.center,
-                color: ColorCodes.lightGrey,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      width: screenWidth(context, dividedBy: 1.4),
-                      child: customText(
-                          "Video of clicking through to the Gftr Guide homepage, scrolling through articles etc. ",
-                          Colors.black,
-                          13,
-                          FontWeight.w400,
-                          poppins,
-                          isTextAlign: true),
-                    ),
-                    Container(
-                      width: screenWidth(context, dividedBy: 1.8),
-                      child: customText(
-                          "Then quick video of the settings page and the reminder options.",
-                          Colors.black,
-                          13,
-                          FontWeight.w400,
-                          poppins,
-                          isTextAlign: true),
-                    ),
-                    Container(
-                      width: screenWidth(context, dividedBy: 1.8),
-                      child: customText("End on GFTR logo.", Colors.black, 13,
-                          FontWeight.w400, poppins,
-                          isTextAlign: true),
-                    ),
-                  ],
-                ),
+                    'The Guide', Colors.white, 25, FontWeight.w600, poppins),
               ),
               Container(
                 margin:
@@ -90,7 +59,7 @@ class _AllAboutUs07State extends State<AllAboutUs07> {
                     "Check out our GFTR Guide for gifting ideas for every occasion; fascinating interviews with gifting aficionados; and ‘Small Business Spotlight’ articles.",
                     Colors.white,
                     13,
-                    FontWeight.w400,
+                    FontWeight.w500,
                     poppins,
                     isTextAlign: true),
               ),
@@ -98,8 +67,12 @@ class _AllAboutUs07State extends State<AllAboutUs07> {
                 padding:
                     EdgeInsets.only(top: screenHeight(context, dividedBy: 80)),
                 child: customText(
-                    "That’s it!", Colors.white, 13, FontWeight.w400, poppins,
-                    isTextAlign: true),
+                  "That’s it!",
+                  Colors.white,
+                  13,
+                  FontWeight.w500,
+                  poppins,
+                ),
               ),
               Container(
                 margin:
@@ -109,7 +82,7 @@ class _AllAboutUs07State extends State<AllAboutUs07> {
                     "(And don’t worry. We’ve all forgotten the occasional birthday... but not anymore! Just check your settings to make sure we will always remind you in plenty of time to get that perfect gift)",
                     Colors.white,
                     13,
-                    FontWeight.w400,
+                    FontWeight.w500,
                     poppins,
                     isTextAlign: true),
               ),
@@ -117,9 +90,42 @@ class _AllAboutUs07State extends State<AllAboutUs07> {
                 padding:
                     EdgeInsets.only(top: screenHeight(context, dividedBy: 60)),
                 child: customText("So what are you waiting for?", Colors.white,
-                    13, FontWeight.w400, poppins,
+                    13, FontWeight.w500, poppins,
                     isTextAlign: true),
               ),
+              SizedBox(height: screenHeight(context, dividedBy: 20)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  customText(
+                    "You’re a",
+                    Colors.white,
+                    16,
+                    FontWeight.w500,
+                    poppins,
+                    isTextAlign: true,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  Image.asset(
+                    ImageConstants.gftrBlack,
+                    color: Colors.white,
+                    height: 30,
+                  ),
+                  SizedBox(
+                    width: 8,
+                  ),
+                  customText(
+                    "now",
+                    Colors.white,
+                    16,
+                    FontWeight.w500,
+                    poppins,
+                  ),
+                ],
+              ),
+              SizedBox(height: screenHeight(context, dividedBy: 30)),
               GestureDetector(
                 onTap: () {
                   // if (authorization.length > 1)

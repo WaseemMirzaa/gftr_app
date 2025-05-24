@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gftr/ViewModel/Cubits/Google_login.dart';
+import 'package:gftr/ViewModel/Cubits/fcm_token_cubit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -36,6 +37,7 @@ class _LoginPageState extends State<LoginPage> {
 
   GoogleSignIn _googleSignIn = GoogleSignIn();
   SignInCubit signInCubit = SignInCubit();
+  FcmTokenCubit fcmTokenCubit = FcmTokenCubit();
   FocusNode emailNode = FocusNode();
   FocusNode passwordNode = FocusNode();
   SharedPrefsService prefsService = SharedPrefsService();
@@ -43,6 +45,7 @@ class _LoginPageState extends State<LoginPage> {
   late final WebViewController _controller;
   final dio = Dio();
   String htmlpage = '';
+  String? fcmToken;
   findingEmailsCubit _helloo = findingEmailsCubit();
   Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
@@ -81,10 +84,17 @@ class _LoginPageState extends State<LoginPage> {
     setState(() {});
   }
 
+  readFcmToken() async {
+    fcmToken = context.read<FcmTokenCubit>().getFcmToken();
+    // fcmTokenCubit.getFcmToken();
+    print("Token fetch From State $fcmToken");
+  }
+
   @override
   void initState() {
     super.initState();
     signInCubit = BlocProvider.of<SignInCubit>(context);
+    readFcmToken();
     //getGoogleAuth();
     // print(signInCubit);
   }
@@ -264,6 +274,7 @@ class _LoginPageState extends State<LoginPage> {
                                               signInCubit.signInService(
                                                   phoneNumber.text,
                                                   password.text,
+                                                  fcmToken ?? "No Token",
                                                   context);
                                             }
 

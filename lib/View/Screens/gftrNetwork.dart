@@ -443,36 +443,45 @@ GFTR
                                       SizedBox(
                                           width: screenWidth(context,
                                               dividedBy: 35)),
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            alignment: Alignment.bottomLeft,
-                                            height: screenHeight(context,
-                                                dividedBy: 25),
-                                            width: screenWidth(context,
-                                                dividedBy: 4),
-                                            child: Text(
-                                              "${_searchbar.text.isNotEmpty ? results[index]['firstname'] : _users[index]['firstname']}",
-                                              style: TextStyle(
-                                                color: Colors.black,
-                                                fontSize: 15,
-                                                fontWeight: FontWeight.w200,
-                                                fontFamily: poppins,
-                                              ),
+                                      Container(
+                                          alignment: Alignment.center,
+                                          height: screenHeight(context,
+                                              dividedBy: 20),
+                                          child: RichText(
+                                            text: TextSpan(
+                                              children: [
+                                                TextSpan(
+                                                  text:
+                                                      _searchbar.text.isNotEmpty
+                                                          ? results[index]
+                                                              ['firstname']
+                                                          : _users[index]
+                                                              ['firstname'],
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w200,
+                                                    fontFamily: poppins,
+                                                  ),
+                                                ),
+                                                TextSpan(text: ' '),
+                                                TextSpan(
+                                                  text:
+                                                      _searchbar.text.isNotEmpty
+                                                          ? results[index]
+                                                              ['lastname']
+                                                          : _users[index]
+                                                              ['lastname'],
+                                                  style: TextStyle(
+                                                    color: Colors.black,
+                                                    fontSize: 15,
+                                                    fontWeight: FontWeight.w200,
+                                                    fontFamily: poppins,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ),
-                                          customText(
-                                              "${_searchbar.text.isNotEmpty ? results[index]['phoneNumber'] : _users[index]['phoneNumber']}",
-                                              ColorCodes.greyText,
-                                              10,
-                                              FontWeight.w100,
-                                              poppins),
-                                        ],
-                                      ),
+                                          )),
                                       Spacer(),
                                       if (isBotton &&
                                           e.contains(
@@ -500,7 +509,7 @@ GFTR
                                                   ImageConstants.askLogo,
                                                   width: 15,
                                                   height: 15),
-                                              Text("Asked",
+                                            Text("Asked",
                                                   style: const TextStyle(
                                                     fontSize: 12,
                                                     color: Color(0xffFFFFFF),
@@ -864,7 +873,8 @@ GFTR
                           },
                         ),
                       );
-                    } else if (state is MutualFrdsSuccess) {
+                    } 
+                    else if (state is MutualFrdsSuccess) {
                       return Scrollbar(
                         thickness: 8,
                         radius: Radius.circular(16),

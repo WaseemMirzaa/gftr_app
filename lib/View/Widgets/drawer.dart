@@ -19,6 +19,7 @@ import 'package:gftr/View/Screens/ManageBottom/getGiftedPublicView.dart';
 import 'package:gftr/View/Widgets/customLoader.dart';
 import 'package:gftr/View/Widgets/customText.dart';
 import 'package:gftr/ViewModel/Cubits/GetGifted/Profiel_img.dart';
+import 'package:gftr/ViewModel/Cubits/fcm_token_cubit.dart';
 import 'package:gftr/ViewModel/Cubits/viewsetting.dart';
 import 'package:gftr/ViewModel/prefsService.dart';
 import 'package:http/http.dart' as http;
@@ -81,6 +82,7 @@ Widget drawerCommonListTile(
             MaterialPageRoute(builder: (context) => const ContactPage()));
       } else if ("Log Out" == text) {
         SharedPrefsService prefsService = SharedPrefsService();
+        final fcmCubit = FcmTokenCubit();
         prefsService.removeData('authToken');
         prefsService.removeData('phoneNumberPre');
         prefsService.removeData('emailPre');
@@ -93,13 +95,14 @@ Widget drawerCommonListTile(
         });
         print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
-
+        fcmCubit.setFcmToken('');
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const LoginPage()),
             (route) => false);
         bottombarblack = false;
       }
+    
     },
     child: Container(
       height: screenHeight(context, dividedBy: 21),

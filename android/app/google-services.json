@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "373698090703",
-    "project_id": "gftr-75db6",
-    "storage_bucket": "gftr-75db6.appspot.com"
+    "project_number": "961429901713",
+    "project_id": "gftr-group",
+    "storage_bucket": "gftr-group.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:373698090703:android:dbf19e18752ab6177d89ba",
+        "mobilesdk_app_id": "1:961429901713:android:e01ab564f9ca1afb46ca30",
         "android_client_info": {
           "package_name": "com.example.gftr"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyBL7dDO7IfnBzQism8R-k1JJYU-eDA05YA"
+          "current_key": "AIzaSyBmVD_fihcPpo75qGTjyXleQG_v0OaCQPg"
         }
       ],
       "services": {

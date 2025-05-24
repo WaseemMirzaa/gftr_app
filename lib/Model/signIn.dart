@@ -18,38 +18,38 @@ class SignIn {
   SignInData? data;
 
   factory SignIn.fromJson(Map<String, dynamic> json) => SignIn(
-    status: json["status"] == null ? null : json["status"],
-    code: json["code"] == null ? null : json["code"],
-    message: json["message"] == null ? null : json["message"],
-    data: json["data"] == null ? null : SignInData.fromJson(json["data"]),
-  );
+        status: json["status"] == null ? null : json["status"],
+        code: json["code"] == null ? null : json["code"],
+        message: json["message"] == null ? null : json["message"],
+        data: json["data"] == null ? null : SignInData.fromJson(json["data"]),
+      );
 
   Map<String, dynamic> toJson() => {
-    "status": status == null ? null : status,
-    "code": code == null ? null : code,
-    "message": message == null ? null : message,
-    "data": data == null ? null : data!.toJson(),
-  };
+        "status": status == null ? null : status,
+        "code": code == null ? null : code,
+        "message": message == null ? null : message,
+        "data": data == null ? null : data!.toJson(),
+      };
 }
 
 class SignInData {
-  SignInData({
-    this.userData,
-    this.token,
-  });
+  SignInData({this.userData, this.token, this.fcmToken});
 
   UserData? userData;
   String? token;
+  String? fcmToken;
 
   factory SignInData.fromJson(Map<String, dynamic> json) => SignInData(
-    userData: json["userData"] == null ? null : UserData.fromJson(json["userData"]),
-    token: json["token"] == null ? null : json["token"],
-  );
+      userData:
+          json["userData"] == null ? null : UserData.fromJson(json["userData"]),
+      token: json["token"] == null ? null : json["token"],
+      fcmToken: json['fcmToken'] ?? "null");
 
   Map<String, dynamic> toJson() => {
-    "userData": userData == null ? null : userData!.toJson(),
-    "token": token == null ? null : token,
-  };
+        "userData": userData == null ? null : userData!.toJson(),
+        "token": token == null ? null : token,
+        "fcmToken": fcmToken ?? "null"
+      };
 }
 
 class UserData {
@@ -64,14 +64,14 @@ class UserData {
   String? email;
 
   factory UserData.fromJson(Map<String, dynamic> json) => UserData(
-    id: json["id"] == null ? null : json["id"],
-    username: json["username"] == null ? null : json["username"],
-    email: json["email"] == null ? null : json["email"],
-  );
+        id: json["id"] == null ? null : json["id"],
+        username: json["username"] == null ? null : json["username"],
+        email: json["email"] == null ? null : json["email"],
+      );
 
   Map<String, dynamic> toJson() => {
-    "id": id == null ? null : id,
-    "username": username == null ? null : username,
-    "email": email == null ? null : email,
-  };
+        "id": id == null ? null : id,
+        "username": username == null ? null : username,
+        "email": email == null ? null : email,
+      };
 }
