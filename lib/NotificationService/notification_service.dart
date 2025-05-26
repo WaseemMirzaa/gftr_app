@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gftr/View/Screens/Gftrs.dart';
+import 'package:gftr/View/Screens/inbox.dart';
 import 'package:gftr/main.dart';
 import 'package:open_app_settings/open_app_settings.dart' as setting;
 
@@ -32,10 +33,9 @@ class NotificationServices {
     if(message == null) return;
 
   notificationRouteKey.currentState?.pushNamed(
-    Gftrs.route,
+    InboxPage.route,
     arguments: message
   );
-
   }
 
   // ────────────────────────── PUBLIC INITIALISER ──────────────────────────────
@@ -114,12 +114,16 @@ class NotificationServices {
       remoteMessage.notification?.body ?? 'No Body',
       details,
     );
+
   }
 
   // ───────────────────────────── MESSAGE LISTENERS ────────────────────────────
   void _firebaseNotificationsInitialization(BuildContext context) {
     FirebaseMessaging.onMessage.listen((message) async {
+      print(message.data);
       debugPrint('🟢 (FG) ${message.notification?.title}');
+      debugPrint('🟢 (FG) ${message.notification?.body}');
+     
       await _initLocalNotifications(context, message);
       await _showNotification(message);
     });

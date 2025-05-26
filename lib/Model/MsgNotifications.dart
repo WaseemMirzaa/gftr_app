@@ -39,15 +39,12 @@ class Notifications {
 
 
 
-
-  factory Notifications.fromJson(Map<String, dynamic> json) => Notifications(
-  status: json["status"],
-  code: json["code"],
-  message: json["message"],
-  data: json["data"],
-  );
-
-
+factory Notifications.fromJson(Map<String, dynamic> json) => Notifications(
+  status: json["status"] as bool?,
+  code: json["code"] as int?,
+  message: json["message"] as String?,
+  data: json["data"] != null ? json["data"] as int : 0,
+);
 
 
   Map<String, dynamic> toJson() => {

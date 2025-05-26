@@ -69,6 +69,7 @@ Future<InitData> init() async {
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   print('Handling background message: ${message.messageId}');
+  print(message.data);
 }
 
 Future<void> main() async {

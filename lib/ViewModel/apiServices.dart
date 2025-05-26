@@ -557,6 +557,7 @@ class DioClient {
     try {
       Response userData = await _dio.post(ApiConstants.decryptData, data: body);
       log('View Gift: ${userData.data}');
+     
       return Groups.fromJson(userData.data);
     } catch (e) {
       print("View Gift error ${e.toString()}");
