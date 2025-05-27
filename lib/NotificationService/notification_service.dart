@@ -80,7 +80,7 @@ class NotificationServices {
   Future<void> _initLocalNotifications(
       BuildContext context, RemoteMessage message) async {
     const initSettings = InitializationSettings(
-      android: AndroidInitializationSettings('icon'),
+      android: AndroidInitializationSettings('ic_notification'),
       iOS: DarwinInitializationSettings(),
     );
 
@@ -98,7 +98,7 @@ class NotificationServices {
         channelDescription: defaultChannel.description,
         importance: Importance.high,
         priority: Priority.high,
-        icon: 'icon',
+        icon: 'ic_notification',
         ticker: 'ticker',
       ),
       iOS: const DarwinNotificationDetails(

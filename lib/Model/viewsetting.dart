@@ -23,14 +23,14 @@ class ViewSetting {
 
   factory ViewSetting.fromJson(Map<String, dynamic> json) => ViewSetting(
     status: json["status"],
-    code: json[" code"],
-    message: json["message"],
-    data: Data.fromJson(json["data"]),
+    code: json["code"] is int ? json["code"] : int.tryParse(json["code"].toString()),
+    message: json["message"] ?? "",
+    data: Data.fromJson(json["data"]?? ""),
   );
 
   Map<String, dynamic> toJson() => {
     "status": status,
-    " code": code,
+    "code": code,
     "message": message,
     "data": data?.toJson(),
   };
@@ -92,32 +92,53 @@ class Data {
   });
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-    id: json["_id"],
-    firstname: json["firstname"],
-    lastname: json["lastname"],
-    email: json["email"],
-    password: json["password"] ?? '',
-    avatar: json["avatar"],
-    child: List<dynamic>.from(json["child"].map((x) => x)) ?? [],
-    otpCheck: json["otpCheck"],
-    phoneNumber: json["phoneNumber"],
-    isVerified: json["isVerified"],
-    status: json["status"],
-    role: json["role"],
-    notifychat: json["notifychat"],
-    remindMe: List<RemindMe>.from(json["remindMe"].map((x) => RemindMe.fromJson(x))),
-    createdAt: DateTime.parse(json["createdAt"]),
-    updatedAt: DateTime.parse(json["updatedAt"]),
-    encEmail: json["__enc_email"],
-    birthday: DateTime.parse(json["birthday"]),
-    city: json["city"],
-    country: json["country"],
-    isPrivate: json["isPrivate"],
-    state: json["state"],
-    street: json["street"],
-    unit: json["unit"],
-    zipcode: json["zipcode"],
-  );
+        id         : json['_id']?.toString() ?? '',
+        firstname  : json['firstname']?.toString() ?? '',
+        lastname   : json['lastname']?.toString() ?? '',
+        email      : json['email']?.toString() ?? '',
+        password   : json['password']?.toString() ?? '',
+        avatar     : json['avatar']?.toString() ?? '',
+        child      : (json['child'] as List?)?.map((x) => x).toList() ?? [],
+        otpCheck   : json['otpCheck']?.toString() ?? '',
+        phoneNumber: json['phoneNumber'] is int
+            ? json['phoneNumber']
+            : int.tryParse(json['phoneNumber']?.toString() ?? '') ?? 0,
+        isVerified : json['isVerified'] is bool
+            ? json['isVerified']
+            : json['isVerified']?.toString().toLowerCase() == 'true',
+        status     : json['status'] is bool
+            ? json['status']
+            : json['status']?.toString().toLowerCase() == 'true',
+        role       : json['role']?.toString() ?? '',
+        notifychat : json['notifychat'] is int
+            ? json['notifychat']
+            : int.tryParse(json['notifychat']?.toString() ?? '') ?? 0,
+        remindMe   : (json['remindMe'] as List?)
+                ?.map((x) => RemindMe.fromJson(x))
+                .toList() ??
+            [],
+        createdAt  : json['createdAt'] != null
+            ? DateTime.parse(json['createdAt'])
+            : DateTime.now(),
+        updatedAt  : json['updatedAt'] != null
+            ? DateTime.parse(json['updatedAt'])
+            : DateTime.now(),
+        encEmail   : json['__enc_email'] is bool
+            ? json['__enc_email']
+            : json['__enc_email']?.toString().toLowerCase() == 'true',
+        birthday   : json['birthday'] != null
+            ? DateTime.parse(json['birthday'])
+            : DateTime.now(),
+        city       : json['city']?.toString() ?? '',
+        country    : json['country']?.toString() ?? '',
+        isPrivate  : json['isPrivate'] is bool
+            ? json['isPrivate']
+            : json['isPrivate']?.toString().toLowerCase() == 'true',
+        state      : json['state']?.toString() ?? '',
+        street     : json['street']?.toString() ?? '',
+        unit       : json['unit']?.toString() ?? '',
+        zipcode    : json['zipcode']?.toString() ?? '',
+      );
 
   Map<String, dynamic> toJson() => {
     "_id": id,

@@ -23,6 +23,7 @@ class MessagnotiCubit extends Cubit<MessagnotiState> {
     print("============================**> $data");
     if (data != null) {
       notifications = await DioClient().MassageNotification(data.data!);
+      print(notifications!.data);
       if (notifications != null && notifications!.status!) {
         emit(MessagnotiSuccess());
         print("============================**> succesfull");

@@ -25,7 +25,7 @@ class Notifications {
   bool? status;
   int? code;
   String? message;
-  int? data;
+  final int? data;
 
 
 
@@ -43,7 +43,7 @@ factory Notifications.fromJson(Map<String, dynamic> json) => Notifications(
   status: json["status"] as bool?,
   code: json["code"] as int?,
   message: json["message"] as String?,
-  data: json["data"] != null ? json["data"] as int : 0,
+  data: (json['data'] ?? 0) as int,
 );
 
 

@@ -42,8 +42,10 @@
             android:hardwareAccelerated="true"
             android:windowSoftInputMode="adjustResize">
 
-            
-
+           <!-- In AndroidManifest.xml -->
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_notification" />
             <!-- Firebase Notification Channel -->
             <meta-data
                 android:name="com.google.firebase.messaging.default_notification_channel_id"
