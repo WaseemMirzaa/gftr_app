@@ -22,8 +22,7 @@ import 'package:uuid/uuid.dart';
 class InboxPage extends StatefulWidget {
   const InboxPage({Key? key}) : super(key: key);
 
-  static const route = "/inbox_page";
-
+  static const inboxPage = "/inboxPage";
   @override
   State<InboxPage> createState() => _InboxPageState();
 }

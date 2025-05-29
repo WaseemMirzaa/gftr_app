@@ -22,10 +22,16 @@ class FcmTokenCubit extends Cubit<FcmTokenState> {
   FcmTokenCubit() : super(FcmTokenInitial());
 
   void setFcmToken(String token) {
-    print(token);
-
+    
+    print("Token Set ${token}");
     emit(FcmTokenLoaded(token));
   }
+
+  void clearFcmToken() {
+    print("clear token");
+  emit(FcmTokenInitial());
+}
+
 
   String? getFcmToken() {
     if (state is FcmTokenLoaded) {

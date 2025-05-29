@@ -1808,7 +1808,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                     FontWeight.w500, poppins),
                                 customText("Who can see your GFTR page?",
                                     Colors.black, 14, FontWeight.w500, poppins),
-
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [

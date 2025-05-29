@@ -25,7 +25,7 @@ class Mutulfriendd {
     status: json["status"],
     code: json["code"],
     message: json["message"],
-    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))),
+    data: List<Datum>.from(json["data"].map((x) => Datum.fromJson(x))).toList(),
   );
 
   Map<String, dynamic> toJson() => {

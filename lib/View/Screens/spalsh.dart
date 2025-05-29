@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gftr/Helper/appConfig.dart';
@@ -6,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:gftr/Helper/imageConstants.dart';
 import 'package:gftr/View/Screens/LoginPage.dart';
 import 'package:gftr/View/Screens/ManageBottom/gftrStoryViewPage.dart';
+import 'package:gftr/View/Widgets/bottomNavigationBar.dart';
 import 'package:gftr/ViewModel/Cubits/setting_cubit.dart';
 import 'package:gftr/ViewModel/Cubits/viewsetting.dart';
 import 'package:gftr/ViewModel/prefsService.dart';
+import 'package:gftr/main.dart';
 
 class SplashPage extends StatefulWidget {
   @override
@@ -27,7 +30,29 @@ class _SplashPageState extends State<SplashPage> {
     viewSettingCubit = BlocProvider.of<ViewSettingCubit>(context);
     viewSettingCubit.getviewSetting();
     checkLoginStatus();
+    // checkforNotification();
   }
+
+  // checkforNotification()async{
+  //   await checkLoginStatus();
+  //   try {
+  //     if(mounted){
+  //       FirebaseMessaging.onMessage.listen((event) {
+  //           void handleMessage(RemoteMessage? message){
+  //   if(message == null) return;
+  //     notificationRouteKey.currentState?.pushNamed(
+  //   NavigationScreen.navigationRoute,
+  //   // arguments: {
+  //   //   "index" : 1
+  //   // }
+  //     );
+  //        }});
+  //     }
+  //   } catch (e) {
+      
+  //   }
+  // }
+
 
   Future<void> checkLoginStatus() async {
     try {

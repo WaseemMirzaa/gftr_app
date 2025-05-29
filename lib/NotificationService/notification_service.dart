@@ -1,8 +1,16 @@
+import 'dart:io';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gftr/View/Screens/Gftrs.dart';
+import 'package:gftr/View/Screens/ManageBottom/gftrStoryViewPage.dart';
+import 'package:gftr/View/Screens/ManageBottom/notificationpageview.dart';
+import 'package:gftr/View/Screens/gftrStories.dart';
+import 'package:gftr/View/Screens/give.dart';
+import 'package:gftr/View/Screens/google.dart';
 import 'package:gftr/View/Screens/inbox.dart';
+import 'package:gftr/View/Widgets/bottomNavigationBar.dart';
 import 'package:gftr/main.dart';
 import 'package:open_app_settings/open_app_settings.dart' as setting;
 
@@ -19,24 +27,33 @@ class NotificationServices {
   final FlutterLocalNotificationsPlugin flutterLocalNotifications =
       FlutterLocalNotificationsPlugin();
 
+  Future<String> getToken()async{
+   String? fcmToken = Platform.isAndroid ?  await messaging.getToken() : await messaging.getAPNSToken();
+
+   return fcmToken ?? "No Token";
+
+  }
+
   // ───────────────────────── Android default channel ──────────────────────────
   static const AndroidNotificationChannel defaultChannel =
       AndroidNotificationChannel(
-    'default_channel', // MUST match <meta-data> value in AndroidManifest.xml
+    'high_importance_channel', // MUST match <meta-data> value in AndroidManifest.xml
     'Default Notifications',
     description: 'General notifications for the app',
     importance: Importance.high,
   );
 
 
-  void handleMessage(RemoteMessage? message){
-    if(message == null) return;
+  void handleMessage(RemoteMessage? message) {
+  if (message == null) return;
 
-  notificationRouteKey.currentState?.pushNamed(
-    InboxPage.route,
-    arguments: message
-  );
-  }
+  Future.delayed(Duration(milliseconds: 200)).then((_) {
+    notificationRouteKey.currentState?.pushNamed(
+    NotificationPageView.inboxRouter
+    );
+  });
+}
+
 
   // ────────────────────────── PUBLIC INITIALISER ──────────────────────────────
   /// Call once after login / on app start.
@@ -147,7 +164,10 @@ class NotificationServices {
           'Dear user, we apologize for the inconvenience',
         )) {
       debugPrint('➡️ Navigate to notifications page');
-      // Navigator.pushNamed(context, '/notifications');
+
+      notificationRouteKey.currentState!.pushNamed(
+        NotificationPageView.inboxRouter
+      );
     }
   }
 }

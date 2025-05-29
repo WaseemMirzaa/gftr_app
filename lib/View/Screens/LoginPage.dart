@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gftr/NotificationService/notification_service.dart';
 import 'package:gftr/ViewModel/Cubits/Google_login.dart';
 import 'package:gftr/ViewModel/Cubits/fcm_token_cubit.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -85,9 +86,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   readFcmToken() async {
-    fcmToken = context.read<FcmTokenCubit>().getFcmToken();
+    NotificationServices sp = NotificationServices();
+    fcmToken = await sp.getToken();
     // fcmTokenCubit.getFcmToken();
-    print("Token fetch From State $fcmToken");
+    print("Token fetch Login $fcmToken");
   }
 
   @override

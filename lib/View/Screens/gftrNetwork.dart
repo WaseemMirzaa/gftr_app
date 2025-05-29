@@ -268,6 +268,7 @@ GFTR
   List e = [];
   List f = [];
   final ScrollController _secondController = ScrollController();
+  final ScrollController _secondController2 = ScrollController();
 
   @override
   void dispose() {
@@ -322,6 +323,7 @@ GFTR
                               element.toString().toLowerCase().contains(value))
                           .toList();
                     });
+                    print(results.length);
                   },
                   // maxLength: hintText=='Price'?5: null,
                   decoration: InputDecoration(
@@ -382,6 +384,14 @@ GFTR
                         child: spinkitLoader(context, ColorCodes.coral),
                       );
                     } else if (state is MutualFrdsError) {
+                      final searchTerm = _searchbar.text.toLowerCase();
+      final filteredUsers = searchTerm.isEmpty
+          ? _users
+          : _users.where((user) {
+              final firstName = user['firstname']?.toString().toLowerCase() ?? '';
+              final lastName = user['lastname']?.toString().toLowerCase() ?? '';
+              return firstName.contains(searchTerm) || lastName.contains(searchTerm);
+            }).toList();
                       return Scrollbar(
                         thickness: 8,
                         radius: Radius.circular(16),
@@ -392,10 +402,9 @@ GFTR
                         controller: _secondController,
                         child: ListView.builder(
                           controller: _secondController,
-                          itemCount: _searchbar.text.isNotEmpty
-                              ? results.length
-                              : _users.length,
+                          itemCount: filteredUsers.length,
                           itemBuilder: (context, index) {
+                            
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -875,6 +884,15 @@ GFTR
                       );
                     } 
                     else if (state is MutualFrdsSuccess) {
+                      final mutualFriends = mutualFrdsCubit.mutulfriendd?.data ?? [];
+      final searchTerm = _searchbar.text.toLowerCase();
+      final filteredFriends = searchTerm.isEmpty
+          ? mutualFriends
+          : mutualFriends.where((friend) {
+              final firstName = friend.frd.firstname?.toLowerCase() ?? '';
+              final lastName = friend.frd.lastname?.toLowerCase() ?? '';
+              return firstName.contains(searchTerm) || lastName.contains(searchTerm);
+            }).toList();
                       return Scrollbar(
                         thickness: 8,
                         radius: Radius.circular(16),
@@ -885,10 +903,10 @@ GFTR
                         controller: _secondController,
                         child: ListView.builder(
                           controller: _secondController,
-                          itemCount: mutualFrdsCubit.mutulfriendd?.data?.length,
+                          itemCount: filteredFriends.length,
                           itemBuilder: (context, Firstindex) {
-                            final mutuInt = mutualFrdsCubit.mutulfriendd!
-                                .data![Firstindex].mutualby.length;
+                            final friend = filteredFriends[Firstindex];
+            final mutuInt = friend.mutualby.length;
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -925,7 +943,7 @@ GFTR
                                             shape: BoxShape.circle),
                                         child: CircleAvatar(
                                           backgroundImage: NetworkImage(
-                                              "${ApiConstants.baseUrlsSocket}${mutualFrdsCubit.mutulfriendd?.data?[Firstindex].frd.avatar}"),
+                                              "${ApiConstants.baseUrlsSocket}${friend.frd.avatar}"),
                                           // AssetImage(ImageConstants.dummyProfile),
                                           radius: 23,
                                         ),
@@ -946,7 +964,7 @@ GFTR
                                             width: screenWidth(context,
                                                 dividedBy: 4),
                                             child: Text(
-                                              "${mutualFrdsCubit.mutulfriendd?.data?[Firstindex].frd.firstname}",
+                                              "${friend.frd.firstname}",
                                               style: TextStyle(
                                                 color: Colors.black,
                                                 fontSize: 15,
@@ -964,7 +982,7 @@ GFTR
                                             child: Row(
                                               children: [
                                                 Text(
-                                                  "Mutual : ${mutualFrdsCubit.mutulfriendd?.data?[Firstindex].mutualby[0].name}",
+                                                  "Mutual : ${friend.mutualby[0].name}",
                                                   style: TextStyle(
                                                     color: Colors.black,
                                                     fontSize: 12,
@@ -983,12 +1001,12 @@ GFTR
                                                                   "Mutual Friends"),
                                                               content:
                                                                   Container(
-                                                                      height:
-                                                                          100,
+                                                                    height: MediaQuery.sizeOf(context).height * 0.4,
+                                                                      width: double.maxFinite,
                                                                       child:
                                                                           Scrollbar(
                                                                         controller:
-                                                                            _secondController,
+                                                                            _secondController2,
                                                                         thickness:
                                                                             8,
                                                                         radius:
@@ -1003,14 +1021,13 @@ GFTR
                                                                           padding:
                                                                               EdgeInsets.zero,
                                                                           controller:
-                                                                              _secondController,
+                                                                              _secondController2,
                                                                           scrollDirection:
                                                                               Axis.vertical,
                                                                           physics:
                                                                               ClampingScrollPhysics(),
-                                                                          itemCount: mutualFrdsCubit
-                                                                              .mutulfriendd!
-                                                                              .data![Firstindex]
+                                                                          itemCount: 
+                                                                              friend
                                                                               .mutualby
                                                                               .length,
                                                                           itemBuilder:
@@ -1018,12 +1035,12 @@ GFTR
                                                                             return Row(
                                                                               children: [
                                                                                 CircleAvatar(
-                                                                                  backgroundImage: NetworkImage("${ApiConstants.baseUrlsSocket}${mutualFrdsCubit.mutulfriendd?.data?[Firstindex].mutualby[index].avatar.toString()}"),
+                                                                                  backgroundImage: NetworkImage("${ApiConstants.baseUrlsSocket}${friend.mutualby[index].avatar.toString()}"),
                                                                                 ),
                                                                                 SizedBox(
                                                                                   width: 10,
                                                                                 ),
-                                                                                Text("${mutualFrdsCubit.mutulfriendd?.data?[Firstindex].mutualby[index].name}"),
+                                                                                Text("${friend.mutualby[index].name}"),
                                                                               ],
                                                                             );
                                                                           },

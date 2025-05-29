@@ -93,7 +93,7 @@ class _IdeaGrannyTrishState extends State<IdeaGrannyTrish> {
                           FontWeight.w500, poppins),
                     );
                   } else if (state is Fetch_All_GiftsSuccess) {
-                    return Expanded(
+                    return   Expanded(
                         child: ListView.builder(
                             itemCount: widget.PublicData?.length,
                             physics: BouncingScrollPhysics(),
@@ -398,7 +398,7 @@ class _IdeaGrannyTrishState extends State<IdeaGrannyTrish> {
                                       )));
                             }));
                   }
-                  return Center(
+                  return  Center(
                     child: spinkitLoader(context, ColorCodes.coral),
                   );
                 },

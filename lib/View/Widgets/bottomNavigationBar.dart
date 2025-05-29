@@ -122,6 +122,8 @@ class NavigationScreen extends StatefulWidget {
       required this.screenextra,
       required this.selectedIndex});
 
+      static const navigationRoute = "/navigation-route";
+
   @override
   _NavigationScreenState createState() => _NavigationScreenState();
 }

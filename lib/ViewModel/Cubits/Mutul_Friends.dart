@@ -21,6 +21,7 @@ class MutualFrdsCubit extends Cubit<MutualFrdsState> {
     emit(MutualFrdsLoading());
     Decryption? data = await DioClient().decryptDataGetMethod(
         ApiConstants.Mutul_friend);
+        
     if (data != null) {
       mutulfriendd = await DioClient().GetMutualFrdS(data.data!);
       if (mutulfriendd != null && mutulfriendd!.status!) {
