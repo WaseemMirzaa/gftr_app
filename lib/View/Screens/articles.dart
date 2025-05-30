@@ -419,6 +419,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
               BlocBuilder<Fetch_All_GiftsCubit, Fetch_All_GiftsState>(
                 builder: (context, state) {
                   print("NoGroupsCubit $state");
+                  
                   if (state is Fetch_All_GiftsLoading) {
                     return Center(
                       child: spinkitLoader(context, ColorCodes.coral),

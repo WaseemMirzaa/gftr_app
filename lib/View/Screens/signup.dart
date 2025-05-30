@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gftr/Helper/appConfig.dart';
 import 'package:gftr/Helper/colorConstants.dart';
 import 'package:gftr/Helper/imageConstants.dart';
+import 'package:gftr/NotificationService/notification_service.dart';
 import 'package:gftr/View/Screens/LoginPage.dart';
 import 'package:gftr/View/Screens/verfiyEmail.dart';
 import 'package:gftr/View/Widgets/commonAuthenticationtextField.dart';
@@ -44,18 +45,18 @@ class _SignUpState extends State<SignUp> {
   void initState() {
     super.initState();
     signUpCubit = BlocProvider.of<SignUpCubit>(context);
-    loadFcmToken();
+    readFcmToken();
   }
 
-  loadFcmToken() async {
-    fcmToken = fcmTokenCubit.getFcmToken();
+  readFcmToken() async {
+    NotificationServices sp = NotificationServices();
+    fcmToken = await sp.getToken();
+    // fcmTokenCubit.getFcmToken();
+    print("Token Signup $fcmToken");
   }
 
   @override
   Widget build(BuildContext context) {
-    fcmToken = fcmTokenCubit.getFcmToken();
-
-    print("fcmToken in Login Page $fcmToken");
 
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),

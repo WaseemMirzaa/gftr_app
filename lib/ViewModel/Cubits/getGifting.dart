@@ -55,6 +55,7 @@ class GetgifingCubit extends Cubit<GetgifingState> {
           .decryptData(ApiConstants.getGifting, response.data!);
       if (data != null) {
         GetGifting? getGifting = await DioClient().getGifting(data.data!);
+        print(getGifting!.data);
         if (getGifting != null && getGifting.status!) {
           emit(GetgifingSuccess());
           log("${getGifting.data?.phoneNumber}");

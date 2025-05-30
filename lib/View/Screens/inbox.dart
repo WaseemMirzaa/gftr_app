@@ -22,6 +22,7 @@ import 'package:uuid/uuid.dart';
 class InboxPage extends StatefulWidget {
   const InboxPage({Key? key}) : super(key: key);
 
+  static const inboxPage = "/inboxPage";
   @override
   State<InboxPage> createState() => _InboxPageState();
 }
@@ -272,22 +273,22 @@ class _InboxPageState extends State<InboxPage> {
               width: screenWidth(context, dividedBy: 1.1),
               child: customText("Notifications", Colors.black, 16,
                   FontWeight.bold, madeOuterSans)),
-          Expanded(
-            child: BlocBuilder<NotificationViewCubit, NotificationViewState>(
-                builder: (context, state) {
-              log("Notification $state");
-              if (state is NotificationViewLoading) {
-                return Center(
-                  child: spinkitLoader(context, ColorCodes.coral),
-                );
-              } else if (state is NotificationViewError) {
-                return Expanded(
-                  child: Center(
-                      child: customText("No Data Found!", Colors.black, 14,
-                          FontWeight.w300, poppins)),
-                );
-              } else if (state is NotificationViewSuccess) {
-                return ListView.builder(
+          BlocBuilder<NotificationViewCubit, NotificationViewState>(
+              builder: (context, state) {
+            log("Notification $state");
+            if (state is NotificationViewLoading) {
+              return Center(
+                child: spinkitLoader(context, ColorCodes.coral),
+              );
+            } else if (state is NotificationViewError) {
+              return Expanded(
+                child: Center(
+                    child: customText("No Data Found!", Colors.black, 14,
+                        FontWeight.w300, poppins)),
+              );
+            } else if (state is NotificationViewSuccess) {
+              return Expanded(
+                child: ListView.builder(
                     physics: BouncingScrollPhysics(),
                     itemCount: notificationViewCubit
                         .myNotifications?.receivedRequestBy?.length,
@@ -452,11 +453,11 @@ class _InboxPageState extends State<InboxPage> {
                           height: screenHeight(context, dividedBy: 50),
                         )
                       ]);
-                    });
-              }
-              return Container();
-            }),
-          )
+                    }),
+              );
+            }
+            return Container();
+          })
         ]));
   }
 }

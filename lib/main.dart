@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:gftr/NotificationService/notification_service.dart';
 import 'package:gftr/View/Screens/google.dart';
@@ -51,6 +52,7 @@ import 'firebase_options.dart';
 
 const String homeRoute = "home";
 const String showDataRoute = "showData";
+
 final notificationRouteKey = GlobalKey<NavigatorState>();
 
 Future<InitData> init() async {
@@ -69,6 +71,7 @@ Future<InitData> init() async {
 
 Future<void> handleBackgroundMessage(RemoteMessage message) async {
   print('Handling background message: ${message.messageId}');
+  print(message.data);
 }
 
 Future<void> main() async {
@@ -76,18 +79,9 @@ Future<void> main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  NotificationServices sp = NotificationServices();
 
   FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
   // 3️⃣  Instantiate services / cubits
-  final notificationServices = NotificationServices();  // singleton
-  final fcmCubit = FcmTokenCubit();
-
-  // 4️⃣  Retrieve the token (can be null on first launch)
-  final String fcmToken = await notificationServices.messaging.getToken() ?? '';
-  print('🔑 FCM token (main): $fcmToken');
-  fcmCubit.setFcmToken(fcmToken);
-  print("fcmToken from main page $fcmToken");
 
   SystemChrome.setPreferredOrientations(
           [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown])
@@ -95,22 +89,22 @@ Future<void> main() async {
     InitData initData = await init();
     runApp(MyApp(
       initData: initData,
-      fcmCubit: fcmCubit,
+    
     ));
+    
   });
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({Key? key, required this.initData, required this.fcmCubit})
+  MyApp({Key? key, required this.initData,})
       : super(key: key);
   final InitData initData;
-  final FcmTokenCubit fcmCubit;
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
-  final _navKey = GlobalKey<NavigatorState>();
+  // final _navKey = GlobalKey<NavigatorState>();
   SharedPrefsService prefsService = SharedPrefsService();
 
 
@@ -123,6 +117,14 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
 
 
     initNotificationForeGround()async{
+        final notificationServices = NotificationServices();  // singleton
+  final fcmCubit = FcmTokenCubit();
+
+  // 4️⃣  Retrieve the token (can be null on first launch)
+  final String fcmToken = await notificationServices.messaging.getToken() ?? '';
+  print('🔑 FCM token (main): $fcmToken');
+  fcmCubit.setFcmToken(fcmToken);
+
       await NotificationServices().initialise(context);
     }
 
@@ -133,7 +135,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     
     return MultiBlocProvider(
         providers: [
-          BlocProvider.value(value: widget.fcmCubit),
+          BlocProvider(create: (context) =>  FcmTokenCubit()),
           BlocProvider(create: (context) => MutualFrdsCubit()),
           BlocProvider(create: (context) => SignUpCubit()),
           BlocProvider(create: (context) => SignInCubit()),
@@ -173,21 +175,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           BlocProvider(create: (context) => Fetch_All_GiftsCubit()),
         ],
         child: MaterialApp(
-          theme: ThemeData(
-            scaffoldBackgroundColor: Colors.white,
-            canvasColor: Colors.white,
-            colorScheme: ColorScheme.light(
-              background: Colors.white,
-            ),
-
-            appBarTheme: AppBarTheme(
-              iconTheme: IconThemeData(color: Colors.white),
-              actionsIconTheme: IconThemeData(color: Colors.white),
-            ),
-            // Add this to ensure the background is white
-            // : Colors.white,
-          ),
-          navigatorKey: _navKey,
+          navigatorKey: notificationRouteKey,
           debugShowCheckedModeBanner: false,
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name) {

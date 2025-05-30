@@ -21,7 +21,8 @@ import 'package:gftr/ViewModel/Cubits/groupnotificationreply.dart';
 
 class NotificationPageView extends StatefulWidget {
   const NotificationPageView({Key? key}) : super(key: key);
-
+  
+static const inboxRouter = "/inbox-route";
   @override
   State<NotificationPageView> createState() => _NotificationPageViewState();
 }

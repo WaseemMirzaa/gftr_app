@@ -43,6 +43,7 @@ class SignInCubit extends Cubit<SignInState> {
       }
     };
 
+  
     Encryption? response = await DioClient().encryptData(body);
     if (response != null && response.status!) {
       Decryption? data =

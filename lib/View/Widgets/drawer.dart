@@ -82,7 +82,6 @@ Widget drawerCommonListTile(
             MaterialPageRoute(builder: (context) => const ContactPage()));
       } else if ("Log Out" == text) {
         SharedPrefsService prefsService = SharedPrefsService();
-        final fcmCubit = FcmTokenCubit();
         prefsService.removeData('authToken');
         prefsService.removeData('phoneNumberPre');
         prefsService.removeData('emailPre');
@@ -95,7 +94,6 @@ Widget drawerCommonListTile(
         });
         print('Response status: ${response.statusCode}');
         print('Response body: ${response.body}');
-        fcmCubit.setFcmToken('');
         Navigator.pushAndRemoveUntil(
             context,
             MaterialPageRoute(builder: (context) => const LoginPage()),

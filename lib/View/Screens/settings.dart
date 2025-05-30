@@ -1791,7 +1791,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             height: screenHeight(context, dividedBy: 100),
                           ),
                           Container(
-                            height: screenHeight(context, dividedBy: 7.5),
+                            height: screenHeight(context, dividedBy: 5.7),
                             width: screenWidth(context, dividedBy: 1.1),
                             decoration: BoxDecoration(
                                 color: Colors.white,
@@ -1808,7 +1808,6 @@ class _SettingsPageState extends State<SettingsPage> {
                                     FontWeight.w500, poppins),
                                 customText("Who can see your GFTR page?",
                                     Colors.black, 14, FontWeight.w500, poppins),
-
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [

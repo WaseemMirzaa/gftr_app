@@ -3,7 +3,6 @@
 //     final groups = groupsFromJson(jsonString);
 
 import 'dart:convert';
-
 Groups groupsFromJson(String str) => Groups.fromJson(json.decode(str));
 
 String groupsToJson(Groups data) => json.encode(data.toJson());
@@ -28,7 +27,9 @@ class Groups {
     code: json["code"],
     message: json["message"],
     loggedUser: json["loggedUser"],
-    groupDetails: List<GroupDetail>.from(json["groupDetails"].map((x) => GroupDetail.fromJson(x))),
+    groupDetails: json["groupDetails"] != null
+        ? List<GroupDetail>.from(json["groupDetails"].map((x) => GroupDetail.fromJson(x)))
+        : null,
   );
 
   Map<String, dynamic> toJson() => {
@@ -36,9 +37,14 @@ class Groups {
     "code": code,
     "message": message,
     "loggedUser": loggedUser,
-    "groupDetails": List<dynamic>.from(groupDetails!.map((x) => x.toJson())),
+    "groupDetails": groupDetails != null
+        ? List<dynamic>.from(groupDetails!.map((x) => x.toJson()))
+        : null,
   };
 }
+
+
+
 
 class GroupDetail {
   String id;
@@ -64,19 +70,20 @@ class GroupDetail {
     required this.publicDatas,
     required this.address,
   });
-
-  factory GroupDetail.fromJson(Map<String, dynamic> json) => GroupDetail(
-    id: json["id"],
-    phoneNumber: json["phoneNumber"],
-    avatar: json["avatar"],
-    name: json["name"],
-    birthday: DateTime.parse(json["birthday"]),
-    birthdayIsIn: json["birthdayIsIn"],
-    gifts: List<dynamic>.from(json["gifts"].map((x) => x)),
-    myideas: List<Myidea>.from(json["myideas"].map((x) => Myidea.fromJson(x))),
-    publicDatas: List<Myidea>.from(json["publicDatas"].map((x) => Myidea.fromJson(x))),
-    address: Address.fromJson(json["address"]),
-  );
+factory GroupDetail.fromJson(Map<String, dynamic> json) => GroupDetail(
+  id: json["id"] ?? "",
+  phoneNumber: json["phoneNumber"] ?? 0,
+  avatar: json["avatar"] ?? "",
+  name: json["name"] ?? "",
+  birthday: DateTime.tryParse(json["birthday"] ?? "") ?? DateTime(1970, 1, 1),
+  birthdayIsIn: json["birthdayIsIn"] ?? "",
+  gifts: json["gifts"] != null ? List<dynamic>.from(json["gifts"].map((x) => x)) : [],
+  myideas: json["myideas"] != null ? List<Myidea>.from(json["myideas"].map((x) => Myidea.fromJson(x))) : [],
+  publicDatas: json["publicDatas"] != null ? List<Myidea>.from(json["publicDatas"].map((x) => Myidea.fromJson(x))) : [],
+  address: json["address"] != null 
+      ? Address.fromJson(json["address"]) 
+      : Address(city: "", street: "", unit: "", zipcore: "", state: "", country: ""),
+);
 
   Map<String, dynamic> toJson() => {
     "id": id,
@@ -110,13 +117,13 @@ class Address {
   });
 
   factory Address.fromJson(Map<String, dynamic> json) => Address(
-    city: json["city"],
-    street: json["street"],
-    unit: json["unit"],
-    zipcore: json["zipcore"],
-    state: json["state"],
-    country: json["country"],
-  );
+  city: json["city"] ?? "",
+  street: json["street"] ?? "",
+  unit: json["unit"] ?? "",
+  zipcore: json["zipcore"] ?? "",
+  state: json["state"] ?? "",
+  country: json["country"] ?? "",
+);
 
   Map<String, dynamic> toJson() => {
     "city": city,
@@ -148,18 +155,17 @@ class Myidea {
     required this.webViewLink,
     required this.markGift,
   });
-
-  factory Myidea.fromJson(Map<String, dynamic> json) => Myidea(
-    id: json["id"],
-    title: json["title"],
-    price: json["price"],
-    notes: json["notes"],
-    image: json["image"],
-    starredGift: json["starredGift"],
-    webViewLink: json["webViewLink"],
-    markGift: json["markGift"],
-  );
-
+  
+factory Myidea.fromJson(Map<String, dynamic> json) => Myidea(
+  id: json["id"] ?? "",
+  title: json["title"] ?? "",
+  price: json["price"] ?? "",
+  notes: json["notes"] ?? "",
+  image: json["image"] ?? "",
+  starredGift: json["starredGift"] ?? false,
+  webViewLink: json["webViewLink"] ?? "",
+  markGift: json["markGift"] ?? "",
+);
   Map<String, dynamic> toJson() => {
     "id": id,
     "title": title,

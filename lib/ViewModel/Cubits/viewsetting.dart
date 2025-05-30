@@ -25,6 +25,7 @@ class ViewSettingCubit extends Cubit<ViewSettingState> {
     if (data != null) {
       viewSetting = await DioClient().viewSetting(data.data!);
       if (viewSetting != null && viewSetting!.status!) {
+        print(viewSetting!.data);
         emit(ViewSettingSuccess());
         // flutterToast(viewSetting!.message!, true);
         phoneNumberPre = viewSetting?.data?.phoneNumber.toString() ?? '';
