@@ -71,7 +71,6 @@ class NotificationServices {
       sound: true,
     );
 
-
       FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
       FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
 
