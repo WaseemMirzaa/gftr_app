@@ -13,6 +13,8 @@ class Groups {
   String? message;
   String? loggedUser;
   List<GroupDetail>? groupDetails;
+  List<UserNotAcceptedRequest>? userNotAcceptedRequest;
+  
 
   Groups({
     this.status,
@@ -20,6 +22,7 @@ class Groups {
     this.message,
     this.loggedUser,
     this.groupDetails,
+    this.userNotAcceptedRequest,
   });
 
   factory Groups.fromJson(Map<String, dynamic> json) => Groups(
@@ -30,6 +33,7 @@ class Groups {
     groupDetails: json["groupDetails"] != null
         ? List<GroupDetail>.from(json["groupDetails"].map((x) => GroupDetail.fromJson(x)))
         : null,
+        userNotAcceptedRequest: List<UserNotAcceptedRequest>.from(json["userNotAcceptedRequest"].map((x) => UserNotAcceptedRequest.fromJson(x))),
   );
 
   Map<String, dynamic> toJson() => {
@@ -40,10 +44,39 @@ class Groups {
     "groupDetails": groupDetails != null
         ? List<dynamic>.from(groupDetails!.map((x) => x.toJson()))
         : null,
+     "userNotAcceptedRequest": userNotAcceptedRequest != null ? 
+      List<dynamic>.from(userNotAcceptedRequest!.map((x) => x.toJson()))
+     : null
   };
 }
 
+class UserNotAcceptedRequest {
+    String id;
+    int phoneNumber;
+    String avatar;
+    String name;
 
+    UserNotAcceptedRequest({
+        required this.id,
+        required this.phoneNumber,
+        required this.avatar,
+        required this.name,
+    });
+
+    factory UserNotAcceptedRequest.fromJson(Map<String, dynamic> json) => UserNotAcceptedRequest(
+        id: json["_id"],
+        phoneNumber: json["phoneNumber"],
+        avatar: json["avatar"],
+        name: json["name"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "_id": id,
+        "phoneNumber": phoneNumber,
+        "avatar": avatar,
+        "name": name,
+    };
+}
 
 
 class GroupDetail {
@@ -98,6 +131,8 @@ factory GroupDetail.fromJson(Map<String, dynamic> json) => GroupDetail(
     "address": address.toJson(),
   };
 }
+
+
 
 class Address {
   String city;

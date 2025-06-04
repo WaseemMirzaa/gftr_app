@@ -18,6 +18,7 @@ class GroupViewCubit extends Cubit<GroupViewState> {
   GroupViewCubit() : super(GroupViewInitials());
 
   List uniqueArray=[];
+  List userReq = [];
   Groups? groups = Groups();
   Future<void> getGroups() async {
     emit(GroupViewLoading());
@@ -26,7 +27,13 @@ class GroupViewCubit extends Cubit<GroupViewState> {
       groups = await DioClient().getGroups(data.data!);
       if (groups != null && groups!.status!) {
         emit(GroupViewSuccess());
+       groups?.userNotAcceptedRequest?.forEach((element) {
+        
+        userReq.add(element.phoneNumber.toString());
+
+       });
         groups?.groupDetails?.forEach((element) {
+          
           uniqueArray.add(element.phoneNumber.toString());
         });
         print("===========>$uniqueArray");

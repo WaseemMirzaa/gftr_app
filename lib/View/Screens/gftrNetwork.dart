@@ -207,6 +207,7 @@ GFTR
   final dio = Dio();
   Timer? timer;
   List _users = [];
+  List _req = [];
   Map? map1;
   Future<ViewAllUsers?> view_all_users() async {
     Decryption? data = await DioClient()
@@ -220,6 +221,7 @@ GFTR
         print("Users ===>$_users");
         setState(() {
           groupViewCubit.uniqueArray;
+          groupViewCubit.userReq;
         });
       });
       return ViewAllUsers.fromJson(userData.data);
@@ -237,6 +239,7 @@ GFTR
     });
     results = _users;
     f = groupViewCubit.uniqueArray;
+    _req = groupViewCubit.userReq;
     mutualFrdsCubit = BlocProvider.of<MutualFrdsCubit>(context);
     usersviewsCubit = BlocProvider.of<UsersviewsCubit>(context);
     groupViewCubit = BlocProvider.of<GroupViewCubit>(context);
@@ -255,6 +258,7 @@ GFTR
         results = _users;
         setState(() {
           f = groupViewCubit.uniqueArray;
+         print("Group RequestsD ${groupViewCubit.userReq.map((e) => print(e))}");
           print("===>$f");
         });
         chang = true;
@@ -385,6 +389,8 @@ GFTR
                       );
                     } else if (state is MutualFrdsError) {
                       final searchTerm = _searchbar.text.toLowerCase();
+                      print(_users.length);
+                      
       final filteredUsers = searchTerm.isEmpty
           ? _users
           : _users.where((user) {
@@ -404,7 +410,7 @@ GFTR
                           controller: _secondController,
                           itemCount: filteredUsers.length,
                           itemBuilder: (context, index) {
-                            
+                           
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -493,7 +499,7 @@ GFTR
                                           )),
                                       Spacer(),
                                       if (isBotton &&
-                                          e.contains(
+                                          _req.contains(
                                               "${_searchbar.text.isNotEmpty ? results[index]['phoneNumber'] : _users[index]['phoneNumber']}"))
                                         Container(
                                           margin: EdgeInsets.only(
@@ -528,8 +534,8 @@ GFTR
                                           // child: customText('Sending', Colors.black, 10,
                                           //     FontWeight.w100, poppins)
                                         )
-                                      else if (f.contains(
-                                          "${_searchbar.text.isNotEmpty ? results[index]['phoneNumber'] : _users[index]['phoneNumber']}"))
+                                      else if (_req.contains(
+                                          "${_searchbar.text.isNotEmpty ? _req[index]['phoneNumber'] : _req[index]['phoneNumber']}"))
                                         Container(
                                             margin: EdgeInsets.only(
                                                 left: screenWidth(context,
@@ -670,7 +676,7 @@ GFTR
                                                                   setState(() {
                                                                     groupViewCubit
                                                                         .uniqueArray;
-                                                                    f.remove(
+                                                                    _req.remove(
                                                                         "${_searchbar.text.isNotEmpty ? results[index]['phoneNumber'] : _users[index]['phoneNumber']}");
                                                                     // groupViewCubit.usernum.remove(usersviewsCubit.viewAllUsers!.data?[index].phoneNumber.toString());
                                                                     chang =
