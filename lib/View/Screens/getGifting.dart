@@ -46,7 +46,8 @@ class _GetGiftingState extends State<GetGiftingPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return _group == true ?SizedBox(
+    return _group == true ?Container(
+      color: Colors.white,
         height: screenHeight(context),
         width: screenWidth(context),
         child: Column(

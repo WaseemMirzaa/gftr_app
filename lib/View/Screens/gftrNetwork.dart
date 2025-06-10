@@ -36,6 +36,7 @@ class GftrNetwork extends StatefulWidget {
 }
 
 class _GftrNetworkState extends State<GftrNetwork> {
+  Map<String, bool> isSendingReqMap = {};
   LinearGradient coralTealColor = const LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.bottomRight,
@@ -221,7 +222,7 @@ GFTR
         print("Users ===>$_users");
         setState(() {
           groupViewCubit.uniqueArray;
-          groupViewCubit.userReq;
+        _req =  groupViewCubit.userReq;
         });
       });
       return ViewAllUsers.fromJson(userData.data);
@@ -238,7 +239,7 @@ GFTR
       groupViewCubit.uniqueArray;
     });
     results = _users;
-    f = groupViewCubit.uniqueArray;
+   groupViewCubit.uniqueArray;
     _req = groupViewCubit.userReq;
     mutualFrdsCubit = BlocProvider.of<MutualFrdsCubit>(context);
     usersviewsCubit = BlocProvider.of<UsersviewsCubit>(context);
@@ -253,24 +254,20 @@ GFTR
     getContactViewCubit.getContactsList();
     viewSettingCubit.getviewSetting();
     view_all_users();
-    Timer(Duration(milliseconds: 700), () {
-      setState(() {
+    
         results = _users;
-        setState(() {
-          f = groupViewCubit.uniqueArray;
-         print("Group RequestsD ${groupViewCubit.userReq.map((e) => print(e))}");
-          print("===>$f");
-        });
+        print("userReq: ${groupViewCubit.userReq}");
+      print("uniqueArray: ${groupViewCubit.uniqueArray}");
+      
+           groupViewCubit.uniqueArray;
+      
         chang = true;
-      });
-    });
+   
+    
   }
 
   List results = [];
-  List c = [];
-  List d = [];
-  List e = [];
-  List f = [];
+ 
   final ScrollController _secondController = ScrollController();
   final ScrollController _secondController2 = ScrollController();
 
@@ -278,9 +275,9 @@ GFTR
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    c.clear();
-    f.clear();
+   
     groupViewCubit.uniqueArray.clear();
+    groupViewCubit.userReq.clear();
     getContactViewCubit.smslList.clear();
     getContactViewCubit.emailList.clear();
     getContactViewCubit.displayname.clear();
@@ -290,6 +287,7 @@ GFTR
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
         body: GestureDetector(
       onTap: () {
         FocusManager.instance.primaryFocus?.unfocus();
@@ -410,7 +408,10 @@ GFTR
                           controller: _secondController,
                           itemCount: filteredUsers.length,
                           itemBuilder: (context, index) {
-                           
+                          final user = filteredUsers[index];
+                          print("List users $user");
+                          final userPhoneNumber = user['phoneNumber'].toString();
+
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -445,12 +446,8 @@ GFTR
                                                 width: 2),
                                             shape: BoxShape.circle),
                                         child: CircleAvatar(
-                                          backgroundImage: _searchbar
-                                                  .text.isNotEmpty
-                                              ? NetworkImage(
-                                                  "${ApiConstants.baseUrlsSocket}${results[index]['avatar']}")
-                                              : NetworkImage(
-                                                  "${ApiConstants.baseUrlsSocket}${_users[index]['avatar']}"),
+                                          backgroundImage:  NetworkImage(
+                                                  "${ApiConstants.baseUrlsSocket}${user['avatar']}"),
                                           // AssetImage(ImageConstants.dummyProfile),
                                           radius: 23,
                                         ),
@@ -467,10 +464,7 @@ GFTR
                                               children: [
                                                 TextSpan(
                                                   text:
-                                                      _searchbar.text.isNotEmpty
-                                                          ? results[index]
-                                                              ['firstname']
-                                                          : _users[index]
+                                                    user
                                                               ['firstname'],
                                                   style: TextStyle(
                                                     color: Colors.black,
@@ -482,10 +476,7 @@ GFTR
                                                 TextSpan(text: ' '),
                                                 TextSpan(
                                                   text:
-                                                      _searchbar.text.isNotEmpty
-                                                          ? results[index]
-                                                              ['lastname']
-                                                          : _users[index]
+                                                      user
                                                               ['lastname'],
                                                   style: TextStyle(
                                                     color: Colors.black,
@@ -498,9 +489,7 @@ GFTR
                                             ),
                                           )),
                                       Spacer(),
-                                      if (isBotton &&
-                                          _req.contains(
-                                              "${_searchbar.text.isNotEmpty ? results[index]['phoneNumber'] : _users[index]['phoneNumber']}"))
+                                     if (groupViewCubit.userReq.contains(userPhoneNumber))
                                         Container(
                                           margin: EdgeInsets.only(
                                               left: screenWidth(context,
@@ -534,8 +523,7 @@ GFTR
                                           // child: customText('Sending', Colors.black, 10,
                                           //     FontWeight.w100, poppins)
                                         )
-                                      else if (_req.contains(
-                                          "${_searchbar.text.isNotEmpty ? _req[index]['phoneNumber'] : _req[index]['phoneNumber']}"))
+                                     else if (groupViewCubit.uniqueArray.contains(userPhoneNumber))
                                         Container(
                                             margin: EdgeInsets.only(
                                                 left: screenWidth(context,
@@ -650,44 +638,12 @@ GFTR
                                                                   ]),
                                                             ),
                                                             InkWell(
-                                                              onTap: () async {
-                                                                setState(() {
-                                                                  chang = false;
-                                                                });
-                                                                print(
-                                                                    "hyyy:${_users[index]['phoneNumber']}");
-                                                                setState(() {
-                                                                  deleteFriendsCubit
-                                                                      .Delete_frdss(
-                                                                          context,
-                                                                          Numbers:
-                                                                              "${_searchbar.text.isNotEmpty ? results[index]['phoneNumber'] : _users[index]['phoneNumber']}");
-                                                                });
-                                                                // Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                                                //   return GftrNetwork();
-                                                                // },));
-                                                                Navigator.pop(
-                                                                    context);
-                                                                Timer(
-                                                                    Duration(
-                                                                        milliseconds:
-                                                                            1500),
-                                                                    () {
-                                                                  setState(() {
-                                                                    groupViewCubit
-                                                                        .uniqueArray;
-                                                                    _req.remove(
-                                                                        "${_searchbar.text.isNotEmpty ? results[index]['phoneNumber'] : _users[index]['phoneNumber']}");
-                                                                    // groupViewCubit.usernum.remove(usersviewsCubit.viewAllUsers!.data?[index].phoneNumber.toString());
-                                                                    chang =
-                                                                        true;
-                                                                    print(
-                                                                        "========== ${groupViewCubit.uniqueArray.toString()}");
-                                                                    print(
-                                                                        "==========fff ${f}");
-                                                                  });
-                                                                });
-                                                              },
+                                                             onTap: () async {
+                                    await deleteFriendsCubit.Delete_frdss(context, Numbers: userPhoneNumber);
+                                    await groupViewCubit.getGroups();
+                                    Navigator.pop(context);
+                                    setState(() {});
+                                  },
                                                               child: Container(
                                                                   margin: const EdgeInsets
                                                                           .only(
@@ -723,7 +679,7 @@ GFTR
                                                 //   c.add(_searchbar.text.isNotEmpty? b[index].toString(): usersviewsCubit.viewAllUsers!.data?[index].phoneNumber.toString());
                                                 // }
 
-                                                print("hello");
+                                              
                                               },
                                               child: customText(
                                                   'Remove',
@@ -747,33 +703,23 @@ GFTR
                                               borderRadius:
                                                   BorderRadius.circular(25)),
                                           child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                if (c.contains(
-                                                    "${_searchbar.text.isNotEmpty ? results[index]['phoneNumber'] : _users[index]['phoneNumber']}")) {
-                                                  c.remove(
-                                                      "${_searchbar.text.isNotEmpty ? results[index]['phoneNumber'] : _users[index]['phoneNumber']}");
-                                                } else {
-                                                  c.add(
-                                                      "${_searchbar.text.isNotEmpty ? results[index]['phoneNumber'] : _users[index]['phoneNumber']}");
-                                                  buildGroupCubit.getBuilGrop(
-                                                      context,
-                                                      checkData: c);
-                                                }
-                                                print(_searchbar.text.isNotEmpty
-                                                    ? results[index]
-                                                        ['phoneNumber']
-                                                    : _users[index]
-                                                        ['phoneNumber']);
-                                                e.addAll(c);
-                                                isBotton = true;
-                                                c.clear();
-                                                print("c:$c");
-                                                print("f:$f");
-                                                print("f:$e");
-                                              });
+                                            onTap: () async {
+if (isSendingReqMap[userPhoneNumber] == true) return;
+        
+        setState(() => isSendingReqMap[userPhoneNumber] = true);
+        
+        try {
+          await buildGroupCubit.getBuilGrop(context, checkData: [userPhoneNumber]);
+          await groupViewCubit.getGroups();
+        } finally {
+          if (mounted) {
+            setState(() => isSendingReqMap[userPhoneNumber] = false);
+          }
+        }
                                             },
-                                            child: customText(
+                                            child: (isSendingReqMap[userPhoneNumber] ?? false) ? Center(
+                        child: spinkitLoader(context, Colors.white),
+                      )  : customText(
                                                 'Add',
                                                 Colors.white,
                                                 10,
@@ -895,8 +841,8 @@ GFTR
       final filteredFriends = searchTerm.isEmpty
           ? mutualFriends
           : mutualFriends.where((friend) {
-              final firstName = friend.frd.firstname?.toLowerCase() ?? '';
-              final lastName = friend.frd.lastname?.toLowerCase() ?? '';
+              final firstName = friend.frd.firstname.toLowerCase();
+              final lastName = friend.frd.lastname.toLowerCase();
               return firstName.contains(searchTerm) || lastName.contains(searchTerm);
             }).toList();
                       return Scrollbar(
@@ -911,8 +857,10 @@ GFTR
                           controller: _secondController,
                           itemCount: filteredFriends.length,
                           itemBuilder: (context, Firstindex) {
+                         
                             final friend = filteredFriends[Firstindex];
-            final mutuInt = friend.mutualby.length;
+                              final userPhoneNumber = friend.frd.phoneNumber.toString();
+                             final mutuInt = friend.mutualby.length;
                             return Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1089,13 +1037,7 @@ GFTR
                                           )
                                         ],
                                       ),
-                                      if (isBotton &&
-                                          e.contains(mutualFrdsCubit
-                                              .mutulfriendd
-                                              ?.data?[Firstindex]
-                                              .frd
-                                              .phoneNumber
-                                              .toString()))
+                                     if (groupViewCubit.userReq.contains(userPhoneNumber))
                                         Container(
                                           margin: EdgeInsets.only(
                                               left: screenWidth(context,
@@ -1129,12 +1071,7 @@ GFTR
                                           // child: customText('Sending', Colors.black, 10,
                                           //     FontWeight.w100, poppins)
                                         )
-                                      else if (f.contains(mutualFrdsCubit
-                                          .mutulfriendd
-                                          ?.data?[Firstindex]
-                                          .frd
-                                          .phoneNumber
-                                          .toString()))
+                                     else if (groupViewCubit.uniqueArray.contains(userPhoneNumber))
                                         Container(
                                             margin: EdgeInsets.only(
                                                 left: screenWidth(context,
@@ -1253,21 +1190,11 @@ GFTR
                                                                 deleteFriendsCubit.Delete_frdss(
                                                                         context,
                                                                         Numbers:
-                                                                            "${mutualFrdsCubit.mutulfriendd?.data?[Firstindex].frd.phoneNumber.toString()}")
-                                                                    .then(
-                                                                  (value) {
-                                                                    mutualFrdsCubit
-                                                                        .mutual_frds();
-                                                                    groupViewCubit
-                                                                        .getGroups();
-                                                                    groupViewCubit
-                                                                        .uniqueArray;
-                                                                    f.remove(
-                                                                        "${mutualFrdsCubit.mutulfriendd?.data?[Firstindex].frd.phoneNumber.toString()}");
-                                                                    Navigator.pop(
-                                                                        context);
-                                                                  },
-                                                                );
+                                                                            "${mutualFrdsCubit.mutulfriendd?.data?[Firstindex].frd.phoneNumber.toString()}");
+                                                                            await groupViewCubit.getGroups();
+                                                                             await mutualFrdsCubit.mutual_frds();
+                                                                             Navigator.pop(context);
+                                                          setState(() {});
                                                               },
                                                               child: Container(
                                                                   margin: const EdgeInsets
@@ -1328,43 +1255,53 @@ GFTR
                                               borderRadius:
                                                   BorderRadius.circular(25)),
                                           child: GestureDetector(
-                                            onTap: () {
-                                              setState(() {
-                                                if (c.contains(mutualFrdsCubit
-                                                    .mutulfriendd
-                                                    ?.data?[Firstindex]
-                                                    .frd
-                                                    .phoneNumber
-                                                    .toString())) {
-                                                  c.remove(mutualFrdsCubit
-                                                      .mutulfriendd
-                                                      ?.data?[Firstindex]
-                                                      .frd
-                                                      .phoneNumber
-                                                      .toString());
-                                                } else {
-                                                  c.add(mutualFrdsCubit
-                                                      .mutulfriendd
-                                                      ?.data?[Firstindex]
-                                                      .frd
-                                                      .phoneNumber
-                                                      .toString());
-                                                  buildGroupCubit.getBuilGrop(
-                                                      context,
-                                                      checkData: c);
-                                                }
-                                                f = groupViewCubit.uniqueArray;
-                                                e.addAll(c);
-                                                isBotton = true;
-                                                c.clear();
-                                              });
+                                            onTap: () async {
+
+                                                if (isSendingReqMap[userPhoneNumber] == true) return;
+
+                                                 setState(() => isSendingReqMap[userPhoneNumber] = true);
+                                                try {
+          await buildGroupCubit.getBuilGrop(context, checkData: [userPhoneNumber]);
+          await groupViewCubit.getGroups();
+        } finally {
+          if (mounted) {
+            setState(() => isSendingReqMap[userPhoneNumber] = false);
+          }
+        }
+
+                                              // setState(() {
+                                              //   if (c.contains(mutualFrdsCubit
+                                              //       .mutulfriendd
+                                              //       ?.data?[Firstindex]
+                                              //       .frd
+                                              //       .phoneNumber
+                                              //       .toString())) {
+                                              //     c.remove(mutualFrdsCubit
+                                              //         .mutulfriendd
+                                              //         ?.data?[Firstindex]
+                                              //         .frd
+                                              //         .phoneNumber
+                                              //         .toString());
+                                              //   } else {
+                                              //     c.add(mutualFrdsCubit
+                                              //         .mutulfriendd
+                                              //         ?.data?[Firstindex]
+                                              //         .frd
+                                              //         .phoneNumber
+                                              //         .toString());
+                                              //     buildGroupCubit.getBuilGrop(
+                                              //         context,
+                                              //         checkData: c);
+                                              //   }
+                                              //   f = groupViewCubit.uniqueArray;
+                                              //   e.addAll(c);
+                                              //   isBotton = true;
+                                              //   c.clear();
+                                              // });
                                             },
-                                            child: customText(
-                                                'Add',
-                                                Colors.white,
-                                                10,
-                                                FontWeight.w100,
-                                                poppins),
+                                            child:(isSendingReqMap[userPhoneNumber] ?? false)
+          ? Center(child: spinkitLoader(context, Colors.white))
+          : customText('Add', Colors.white, 10, FontWeight.w100, poppins)
                                           ),
                                         ),
                                       SizedBox(

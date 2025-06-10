@@ -26,16 +26,17 @@ class GroupViewCubit extends Cubit<GroupViewState> {
     if (data != null) {
       groups = await DioClient().getGroups(data.data!);
       if (groups != null && groups!.status!) {
-        emit(GroupViewSuccess());
+       
+        userReq.clear();
        groups?.userNotAcceptedRequest?.forEach((element) {
-        
+        print(element.name);
         userReq.add(element.phoneNumber.toString());
-
        });
+       uniqueArray.clear();
         groups?.groupDetails?.forEach((element) {
-          
           uniqueArray.add(element.phoneNumber.toString());
         });
+         emit(GroupViewSuccess());
         print("===========>$uniqueArray");
       } else {
         emit(GroupViewError());

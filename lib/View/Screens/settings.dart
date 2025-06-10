@@ -1760,7 +1760,8 @@ class _SettingsPageState extends State<SettingsPage> {
           isIcon = true;
           setState(() {});
         },
-        child: SizedBox(
+        child: Container(
+          color: Colors.white,
             height: screenHeight(context),
             width: screenWidth(context),
             child: BlocBuilder<ViewSettingCubit, ViewSettingState>(

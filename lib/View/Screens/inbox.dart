@@ -77,7 +77,8 @@ class _InboxPageState extends State<InboxPage> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
+    return Container(
+      color: Colors.white,
         height: screenHeight(context),
         width: screenWidth(context),
         child: Column(children: [
@@ -89,6 +90,7 @@ class _InboxPageState extends State<InboxPage> {
               child: customText("Messages", Colors.black, 16, FontWeight.w500,
                   madeOuterSans)),
           Container(
+            color: Colors.white,
             margin: EdgeInsets.only(top: 5),
             height: screenHeight(context, dividedBy: 2.9),
             child: BlocBuilder<GroupViewCubit, GroupViewState>(
