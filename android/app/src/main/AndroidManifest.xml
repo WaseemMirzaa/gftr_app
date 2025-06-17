@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.gftr">
+
 
     <!-- Permissions -->
     <uses-permission android:name="android.permission.INTERNET"/>
@@ -45,13 +47,17 @@
             android:value="high_importance_channel" />
 
         <!-- Background service -->
+       <!-- ✅ Correct Firebase Messaging background handler -->
         <service
-            android:name=".flutterFirebaseMessagingBackgroundService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+            android:name="io.flutter.plugins.firebase.messaging.FlutterFirebaseMessagingService"
+           android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE"
+            tools:replace="android:exported">
+        <intent-filter>
+         <action android:name="com.google.firebase.MESSAGING_EVENT" />
+        </intent-filter>
+</service>
+
 
 
         <activity

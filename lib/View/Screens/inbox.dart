@@ -65,20 +65,38 @@ class _InboxPageState extends State<InboxPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    getHttp();
-    notificationViewCubit = BlocProvider.of<NotificationViewCubit>(context);
-    upadetInviteCubit = BlocProvider.of<UpadetInviteCubit>(context);
-    groupViewCubit = BlocProvider.of<GroupViewCubit>(context);
-    messagnotiCubit = BlocProvider.of<MessagnotiCubit>(context);
-    groupViewCubit.getGroups();
-    notificationViewCubit.getMyNotifitication();
-    messagnotiCubit.messages();
+    try {
+      getHttp();
+      notificationViewCubit = BlocProvider.of<NotificationViewCubit>(context);
+      upadetInviteCubit = BlocProvider.of<UpadetInviteCubit>(context);
+      groupViewCubit = BlocProvider.of<GroupViewCubit>(context);
+      messagnotiCubit = BlocProvider.of<MessagnotiCubit>(context);
+      groupViewCubit.getGroups();
+      notificationViewCubit.getMyNotifitication();
+      messagnotiCubit.messages();
+    } catch (e) {
+      debugPrint('Error in InboxPage initState: $e');
+    }
+  }
+
+  @override
+  void dispose() {
+    try {
+      socket.disconnect();
+      socket.dispose();
+      _scrollController.dispose();
+      messageList.close();
+      timer?.cancel();
+    } catch (e) {
+      debugPrint('Error in InboxPage dispose: $e');
+    }
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+        color: Colors.white,
         height: screenHeight(context),
         width: screenWidth(context),
         child: Column(children: [
@@ -104,7 +122,7 @@ class _InboxPageState extends State<InboxPage> {
                   radius: Radius.circular(16),
                   //--------------------------------CLOSED BY ME------------------------------------------------
                   // isAlwaysShown: true,
-                   thumbVisibility: true,
+                  thumbVisibility: true,
                   //--------------------------------CLOSED BY ME------------------------------------------------
                   child: ListView.builder(
                       controller: _scrollController,
@@ -311,7 +329,7 @@ class _InboxPageState extends State<InboxPage> {
                                 height: screenHeight(context, dividedBy: 90),
                               ),
                               Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   SizedBox(
                                     width: screenWidth(context, dividedBy: 50),
@@ -350,20 +368,22 @@ class _InboxPageState extends State<InboxPage> {
                                         poppins,
                                         maxLines: 2),
                                   ),
-                                  SizedBox(
-                                    width: screenWidth(context, dividedBy: 50),
+                                  // SizedBox(
+                                  //   width: screenWidth(context, dividedBy: 40),
+                                  // ),
+                                  Flexible(
+                                    child: customText(
+                                        notificationViewCubit
+                                                .myNotifications
+                                                ?.receivedRequestBy?[index]
+                                                .rektime
+                                                .toString() ??
+                                            '',
+                                        ColorCodes.greyText,
+                                        12,
+                                        FontWeight.w500,
+                                        poppins),
                                   ),
-                                  customText(
-                                      notificationViewCubit
-                                              .myNotifications
-                                              ?.receivedRequestBy?[index]
-                                              .rektime
-                                              .toString() ??
-                                          '',
-                                      ColorCodes.greyText,
-                                      12,
-                                      FontWeight.w500,
-                                      poppins),
                                 ],
                               ),
                               Row(

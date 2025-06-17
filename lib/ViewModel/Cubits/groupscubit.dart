@@ -17,27 +17,35 @@ class GroupViewSuccess extends GroupViewState {}
 class GroupViewCubit extends Cubit<GroupViewState> {
   GroupViewCubit() : super(GroupViewInitials());
 
-  List uniqueArray=[];
+  List uniqueArray = [];
   List userReq = [];
   Groups? groups = Groups();
   Future<void> getGroups() async {
     emit(GroupViewLoading());
-    Decryption? data = await DioClient().decryptDataGetMethod(ApiConstants.groups);
+    Decryption? data =
+        await DioClient().decryptDataGetMethod(ApiConstants.groups);
     if (data != null) {
       groups = await DioClient().getGroups(data.data!);
       if (groups != null && groups!.status!) {
-       
+        // Clear lists before updating
         userReq.clear();
-       groups?.userNotAcceptedRequest?.forEach((element) {
-        print(element.name);
-        userReq.add(element.phoneNumber.toString());
-       });
-       uniqueArray.clear();
-        groups?.groupDetails?.forEach((element) {
-          uniqueArray.add(element.phoneNumber.toString());
-        });
-         emit(GroupViewSuccess());
-        print("===========>$uniqueArray");
+        uniqueArray.clear();
+
+        // Update userReq list with pending requests
+        if (groups?.userNotAcceptedRequest != null) {
+          for (var element in groups!.userNotAcceptedRequest!) {
+            userReq.add(element.phoneNumber.toString());
+          }
+        }
+
+        // Update uniqueArray with accepted friends
+        if (groups?.groupDetails != null) {
+          for (var element in groups!.groupDetails!) {
+            uniqueArray.add(element.phoneNumber.toString());
+          }
+        }
+
+        emit(GroupViewSuccess());
       } else {
         emit(GroupViewError());
       }

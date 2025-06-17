@@ -32,8 +32,8 @@ class NotificationServices {
   );
 
   Future<String> getToken() async {
-    String? fcmToken = Platform.isAndroid 
-        ? await messaging.getToken() 
+    String? fcmToken = Platform.isAndroid
+        ? await messaging.getToken()
         : await messaging.getAPNSToken();
     return fcmToken ?? "No Token";
   }
@@ -41,17 +41,24 @@ class NotificationServices {
   void handleMessage(RemoteMessage? message) {
     if (message == null) return;
 
-    Future.delayed(const Duration(milliseconds: 200)).then((_) {
-      notificationRouteKey.currentState?.pushNamed(
-        NotificationPageView.inboxRouter
-      );
-    });
+    try {
+      // Add a small delay to ensure the app is ready for navigation
+      Future.delayed(const Duration(milliseconds: 500)).then((_) {
+        if (notificationRouteKey.currentState != null &&
+            notificationRouteKey.currentState!.mounted) {
+          notificationRouteKey.currentState
+              ?.pushNamed(NotificationPageView.inboxRouter);
+        }
+      });
+    } catch (e) {
+      debugPrint('⚠️ Error handling notification navigation: $e');
+    }
   }
 
   /// Call once after login / on app start.
   Future<void> initialise(BuildContext context) async {
     await Firebase.initializeApp();
-    
+
     // 1. Create notification channel (Android)
     await _createNotificationChannel();
 
@@ -88,7 +95,7 @@ class NotificationServices {
       requestBadgePermission: false,
       requestSoundPermission: false,
     );
-    
+
     const initSettings = InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
@@ -102,7 +109,6 @@ class NotificationServices {
     );
   }
 
-
   Future<void> requestNotificationPermissions() async {
     try {
       // Handle Android 13+ permissions
@@ -113,13 +119,13 @@ class NotificationServices {
               .resolvePlatformSpecificImplementation<
                   AndroidFlutterLocalNotificationsPlugin>()
               ?.requestPermission();
-          
+
           if (granted != true) {
             await OpenAppSettings.openNotificationSettings();
           }
         }
       }
-      
+
       // Request Firebase permissions
       final settings = await messaging.requestPermission(
         alert: true,
@@ -128,9 +134,9 @@ class NotificationServices {
         provisional: false,
         criticalAlert: false,
       );
-      
+
       debugPrint('🔔 Permission status: ${settings.authorizationStatus}');
-      
+
       if (settings.authorizationStatus == AuthorizationStatus.denied) {
         await OpenAppSettings.openNotificationSettings();
       }
