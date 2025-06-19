@@ -45,3 +45,9 @@ class Data {
   Map<String, dynamic> toJson() => {
   };
 }
+
+
+
+// To parse this JSON data, do
+//
+//     final removeEvent = removeEventFromJson(jsonString);

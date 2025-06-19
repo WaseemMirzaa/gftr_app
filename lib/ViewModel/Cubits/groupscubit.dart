@@ -19,7 +19,9 @@ class GroupViewCubit extends Cubit<GroupViewState> {
 
   List uniqueArray = [];
   List userReq = [];
+  List<Map<String, dynamic>> userReqMap = [];
   Groups? groups = Groups();
+  List grouIds = [];
   Future<void> getGroups() async {
     emit(GroupViewLoading());
     Decryption? data =
@@ -30,11 +32,17 @@ class GroupViewCubit extends Cubit<GroupViewState> {
         // Clear lists before updating
         userReq.clear();
         uniqueArray.clear();
-
+        grouIds.clear();
+        userReqMap.clear();
         // Update userReq list with pending requests
         if (groups?.userNotAcceptedRequest != null) {
           for (var element in groups!.userNotAcceptedRequest!) {
-            userReq.add(element.phoneNumber.toString());
+            // userReq.add(element.phoneNumber.toString());
+            userReqMap.add({
+              "phoneNumber": element.phoneNumber.toString(),
+              "groupId": element.groupId.toString(),
+            });
+            // userReq.add(element.id.toString());
           }
         }
 
@@ -42,6 +50,7 @@ class GroupViewCubit extends Cubit<GroupViewState> {
         if (groups?.groupDetails != null) {
           for (var element in groups!.groupDetails!) {
             uniqueArray.add(element.phoneNumber.toString());
+            // grouIds.add(element.id.toString());
           }
         }
 

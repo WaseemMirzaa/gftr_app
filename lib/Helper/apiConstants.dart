@@ -64,4 +64,6 @@ class ApiConstants {
   static const Get_Url = '${baseUrls}geturl';
   static const find_Email = '${baseUrls}findemail'; //
   static const all_gifts = '${baseUrls}allgift'; //
+  static const cancel_request = '${baseUrls}cancelRequest'; //
+  // static const cancel_request = '${baseUrls}decodeData/cancelRequest'; //
 }
