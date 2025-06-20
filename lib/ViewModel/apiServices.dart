@@ -1,4 +1,5 @@
 // ignore_for_file: avoid_print
+import 'dart:convert';
 import 'dart:developer';
 import 'package:dio/dio.dart';
 import 'package:gftr/Helper/apiConstants.dart';
@@ -47,6 +48,7 @@ import 'package:gftr/Model/viewsetting.dart';
 import '../Model/GooglelLogin.dart';
 import '../Model/all_gift.dart';
 import '../Model/groups.dart';
+import '../Model/cancel_request_response.dart';
 
 class DioClient {
   final Dio _dio = Dio();
@@ -293,6 +295,27 @@ class DioClient {
     } catch (e) {
       print("Delete friends Error ${e.toString()}");
       return null;
+    }
+  }
+
+  Future<bool> cancelRequest(String groupId, String phoneNumber) async {
+    final url = "${ApiConstants.cancel_request}/$groupId";
+    final body = {
+      "phoneNumber": phoneNumber,
+    };
+    try {
+      Response response = await _dio.post(
+        url,
+        data: body,
+      );
+
+      print('Response: ${response.statusCode} -> ${response.data}');
+      final responseModel = CancelRequestResponse.fromJson(response.data);
+      log("Cancel Request Status: ${responseModel.message}");
+      return responseModel.status ?? false;
+    } catch (e) {
+      print("Cancel Request Error: ${e.toString()}");
+      return false;
     }
   }
 
@@ -557,7 +580,7 @@ class DioClient {
     try {
       Response userData = await _dio.post(ApiConstants.decryptData, data: body);
       log('View Gift: ${userData.data}');
-     
+
       return Groups.fromJson(userData.data);
     } catch (e) {
       print("View Gift error ${e.toString()}");

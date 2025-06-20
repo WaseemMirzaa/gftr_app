@@ -176,6 +176,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ],
         child: MaterialApp(
           navigatorKey: notificationRouteKey,
+         
           debugShowCheckedModeBanner: false,
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name) {

@@ -76,13 +76,21 @@ class _MessagesPageState extends State<MessagesPage> {
         .emit("getOldMessages", {"to": widget.targetId, "from": widget.userId});
     log("Requested old messages: to=${widget.targetId}, from=${widget.userId}]🎊🎊🎊");
     socket.on("data", (data) {
-      log("Received message data from socket 🎈🎈🎈🎈");
-      messageList.sink.add(data);
-      log("Message data added to stream: ${data.length} messages 🎆🎆🎆🎆🎆🎆🎆");
-      log("Show a notification to the user showNotification(${data})");
-      print("New message from ${data.widget.userId}: ${data.messages}");
-      log(data.toString());
-      setState(() {});
+      try {
+        log("Received message data from socket 🎈🎈🎈🎈");
+        if (data != null) {
+          messageList.sink.add(data);
+          log("Message data added to stream: ${data.length} messages 🎆🎆🎆🎆🎆🎆🎆");
+          log("Show a notification to the user showNotification(${data})");
+          print("New message from ${data.widget.userId}: ${data.messages}");
+          log(data.toString());
+          if (mounted) {
+            setState(() {});
+          }
+        }
+      } catch (e) {
+        log("Error handling socket data: $e");
+      }
     });
 
     socket.onDisconnect((_) {

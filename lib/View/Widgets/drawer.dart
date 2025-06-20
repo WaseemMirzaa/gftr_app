@@ -645,6 +645,7 @@ Widget drawerHeader(BuildContext context) {
 
 Widget drawerWidget(BuildContext context) {
   return Drawer(
+    backgroundColor: Colors.white,
       child: Column(
     children: [
       GestureDetector(child: drawerHeader(context)),
