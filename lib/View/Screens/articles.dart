@@ -138,8 +138,9 @@ class _ArticlesPageState extends State<ArticlesPage> {
               SizedBox(
                 height: screenHeight(context, dividedBy: 60),
               ),
-              resultSearch.isNotEmpty && search.text.isNotEmpty
-                  ? Expanded(
+              if (search.text.isNotEmpty)
+                if (resultSearch.isNotEmpty)
+                  Expanded(
                       child: ListView.builder(
                           itemCount: resultSearch.length,
                           itemBuilder: (context, index) => Padding(
@@ -189,7 +190,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                                             12.0),
                                                     child: Container(
                                                       padding: const EdgeInsets
-                                                              .symmetric(
+                                                          .symmetric(
                                                           horizontal: 12,
                                                           vertical: 8),
                                                       decoration: BoxDecoration(
@@ -238,152 +239,148 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                       ],
                                     )),
                               )))
-                  : Column(
-                      children: [
-                        BlocBuilder<GftrStoriesCubit, GftrStoriesState>(
-                            builder: (context, state) {
-                          if (state is GftrStoriesLoading) {
-                            return spinkitLoader(context, ColorCodes.coral);
-                          } else if (state is GftrStoriesError) {
-                            return customText("Not Data Found!", Colors.black,
-                                16, FontWeight.w300, poppins);
-                          } else if (state is GftrStoriesSuccess) {
-                            return Container(
-                              height: screenHeight(context, dividedBy: 3),
-                              child: Scrollbar(
-                                thickness: 8,
-                                radius: Radius.circular(16),
-                                //--------------------------------CLOSED BY ME------------------------------------------------
-                                // isAlwaysShown: true,
-                                thumbVisibility: true,
-                                //--------------------------------CLOSED BY ME------------------------------------------------
-                                controller: _secondController,
-                                child: ListView.builder(
-                                  controller: _secondController,
-                                  itemCount: gftrStoriesCubit
-                                      .gftrStories?.data?.post?.length,
-                                  itemBuilder: (context, index) => Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: screenWidth(context,
-                                            dividedBy: 30)),
-                                    child: GestureDetector(
-                                        onTap: () {
-                                          Navigator.push(context,
-                                              MaterialPageRoute(
-                                            builder: (context) {
-                                              return giftr_details(index);
-                                            },
-                                          ));
+                else
+                  Expanded(
+                    child: Center(
+                      child: customText("No results found!", Colors.black, 16,
+                          FontWeight.w300, poppins),
+                    ),
+                  )
+              else
+                Column(
+                  children: [
+                    BlocBuilder<GftrStoriesCubit, GftrStoriesState>(
+                        builder: (context, state) {
+                      if (state is GftrStoriesLoading) {
+                        return spinkitLoader(context, ColorCodes.coral);
+                      } else if (state is GftrStoriesError) {
+                        return customText("Not Data Found!", Colors.black, 16,
+                            FontWeight.w300, poppins);
+                      } else if (state is GftrStoriesSuccess) {
+                        return Container(
+                          height: screenHeight(context, dividedBy: 3),
+                          child: Scrollbar(
+                            thickness: 8,
+                            radius: Radius.circular(16),
+                            //--------------------------------CLOSED BY ME------------------------------------------------
+                            // isAlwaysShown: true,
+                            thumbVisibility: true,
+                            //--------------------------------CLOSED BY ME------------------------------------------------
+                            controller: _secondController,
+                            child: ListView.builder(
+                              controller: _secondController,
+                              itemCount: gftrStoriesCubit
+                                  .gftrStories?.data?.post?.length,
+                              itemBuilder: (context, index) => Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        screenWidth(context, dividedBy: 30)),
+                                child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.push(context, MaterialPageRoute(
+                                        builder: (context) {
+                                          return giftr_details(index);
                                         },
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Container(
-                                              height: 0.3, // Divider height
-                                              color: Colors.black,
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Container(
-                                                height: screenHeight(context,
-                                                    dividedBy:
-                                                        5), // Height of the image container
-                                                width: double
-                                                    .infinity, // Full width
-                                                decoration: BoxDecoration(
-                                                  borderRadius:
-                                                      BorderRadius.circular(15),
-                                                  image: DecorationImage(
-                                                    image: NetworkImage(
-                                                      "${gftrStoriesCubit.gftrStories?.data?.post?[index].image}",
-                                                    ),
-                                                    fit: BoxFit
-                                                        .cover, // Make sure the image covers the container
-                                                  ),
+                                      ));
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 0.3, // Divider height
+                                          color: Colors.black,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            height: screenHeight(context,
+                                                dividedBy:
+                                                    5), // Height of the image container
+                                            width:
+                                                double.infinity, // Full width
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                  "${gftrStoriesCubit.gftrStories?.data?.post?[index].image}",
                                                 ),
-                                                child: Stack(
-                                                  children: [
-                                                    Align(
-                                                      alignment:
-                                                          Alignment.bottomLeft,
-                                                      child: Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(12.0),
-                                                        child: Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                      .symmetric(
-                                                                  horizontal:
-                                                                      12,
-                                                                  vertical: 8),
-                                                          decoration:
-                                                              BoxDecoration(
-                                                            color: Colors.black
-                                                                .withOpacity(
-                                                                    0.6),
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8),
-                                                          ),
-                                                          child: Text(
-                                                            gftrStoriesCubit
-                                                                    .gftrStories
-                                                                    ?.data
-                                                                    ?.post?[
-                                                                        index]
-                                                                    .title ??
-                                                                "",
-                                                            style: TextStyle(
-                                                              fontSize: 14,
-                                                              fontWeight:
-                                                                  FontWeight
-                                                                      .w500,
-                                                              color:
-                                                                  Colors.white,
-                                                              shadows: [
-                                                                Shadow(
-                                                                  color: Colors
-                                                                      .black
-                                                                      .withOpacity(
-                                                                          0.6),
-                                                                  offset:
-                                                                      Offset(
-                                                                          2, 2),
-                                                                  blurRadius: 4,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            maxLines: 2,
-                                                            overflow:
-                                                                TextOverflow
-                                                                    .ellipsis,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
+                                                fit: BoxFit
+                                                    .cover, // Make sure the image covers the container
                                               ),
                                             ),
-                                            Container(
-                                              height: 0.3, // Divider height
-                                              color: Colors.black,
+                                            child: Stack(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomLeft,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            12.0),
+                                                    child: Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 12,
+                                                          vertical: 8),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.black
+                                                            .withOpacity(0.6),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                      child: Text(
+                                                        gftrStoriesCubit
+                                                                .gftrStories
+                                                                ?.data
+                                                                ?.post?[index]
+                                                                .title ??
+                                                            "",
+                                                        style: TextStyle(
+                                                          fontSize: 14,
+                                                          fontWeight:
+                                                              FontWeight.w500,
+                                                          color: Colors.white,
+                                                          shadows: [
+                                                            Shadow(
+                                                              color: Colors
+                                                                  .black
+                                                                  .withOpacity(
+                                                                      0.6),
+                                                              offset:
+                                                                  Offset(2, 2),
+                                                              blurRadius: 4,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                        maxLines: 2,
+                                                        overflow: TextOverflow
+                                                            .ellipsis,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                          ],
-                                        )),
-                                  ),
-                                ),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 0.3, // Divider height
+                                          color: Colors.black,
+                                        ),
+                                      ],
+                                    )),
                               ),
-                            );
-                          }
-                          return Container();
-                        }),
-                      ],
-                    ),
+                            ),
+                          ),
+                        );
+                      }
+                      return Container();
+                    }),
+                  ],
+                ),
               SizedBox(
                 height: screenHeight(context, dividedBy: 300),
               ),
@@ -419,7 +416,6 @@ class _ArticlesPageState extends State<ArticlesPage> {
               BlocBuilder<Fetch_All_GiftsCubit, Fetch_All_GiftsState>(
                 builder: (context, state) {
                   print("NoGroupsCubit $state");
-                  
                   if (state is Fetch_All_GiftsLoading) {
                     return Center(
                       child: spinkitLoader(context, ColorCodes.coral),
