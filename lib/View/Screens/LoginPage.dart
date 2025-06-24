@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:gftr/NotificationService/notification_service.dart';
 import 'package:gftr/ViewModel/Cubits/Google_login.dart';
 import 'package:gftr/ViewModel/Cubits/fcm_token_cubit.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+// import 'package:google_sign_in/google_sign_in.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gftr/Helper/apiConstants.dart';
@@ -36,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
   TextEditingController phoneNumber = TextEditingController();
   TextEditingController password = TextEditingController();
 
-  GoogleSignIn _googleSignIn = GoogleSignIn();
+  // GoogleSignIn _googleSignIn = GoogleSignIn();
   SignInCubit signInCubit = SignInCubit();
   FcmTokenCubit fcmTokenCubit = FcmTokenCubit();
   FocusNode emailNode = FocusNode();
@@ -48,31 +48,31 @@ class _LoginPageState extends State<LoginPage> {
   String htmlpage = '';
   String? fcmToken;
   findingEmailsCubit _helloo = findingEmailsCubit();
-  Future<UserCredential> signInWithGoogle() async {
+  // Future<UserCredential> signInWithGoogle() async {
     // Trigger the authentication flow
-    final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+    // final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
     // Obtain the auth details from the request
-    final GoogleSignInAuthentication? googleAuth =
-        await googleUser?.authentication;
+    // final GoogleSignInAuthentication? googleAuth =
+        // await googleUser?.authentication;
     // Create a new credential
-    final credential = GoogleAuthProvider.credential(
-      accessToken: googleAuth?.accessToken,
-      idToken: googleAuth?.idToken,
-    );
+    // final credential = GoogleAuthProvider.credential(
+    //   accessToken: googleAuth?.accessToken,
+    //   idToken: googleAuth?.idToken,
+    // );
 
     // Once signed in, return the UserCredential
-    return await FirebaseAuth.instance.signInWithCredential(credential);
-  }
+    // return await FirebaseAuth.instance.signInWithCredential(credential);
+  // }
 
   Future<void> handleGoogleSignIn() async {
-    try {
-      final resuilt = await _googleSignIn.signIn();
-      print("resuilt :${resuilt}");
-      _helloo.Delete_frdss(
-          context, resuilt?.email ?? '', resuilt?.displayName ?? '', '');
-    } catch (error) {
-      print(" error :$error");
-    }
+  //   try {
+  //     final resuilt = await _googleSignIn.signIn();
+  //     print("resuilt :${resuilt}");
+  //     _helloo.Delete_frdss(
+  //         context, resuilt?.email ?? '', resuilt?.displayName ?? '', '');
+  //   } catch (error) {
+  //     print(" error :$error");
+  //   }
   }
 
   Future getGoogleAuth() async {

@@ -1,4 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'package:carousel_slider/carousel_slider.dart' as c1;
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gftr/Helper/apiConstants.dart';
@@ -82,8 +82,8 @@ class _GfterStoriesState extends State<GfterStories>
                             decoration: const BoxDecoration(
                               color: Colors.transparent,
                             ),
-                            child: CarouselSlider(
-                              options: CarouselOptions(
+                            child: c1.CarouselSlider(
+                              options: c1.CarouselOptions(
                                 onPageChanged: (index, re) {
                                   setState(() {
                                     pageViewIndex = index;
