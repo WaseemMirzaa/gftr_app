@@ -262,6 +262,9 @@ GFTR
     groupViewCubit.uniqueArray;
 
     chang = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      await groupViewCubit.getGroups();
+    });
   }
 
   List results = [];
@@ -508,134 +511,59 @@ GFTR
                                                   element['phoneNumber'] ==
                                                   userPhoneNumber))
                                             InkWell(
-                                              onTap: () {
-                                                showDialog(
+                                              onTap: () async {
+                                                var g = await showDialog(
                                                   context: context,
                                                   builder: (context) {
-                                                    return SimpleDialog(
-                                                      shape:
-                                                          RoundedRectangleBorder(
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .circular(
-                                                                          20)),
-                                                      children: [
-                                                        Padding(
-                                                            padding:
-                                                                const EdgeInsets
-                                                                    .symmetric(
-                                                                    horizontal:
-                                                                        20,
-                                                                    vertical:
-                                                                        20),
-                                                            child: Center(
-                                                                child: Text(
-                                                                    "Are you sure ...."))),
-                                                        Container(
-                                                          width: 200,
-                                                          height: 1,
-                                                          decoration:
-                                                              const BoxDecoration(
-                                                                  color: Colors
-                                                                      .black12,
-                                                                  boxShadow: [
-                                                                BoxShadow(
-                                                                    color: Colors
-                                                                        .black38,
-                                                                    blurRadius:
-                                                                        5)
-                                                              ]),
-                                                        ),
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceEvenly,
-                                                          children: [
-                                                            InkWell(
-                                                              onTap: () async {
-                                                                Navigator.pop(
-                                                                    context);
-                                                              },
-                                                              child: Container(
-                                                                margin:
-                                                                    const EdgeInsets
-                                                                        .only(
-                                                                        top: 5),
-                                                                height: 20,
-                                                                width: 100,
-                                                                alignment:
-                                                                    Alignment
-                                                                        .center,
-                                                                child: Padding(
-                                                                    padding: const EdgeInsets
-                                                                        .only(
-                                                                        left:
-                                                                            8.0),
-                                                                    child: customText(
-                                                                        "No",
-                                                                        ColorCodes
-                                                                            .greyText,
-                                                                        14,
-                                                                        FontWeight
-                                                                            .w400,
-                                                                        poppins)),
-                                                              ),
-                                                            ),
-                                                            Container(
-                                                              width:
-                                                                  screenWidth(
-                                                                      context,
-                                                                      dividedBy:
-                                                                          300),
-                                                              height:
-                                                                  screenHeight(
-                                                                      context,
-                                                                      dividedBy:
+                                                    return StatefulBuilder(
+                                                        builder: (context,
+                                                            stateCancelReqForm) {
+                                                      return SimpleDialog(
+                                                        shape: RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        20)),
+                                                        children: [
+                                                          Padding(
+                                                              padding:
+                                                                  const EdgeInsets
+                                                                      .symmetric(
+                                                                      horizontal:
+                                                                          20,
+                                                                      vertical:
                                                                           20),
-                                                              decoration: const BoxDecoration(
-                                                                  color: Colors
-                                                                      .black12,
-                                                                  boxShadow: [
-                                                                    BoxShadow(
-                                                                        color: Colors
-                                                                            .black38,
-                                                                        blurRadius:
-                                                                            5)
-                                                                  ]),
-                                                            ),
-                                                            InkWell(
-                                                              onTap: () async {
-                                                                DioClient gp =
-                                                                    DioClient();
-
-                                                                final groupId = groupViewCubit
-                                                                    .userReqMap
-                                                                    .firstWhere((element) =>
-                                                                        element[
-                                                                            'phoneNumber'] ==
-                                                                        userPhoneNumber)['groupId'];
-
-                                                                print(
-                                                                    "groupId: $groupId");
-
-                                                                print(
-                                                                    userPhoneNumber);
-
-                                                                var g = await gp
-                                                                    .cancelRequest(
-                                                                        groupId,
-                                                                        userPhoneNumber);
-
-                                                                if (g) {
-                                                                  await groupViewCubit
-                                                                      .getGroups();
-                                                                  setState(
-                                                                      () {});
+                                                              child: Center(
+                                                                  child: Text(
+                                                                      "Are you sure to cancel request?"))),
+                                                          Container(
+                                                            width: 200,
+                                                            height: 1,
+                                                            decoration:
+                                                                const BoxDecoration(
+                                                                    color: Colors
+                                                                        .black12,
+                                                                    boxShadow: [
+                                                                  BoxShadow(
+                                                                      color: Colors
+                                                                          .black38,
+                                                                      blurRadius:
+                                                                          5)
+                                                                ]),
+                                                          ),
+                                                          Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceEvenly,
+                                                            children: [
+                                                              InkWell(
+                                                                onTap:
+                                                                    () async {
                                                                   Navigator.pop(
                                                                       context);
-                                                                }
-                                                              },
-                                                              child: Container(
+                                                                },
+                                                                child:
+                                                                    Container(
                                                                   margin:
                                                                       const EdgeInsets
                                                                           .only(
@@ -652,20 +580,98 @@ GFTR
                                                                           left:
                                                                               8.0),
                                                                       child: customText(
-                                                                          "Yes",
+                                                                          "No",
                                                                           ColorCodes
                                                                               .greyText,
                                                                           14,
                                                                           FontWeight
                                                                               .w400,
-                                                                          poppins))),
-                                                            )
-                                                          ],
-                                                        )
-                                                      ],
-                                                    );
+                                                                          poppins)),
+                                                                ),
+                                                              ),
+                                                              Container(
+                                                                width: screenWidth(
+                                                                    context,
+                                                                    dividedBy:
+                                                                        300),
+                                                                height:
+                                                                    screenHeight(
+                                                                        context,
+                                                                        dividedBy:
+                                                                            20),
+                                                                decoration: const BoxDecoration(
+                                                                    color: Colors
+                                                                        .black12,
+                                                                    boxShadow: [
+                                                                      BoxShadow(
+                                                                          color: Colors
+                                                                              .black38,
+                                                                          blurRadius:
+                                                                              5)
+                                                                    ]),
+                                                              ),
+                                                              InkWell(
+                                                                onTap:
+                                                                    () async {
+                                                                  DioClient gp =
+                                                                      DioClient();
+
+                                                                  final groupId = groupViewCubit
+                                                                      .userReqMap
+                                                                      .firstWhere((element) =>
+                                                                          element[
+                                                                              'phoneNumber'] ==
+                                                                          userPhoneNumber)['groupId'];
+
+                                                                  print(
+                                                                      "groupId: $groupId");
+
+                                                                  print(
+                                                                      userPhoneNumber);
+
+                                                                  await gp.cancelRequest(
+                                                                      groupId,
+                                                                      userPhoneNumber);
+
+                                                                  Navigator.of(
+                                                                          context)
+                                                                      .pop(
+                                                                          true);
+                                                                },
+                                                                child: Container(
+                                                                    margin: const EdgeInsets
+                                                                        .only(
+                                                                        top: 5),
+                                                                    height: 20,
+                                                                    width: 100,
+                                                                    alignment:
+                                                                        Alignment
+                                                                            .center,
+                                                                    child: Padding(
+                                                                        padding: const EdgeInsets
+                                                                            .only(
+                                                                            left:
+                                                                                8.0),
+                                                                        child: customText(
+                                                                            "Yes",
+                                                                            ColorCodes.greyText,
+                                                                            14,
+                                                                            FontWeight.w400,
+                                                                            poppins))),
+                                                              )
+                                                            ],
+                                                          )
+                                                        ],
+                                                      );
+                                                    });
                                                   },
                                                 );
+                                                if (g == true) {
+                                                  await groupViewCubit
+                                                      .getGroups();
+                                                  setState(() {});
+                                                  print("Group Page reloaded");
+                                                }
                                               },
                                               child: Container(
                                                 margin: EdgeInsets.only(
@@ -1271,7 +1277,7 @@ GFTR
                                                       ImageConstants.askLogo,
                                                       width: 15,
                                                       height: 15),
-                                                  Text("Asked",
+                                                  Text("Cancel",
                                                       style: const TextStyle(
                                                         fontSize: 12,
                                                         color:

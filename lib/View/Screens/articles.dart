@@ -306,8 +306,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                                 image: NetworkImage(
                                                   "${gftrStoriesCubit.gftrStories?.data?.post?[index].image}",
                                                 ),
-                                                fit: BoxFit
-                                                    .cover, // Make sure the image covers the container
+                                                fit: BoxFit.cover,
                                               ),
                                             ),
                                             child: Stack(

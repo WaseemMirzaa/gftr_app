@@ -184,7 +184,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
                 return MaterialPageRoute(builder: (_) => SplashPage());
             }
           },
-          initialRoute: homeRoute, // Always start with homeRoute
+          initialRoute: homeRoute,
         ));
   }
 }

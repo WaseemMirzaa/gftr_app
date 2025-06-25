@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:gftr/Model/buildgroup.dart';
 
-
 import 'package:gftr/Model/decryption.dart';
 import 'package:gftr/Model/encryptions.dart';
 
@@ -44,7 +43,7 @@ class BuildGroupCubit extends Cubit<BuildGroupState> {
     Map<String, dynamic> body = {
       "decData": {"member": list}
     };
-  log("Body : $body");
+    log("Body : $body");
     Encryption? response = await DioClient().encryptData(body);
     if (response != null && response.status!) {
       log('encode : ${response.data}');
@@ -56,10 +55,11 @@ class BuildGroupCubit extends Cubit<BuildGroupState> {
         if (buildGroup != null && buildGroup.status!) {
           // flutterToast(buildGroup.message!, true);
           emit(BuildGroupSuccess());
-        } else {
-          emit(BuildGroupError());
-          flutterToast(buildGroup!.message!, false);
         }
+        // else {
+        //   emit(BuildGroupError());
+        //   flutterToast(buildGroup!.message!, false);
+        // }
       } else {
         emit(BuildGroupError());
         flutterToast("Something went wrong!", false);
