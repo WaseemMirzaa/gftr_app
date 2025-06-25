@@ -69,18 +69,14 @@ Future<InitData> init() async {
   return InitData(sharedText, routeName);
 }
 
-Future<void> handleBackgroundMessage(RemoteMessage message) async {
-  print('Handling background message: ${message.messageId}');
-  print(message.data);
-}
-
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
 
-  FirebaseMessaging.onBackgroundMessage(handleBackgroundMessage);
+  // Register the background message handler
+  FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   // 3️⃣  Instantiate services / cubits
 
   SystemChrome.setPreferredOrientations(
@@ -89,15 +85,15 @@ Future<void> main() async {
     InitData initData = await init();
     runApp(MyApp(
       initData: initData,
-    
     ));
-    
   });
 }
 
 class MyApp extends StatefulWidget {
-  MyApp({Key? key, required this.initData,})
-      : super(key: key);
+  MyApp({
+    Key? key,
+    required this.initData,
+  }) : super(key: key);
   final InitData initData;
   @override
   State<MyApp> createState() => _MyAppState();
@@ -107,7 +103,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
   // final _navKey = GlobalKey<NavigatorState>();
   SharedPrefsService prefsService = SharedPrefsService();
 
-
   @override
   void initState() {
     // TODO: implement initState
@@ -115,27 +110,24 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     initNotificationForeGround();
   }
 
+  initNotificationForeGround() async {
+    final notificationServices = NotificationServices(); // singleton
+    final fcmCubit = FcmTokenCubit();
 
-    initNotificationForeGround()async{
-        final notificationServices = NotificationServices();  // singleton
-  final fcmCubit = FcmTokenCubit();
+    // 4️⃣  Retrieve the token (can be null on first launch)
+    final String fcmToken =
+        await notificationServices.messaging.getToken() ?? '';
+    print('🔑 FCM token (main): $fcmToken');
+    fcmCubit.setFcmToken(fcmToken);
 
-  // 4️⃣  Retrieve the token (can be null on first launch)
-  final String fcmToken = await notificationServices.messaging.getToken() ?? '';
-  print('🔑 FCM token (main): $fcmToken');
-  fcmCubit.setFcmToken(fcmToken);
-
-      await NotificationServices().initialise(context);
-    }
-
-  
+    await NotificationServices().initialise(context);
+  }
 
   @override
   Widget build(BuildContext context) {
-    
     return MultiBlocProvider(
         providers: [
-          BlocProvider(create: (context) =>  FcmTokenCubit()),
+          BlocProvider(create: (context) => FcmTokenCubit()),
           BlocProvider(create: (context) => MutualFrdsCubit()),
           BlocProvider(create: (context) => SignUpCubit()),
           BlocProvider(create: (context) => SignInCubit()),
@@ -176,7 +168,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ],
         child: MaterialApp(
           navigatorKey: notificationRouteKey,
-         
+
           debugShowCheckedModeBanner: false,
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name) {

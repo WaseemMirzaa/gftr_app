@@ -32,9 +32,9 @@ class NotificationServices {
   );
 
   Future<String> getToken() async {
-    String? fcmToken = Platform.isAndroid
-        ? await messaging.getToken()
-        : await messaging.getAPNSToken();
+    // For both iOS and Android, use getToken() which returns the FCM token
+    String? fcmToken = await messaging.getToken();
+    print('🔑 FCM Token retrieved: $fcmToken');
     return fcmToken ?? "No Token";
   }
 
@@ -91,9 +91,12 @@ class NotificationServices {
   Future<void> _initLocalNotifications(BuildContext context) async {
     const androidSettings = AndroidInitializationSettings('ic_notification');
     const iosSettings = DarwinInitializationSettings(
-      requestAlertPermission: false,
-      requestBadgePermission: false,
-      requestSoundPermission: false,
+      requestAlertPermission: true,
+      requestBadgePermission: true,
+      requestSoundPermission: true,
+      defaultPresentAlert: true,
+      defaultPresentBadge: true,
+      defaultPresentSound: true,
     );
 
     const initSettings = InitializationSettings(
@@ -111,6 +114,8 @@ class NotificationServices {
 
   Future<void> requestNotificationPermissions() async {
     try {
+      print('🔔 Requesting notification permissions...');
+
       // Handle Android 13+ permissions
       if (Platform.isAndroid) {
         final androidInfo = await DeviceInfoPlugin().androidInfo;
@@ -126,6 +131,19 @@ class NotificationServices {
         }
       }
 
+      // For iOS, request local notification permissions first
+      if (Platform.isIOS) {
+        final bool? result = await flutterLocalNotifications
+            .resolvePlatformSpecificImplementation<
+                IOSFlutterLocalNotificationsPlugin>()
+            ?.requestPermissions(
+              alert: true,
+              badge: true,
+              sound: true,
+            );
+        print('🍎 iOS Local notification permission: $result');
+      }
+
       // Request Firebase permissions
       final settings = await messaging.requestPermission(
         alert: true,
@@ -135,13 +153,21 @@ class NotificationServices {
         criticalAlert: false,
       );
 
-      debugPrint('🔔 Permission status: ${settings.authorizationStatus}');
+      print('🔔 Firebase permission status: ${settings.authorizationStatus}');
 
-      if (settings.authorizationStatus == AuthorizationStatus.denied) {
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        print('✅ User granted permission');
+      } else if (settings.authorizationStatus ==
+          AuthorizationStatus.provisional) {
+        print('⚠️ User granted provisional permission');
+      } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
+        print('❌ User denied permission');
         await OpenAppSettings.openNotificationSettings();
+      } else {
+        print('❓ Permission status: ${settings.authorizationStatus}');
       }
     } catch (e) {
-      debugPrint('⚠️ requestNotificationPermissions: $e');
+      print('⚠️ requestNotificationPermissions error: $e');
     }
   }
 
@@ -164,7 +190,12 @@ class NotificationServices {
 
   Future<void> _showNotification(RemoteMessage remoteMessage) async {
     final notification = remoteMessage.notification;
-    if (notification == null) return;
+    print('📱 Attempting to show notification: ${notification?.title}');
+
+    if (notification == null) {
+      print('⚠️ Notification is null, cannot display');
+      return;
+    }
 
     final androidDetails = AndroidNotificationDetails(
       defaultChannel.id,
@@ -180,6 +211,10 @@ class NotificationServices {
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
+      sound: 'default',
+      badgeNumber: 1,
+      subtitle: 'GFTR Notification',
+      threadIdentifier: 'gftr_notifications',
     );
 
     final details = NotificationDetails(
@@ -187,13 +222,18 @@ class NotificationServices {
       iOS: iosDetails,
     );
 
-    await flutterLocalNotifications.show(
-      remoteMessage.hashCode,
-      notification.title ?? 'No Title',
-      notification.body ?? 'No Body',
-      details,
-      payload: remoteMessage.data.toString(),
-    );
+    try {
+      await flutterLocalNotifications.show(
+        remoteMessage.hashCode,
+        notification.title ?? 'No Title',
+        notification.body ?? 'No Body',
+        details,
+        payload: remoteMessage.data.toString(),
+      );
+      print('✅ Notification shown successfully: ${notification.title}');
+    } catch (e) {
+      print('❌ Error showing notification: $e');
+    }
   }
 }
 
@@ -201,5 +241,13 @@ class NotificationServices {
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
-  await NotificationServices()._showNotification(message);
+
+  print('🔵 Background message received: ${message.messageId}');
+  print('🔵 Title: ${message.notification?.title}');
+  print('🔵 Body: ${message.notification?.body}');
+  print('🔵 Data: ${message.data}');
+
+  // Show local notification for background messages
+  final notificationService = NotificationServices();
+  await notificationService._showNotification(message);
 }
