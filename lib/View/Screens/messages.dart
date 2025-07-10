@@ -414,35 +414,42 @@ class _MessagesPageState extends State<MessagesPage> {
                     child: EmojiPicker(
                       textEditingController: messageController,
                       config: Config(
-                        columns: 7,
-                        emojiSizeMax: 32 *
-                            (foundation.defaultTargetPlatform ==
-                                    TargetPlatform.android
-                                ? 1.30
-                                : 1.0),
-                        verticalSpacing: 0,
-                        horizontalSpacing: 0,
-                        gridPadding: EdgeInsets.zero,
-                        initCategory: Category.RECENT,
-                        bgColor: const Color(0xFFF2F2F2),
-                        indicatorColor: Colors.blue,
-                        iconColor: Colors.grey,
-                        iconColorSelected: Colors.blue,
-                        backspaceColor: Colors.blue,
-                        skinToneDialogBgColor: Colors.white,
-                        skinToneIndicatorColor: Colors.grey,
-                        enableSkinTones: true,
-                        recentsLimit: 28,
-                        replaceEmojiOnLimitExceed: false,
-                        noRecents: const Text(
-                          'No Recents',
-                          style: TextStyle(fontSize: 20, color: Colors.black26),
-                          textAlign: TextAlign.center,
+                        skinToneConfig: SkinToneConfig(
+                            dialogBackgroundColor: Colors.white,
+                            indicatorColor: Colors.grey,
+                            enabled: true),
+                        emojiViewConfig: EmojiViewConfig(
+                          columns: 7,
+                          emojiSizeMax: 32 *
+                              (foundation.defaultTargetPlatform ==
+                                      TargetPlatform.android
+                                  ? 1.30
+                                  : 1.0),
+                          horizontalSpacing: 0,
+                          gridPadding: EdgeInsets.zero,
+                          verticalSpacing: 0,
+                          recentsLimit: 28,
+                          replaceEmojiOnLimitExceed: false,
+                          loadingIndicator: const SizedBox.shrink(),
+                          noRecents: const Text(
+                            'No Recents',
+                            style:
+                                TextStyle(fontSize: 20, color: Colors.black26),
+                            textAlign: TextAlign.center,
+                          ),
+                          buttonMode: ButtonMode.MATERIAL,
                         ),
-                        loadingIndicator: const SizedBox.shrink(),
-                        tabIndicatorAnimDuration: kTabScrollDuration,
-                        categoryIcons: const CategoryIcons(),
-                        buttonMode: ButtonMode.MATERIAL,
+                        categoryViewConfig: CategoryViewConfig(
+                          initCategory: Category.RECENT,
+                          backgroundColor: Color(0xFFF2F2F2),
+                          indicatorColor: Colors.blue,
+                          iconColor: Colors.grey,
+                          iconColorSelected: Colors.blue,
+                          backspaceColor: Colors.blue,
+                          tabIndicatorAnimDuration: kTabScrollDuration,
+                          categoryIcons: const CategoryIcons(),
+                        ),
+                        // loadingIndicator: const SizedBox.shrink(),
                         checkPlatformCompatibility: true,
                       ),
                     ))),

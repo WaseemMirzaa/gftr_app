@@ -263,7 +263,7 @@ class _GfterStoriesState extends State<GfterStories>
                                                   alignment:
                                                       Alignment.centerLeft,
                                                   padding: const EdgeInsets
-                                                          .symmetric(
+                                                      .symmetric(
                                                       horizontal: 12),
                                                   child: Text(
                                                     post.title ?? '',
