@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_holo_date_picker/date_picker.dart';
+import 'package:gftr/View/Widgets/customButton.dart';
 import 'package:gftr/View/Widgets/customLoader.dart';
 import 'package:gftr/View/Widgets/flutterToast.dart';
 import 'package:gftr/ViewModel/Cubits/Calendar_post.dart';
@@ -434,9 +435,27 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
                 showDialog(
                   context: context,
                   builder: (ctx) => AlertDialog(
-                    title: Text(
-                        '${DateFormat('dd MMMM').format(_selectedDate!).toString()}',
-                        style: TextStyle(fontFamily: 'poppins')),
+                    title: Row(
+                      children: [
+                        Expanded(
+                          child: Text(
+                              '${DateFormat('dd MMMM').format(_selectedDate!).toString()}',
+                              style: TextStyle(fontFamily: 'poppins')),
+                        ),
+                        ElevatedButton(
+                            onPressed: () {
+                              _showAddEventDialog();
+                            },
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: ColorCodes.coral,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8))),
+                            child: Text(
+                              "Add Event",
+                              style: TextStyle(fontFamily: "poppins"),
+                            ))
+                      ],
+                    ),
                     actions: <Widget>[
                       ..._listOfDayEvents(_selectedDate!).map(
                         (myEvents) => ListTile(
