@@ -9,13 +9,17 @@ import 'package:gftr/View/Widgets/customLoader.dart';
 import 'package:gftr/View/Widgets/customText.dart';
 import 'package:gftr/ViewModel/Cubits/GetGifted/getgiftedview_dart.dart';
 import 'package:gftr/ViewModel/Cubits/folderview_cubit.dart';
+import 'package:gftr/ViewModel/Cubits/editgiftnotes_cubit.dart';
 import 'package:share_plus/share_plus.dart';
 import 'ManageBottom/gftrStoryViewPage.dart';
 
 class FolderPublicView extends StatefulWidget {
-  int imageIndex;
-  String folderName;
-  FolderPublicView({required this.imageIndex, required this.folderName});
+  final int imageIndex;
+  final String folderName;
+
+  const FolderPublicView(
+      {Key? key, required this.imageIndex, required this.folderName})
+      : super(key: key);
 
   @override
   State<FolderPublicView> createState() => _FolderPublicViewState();
@@ -24,6 +28,7 @@ class FolderPublicView extends StatefulWidget {
 class _FolderPublicViewState extends State<FolderPublicView> {
   FolderViewDeleteCubit folderViewDeleteCubit = FolderViewDeleteCubit();
   GetGiftedViewCubit getGiftedViewCubit = GetGiftedViewCubit();
+  EditGiftNotesCubit editGiftNotesCubit = EditGiftNotesCubit();
 
   @override
   void initState() {
@@ -31,7 +36,69 @@ class _FolderPublicViewState extends State<FolderPublicView> {
     super.initState();
     folderViewDeleteCubit = BlocProvider.of<FolderViewDeleteCubit>(context);
     getGiftedViewCubit = BlocProvider.of<GetGiftedViewCubit>(context);
+    editGiftNotesCubit = BlocProvider.of<EditGiftNotesCubit>(context);
     getGiftedViewCubit.getViewGift();
+  }
+
+  void _showEditNotesDialog(
+      String currentNotes, String formDataId, String folderId) {
+    TextEditingController notesController =
+        TextEditingController(text: currentNotes);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('Edit Notes'),
+          content: TextField(
+            controller: notesController,
+            decoration: InputDecoration(
+              hintText: 'Enter your notes...',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text('Cancel'),
+            ),
+            BlocConsumer<EditGiftNotesCubit, EditGiftNotesState>(
+              bloc: editGiftNotesCubit,
+              listener: (context, state) {
+                if (state is EditGiftNotesSuccess) {
+                  Navigator.of(dialogContext).pop();
+                  // Refresh the data - BlocBuilder will automatically rebuild the UI
+                  getGiftedViewCubit.getViewGift();
+                } else if (state is EditGiftNotesError) {
+                  // Error toast is already shown in the cubit
+                }
+              },
+              builder: (context, state) {
+                return TextButton(
+                  onPressed: state is EditGiftNotesLoading
+                      ? null
+                      : () {
+                          editGiftNotesCubit.editGiftNotes(
+                            folderId: folderId,
+                            formDataId: formDataId,
+                            notes: notesController.text,
+                          );
+                        },
+                  child: state is EditGiftNotesLoading
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text('Save'),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -67,9 +134,33 @@ class _FolderPublicViewState extends State<FolderPublicView> {
             SizedBox(
               height: screenHeight(context, dividedBy: 50),
             ),
-            getGiftedViewCubit.viewGift!.publicData![widget.imageIndex]
-                    .formdata!.isNotEmpty
-                ? Expanded(
+            BlocBuilder<GetGiftedViewCubit, GetGiftedViewState>(
+              bloc: getGiftedViewCubit,
+              builder: (context, state) {
+                if (state is GetGiftedViewLoading) {
+                  return Expanded(
+                    child: Center(
+                      child: spinkitLoader(context, ColorCodes.coral),
+                    ),
+                  );
+                } else if (state is GetGiftedViewError) {
+                  return Expanded(
+                    child: Center(
+                      child: customText("Error loading gifts", Colors.black, 16,
+                          FontWeight.w300, poppins),
+                    ),
+                  );
+                } else if (state is GetGiftedViewSuccess &&
+                    getGiftedViewCubit.viewGift != null &&
+                    getGiftedViewCubit.viewGift!.publicData != null &&
+                    widget.imageIndex <
+                        getGiftedViewCubit.viewGift!.publicData!.length &&
+                    getGiftedViewCubit.viewGift!.publicData![widget.imageIndex]
+                            .formdata !=
+                        null &&
+                    getGiftedViewCubit.viewGift!.publicData![widget.imageIndex]
+                        .formdata!.isNotEmpty) {
+                  return Expanded(
                     child: ListView.builder(
                         itemCount: getGiftedViewCubit.viewGift
                             ?.publicData?[widget.imageIndex].formdata?.length,
@@ -292,30 +383,76 @@ class _FolderPublicViewState extends State<FolderPublicView> {
                                                   ],
                                                 ),
                                               ),
-                                              Container(
-                                                height: screenHeight(context,
-                                                    dividedBy: 30),
-                                                width: screenWidth(context,
-                                                    dividedBy: 1.8),
-                                                padding: EdgeInsets.only(
-                                                    left: screenWidth(context,
-                                                        dividedBy: 60)),
-                                                alignment: Alignment.centerLeft,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            5),
-                                                    border: Border.all(
-                                                        width: 1.2,
+                                              GestureDetector(
+                                                onTap: () {
+                                                  String folderId =
+                                                      getGiftedViewCubit
+                                                              .viewGift
+                                                              ?.publicData?[widget
+                                                                  .imageIndex]
+                                                              .id ??
+                                                          '';
+                                                  String formDataId =
+                                                      getGiftedViewCubit
+                                                              .viewGift
+                                                              ?.publicData?[widget
+                                                                  .imageIndex]
+                                                              .formdata?[index]
+                                                              .id ??
+                                                          '';
+                                                  String currentNotes =
+                                                      getGiftedViewCubit
+                                                              .viewGift
+                                                              ?.publicData?[widget
+                                                                  .imageIndex]
+                                                              .formdata?[index]
+                                                              .notes ??
+                                                          '';
+
+                                                  _showEditNotesDialog(
+                                                      currentNotes,
+                                                      formDataId,
+                                                      folderId);
+                                                },
+                                                child: Container(
+                                                  height: screenHeight(context,
+                                                      dividedBy: 30),
+                                                  width: screenWidth(context,
+                                                      dividedBy: 1.8),
+                                                  padding: EdgeInsets.only(
+                                                      left: screenWidth(context,
+                                                          dividedBy: 60)),
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      border: Border.all(
+                                                          width: 1.2,
+                                                          color: ColorCodes
+                                                              .greyButton)),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: customText(
+                                                            "Notes: ${getGiftedViewCubit.viewGift?.publicData?[widget.imageIndex].formdata?[index].notes ?? ""}",
+                                                            Colors.black,
+                                                            10,
+                                                            FontWeight.w100,
+                                                            poppins),
+                                                      ),
+                                                      Icon(
+                                                        Icons.edit,
+                                                        size: 16,
                                                         color: ColorCodes
-                                                            .greyButton)),
-                                                child: customText(
-                                                    "Notes: ${getGiftedViewCubit.viewGift?.publicData?[widget.imageIndex].formdata?[index].notes ?? ""}",
-                                                    Colors.black,
-                                                    10,
-                                                    FontWeight.w100,
-                                                    poppins),
+                                                            .greyButton,
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                    ],
+                                                  ),
+                                                ),
                                               )
                                             ])
                                       ]))),
@@ -325,8 +462,9 @@ class _FolderPublicViewState extends State<FolderPublicView> {
                             ]),
                           );
                         }),
-                  )
-                : Expanded(
+                  );
+                } else {
+                  return Expanded(
                     child: Container(
                       width: screenWidth(context, dividedBy: 1),
                       child: Column(
@@ -396,7 +534,10 @@ class _FolderPublicViewState extends State<FolderPublicView> {
                         ],
                       ),
                     ),
-                  ),
+                  );
+                }
+              },
+            ),
           ],
         ),
       ),

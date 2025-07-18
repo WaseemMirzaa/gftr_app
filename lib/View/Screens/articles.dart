@@ -102,8 +102,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                             [];
 
                         // Get matching gifts from "Saved by a" section
-                        var matchingGifts = fetch_all_giftsCubit
-                                .allgifts?.data
+                        var matchingGifts = fetch_all_giftsCubit.allgifts?.data
                                 ?.where((gift) =>
                                     gift.title
                                         ?.toLowerCase()
@@ -114,8 +113,10 @@ class _ArticlesPageState extends State<ArticlesPage> {
 
                         // Combine both results
                         resultSearch = [];
-                        resultSearch.addAll(matchingArticles.map((article) => {'type': 'article', 'data': article}));
-                        resultSearch.addAll(matchingGifts.map((gift) => {'type': 'gift', 'data': gift}));
+                        resultSearch.addAll(matchingArticles.map(
+                            (article) => {'type': 'article', 'data': article}));
+                        resultSearch.addAll(matchingGifts
+                            .map((gift) => {'type': 'gift', 'data': gift}));
                       }
                       setState(() {});
                     },
@@ -157,7 +158,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                             var item = resultSearch[index];
                             var type = item['type'];
                             var data = item['data'];
-                            
+
                             if (type == 'article') {
                               return Padding(
                                 padding: EdgeInsets.symmetric(
@@ -167,8 +168,10 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                     onTap: () {
                                       // Find the original index of this article
                                       var originalIndex = gftrStoriesCubit
-                                          .gftrStories?.data?.post
-                                          ?.indexWhere((article) => article == data) ?? 0;
+                                              .gftrStories?.data?.post
+                                              ?.indexWhere((article) =>
+                                                  article == data) ??
+                                          0;
                                       Navigator.push(context, MaterialPageRoute(
                                         builder: (context) {
                                           return giftr_details(originalIndex);
@@ -317,16 +320,21 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                                                 .circular(8),
                                                       ),
                                                       child: Column(
-                                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                                        mainAxisSize: MainAxisSize.min,
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
                                                         children: [
                                                           Text(
                                                             data.title ?? "",
                                                             style: TextStyle(
                                                               fontSize: 14,
                                                               fontWeight:
-                                                                  FontWeight.w500,
-                                                              color: Colors.white,
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color:
+                                                                  Colors.white,
                                                               shadows: [
                                                                 Shadow(
                                                                   color: Colors
@@ -334,23 +342,28 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                                                       .withOpacity(
                                                                           0.6),
                                                                   offset:
-                                                                      Offset(2, 2),
+                                                                      Offset(
+                                                                          2, 2),
                                                                   blurRadius: 4,
                                                                 ),
                                                               ],
                                                             ),
                                                             maxLines: 2,
-                                                            overflow: TextOverflow
-                                                                .ellipsis,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
                                                           ),
-                                                          if (data.price != null)
+                                                          if (data.price !=
+                                                              null)
                                                             Text(
                                                               "\$${data.price}",
                                                               style: TextStyle(
                                                                 fontSize: 12,
                                                                 fontWeight:
-                                                                    FontWeight.w400,
-                                                                color: Colors.white,
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: Colors
+                                                                    .white,
                                                                 shadows: [
                                                                   Shadow(
                                                                     color: Colors
@@ -358,8 +371,11 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                                                         .withOpacity(
                                                                             0.6),
                                                                     offset:
-                                                                        Offset(2, 2),
-                                                                    blurRadius: 4,
+                                                                        Offset(
+                                                                            2,
+                                                                            2),
+                                                                    blurRadius:
+                                                                        4,
                                                                   ),
                                                                 ],
                                                               ),

@@ -9,15 +9,17 @@ import 'package:gftr/View/Widgets/customLoader.dart';
 import 'package:gftr/View/Widgets/customText.dart';
 import 'package:gftr/ViewModel/Cubits/GetGifted/getgiftedview_dart.dart';
 import 'package:gftr/ViewModel/Cubits/folderview_cubit.dart';
+import 'package:gftr/ViewModel/Cubits/editgiftnotes_cubit.dart';
 import 'package:share_plus/share_plus.dart';
 import 'ManageBottom/gftrStoryViewPage.dart';
 
 class FolderPrivateView extends StatefulWidget {
-  int imageIndex;
-  String folderName;
+  final int imageIndex;
+  final String folderName;
 
-
-  FolderPrivateView({required this.imageIndex,required this.folderName});
+  const FolderPrivateView(
+      {Key? key, required this.imageIndex, required this.folderName})
+      : super(key: key);
 
   @override
   State<FolderPrivateView> createState() => _FolderPrivateViewState();
@@ -26,6 +28,7 @@ class FolderPrivateView extends StatefulWidget {
 class _FolderPrivateViewState extends State<FolderPrivateView> {
   FolderViewDeleteCubit folderViewDeleteCubit = FolderViewDeleteCubit();
   GetGiftedViewCubit getGiftedViewCubit = GetGiftedViewCubit();
+  EditGiftNotesCubit editGiftNotesCubit = EditGiftNotesCubit();
 
   @override
   void initState() {
@@ -33,7 +36,69 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
     super.initState();
     folderViewDeleteCubit = BlocProvider.of<FolderViewDeleteCubit>(context);
     getGiftedViewCubit = BlocProvider.of<GetGiftedViewCubit>(context);
+    editGiftNotesCubit = BlocProvider.of<EditGiftNotesCubit>(context);
     getGiftedViewCubit.getViewGift();
+  }
+
+  void _showEditNotesDialog(
+      String currentNotes, String formDataId, String folderId) {
+    TextEditingController notesController =
+        TextEditingController(text: currentNotes);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('Edit Notes'),
+          content: TextField(
+            controller: notesController,
+            decoration: InputDecoration(
+              hintText: 'Enter your notes...',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text('Cancel'),
+            ),
+            BlocConsumer<EditGiftNotesCubit, EditGiftNotesState>(
+              bloc: editGiftNotesCubit,
+              listener: (context, state) {
+                if (state is EditGiftNotesSuccess) {
+                  Navigator.of(dialogContext).pop();
+                  // Refresh the data - BlocBuilder will automatically rebuild the UI
+                  getGiftedViewCubit.getViewGift();
+                } else if (state is EditGiftNotesError) {
+                  // Error toast is already shown in the cubit
+                }
+              },
+              builder: (context, state) {
+                return TextButton(
+                  onPressed: state is EditGiftNotesLoading
+                      ? null
+                      : () {
+                          editGiftNotesCubit.editGiftNotes(
+                            folderId: folderId,
+                            formDataId: formDataId,
+                            notes: notesController.text,
+                          );
+                        },
+                  child: state is EditGiftNotesLoading
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text('Save'),
+                );
+              },
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -69,17 +134,41 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
             SizedBox(
               height: screenHeight(context, dividedBy: 50),
             ),
-            getGiftedViewCubit.viewGift!.privateData![widget.imageIndex].formdata!.isNotEmpty
-                ? Expanded(
+            BlocBuilder<GetGiftedViewCubit, GetGiftedViewState>(
+              bloc: getGiftedViewCubit,
+              builder: (context, state) {
+                if (state is GetGiftedViewLoading) {
+                  return Expanded(
+                    child: Center(
+                      child: spinkitLoader(context, ColorCodes.coral),
+                    ),
+                  );
+                } else if (state is GetGiftedViewError) {
+                  return Expanded(
+                    child: Center(
+                      child: customText("Error loading gifts", Colors.black, 16,
+                          FontWeight.w300, poppins),
+                    ),
+                  );
+                } else if (state is GetGiftedViewSuccess &&
+                    getGiftedViewCubit.viewGift != null &&
+                    getGiftedViewCubit.viewGift!.privateData != null &&
+                    widget.imageIndex <
+                        getGiftedViewCubit.viewGift!.privateData!.length &&
+                    getGiftedViewCubit.viewGift!.privateData![widget.imageIndex]
+                            .formdata !=
+                        null &&
+                    getGiftedViewCubit.viewGift!.privateData![widget.imageIndex]
+                        .formdata!.isNotEmpty) {
+                  return Expanded(
                     child: ListView.builder(
                         itemCount: getGiftedViewCubit.viewGift
                             ?.privateData?[widget.imageIndex].formdata?.length,
                         padding: EdgeInsets.only(
                             top: screenHeight(context, dividedBy: 100)),
                         itemBuilder: (context, index) {
-                          return GestureDetector(onTap: (){
-
-                          },
+                          return GestureDetector(
+                            onTap: () {},
                             child: Column(children: [
                               Dismissible(
                                   key: UniqueKey(),
@@ -89,13 +178,15 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                                         .folderViewDeleteGift(
                                           folderViewId: getGiftedViewCubit
                                                   .viewGift
-                                                  ?.privateData?[widget.imageIndex]
+                                                  ?.privateData?[
+                                                      widget.imageIndex]
                                                   .formdata?[index]
                                                   .id ??
                                               '',
                                           giftfolderId: getGiftedViewCubit
                                                   .viewGift
-                                                  ?.privateData?[widget.imageIndex]
+                                                  ?.privateData?[
+                                                      widget.imageIndex]
                                                   .id ??
                                               '',
                                         )
@@ -105,8 +196,8 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                                   },
                                   background: Container(
                                     padding: EdgeInsets.only(
-                                        right:
-                                            screenWidth(context, dividedBy: 10)),
+                                        right: screenWidth(context,
+                                            dividedBy: 10)),
                                     decoration: BoxDecoration(
                                         color: Colors.red,
                                         borderRadius: BorderRadius.circular(10),
@@ -117,15 +208,18 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                                           )
                                         ]),
                                     alignment: Alignment.centerRight,
-                                    child: customText("Delete", Colors.white, 18,
-                                        FontWeight.w700, poppins),
+                                    child: customText("Delete", Colors.white,
+                                        18, FontWeight.w700, poppins),
                                   ),
                                   child: Container(
-                                      height: screenHeight(context, dividedBy: 8),
-                                      width: screenWidth(context, dividedBy: 1.1),
+                                      height:
+                                          screenHeight(context, dividedBy: 8),
+                                      width:
+                                          screenWidth(context, dividedBy: 1.1),
                                       decoration: BoxDecoration(
                                           color: Colors.white,
-                                          borderRadius: BorderRadius.circular(10),
+                                          borderRadius:
+                                              BorderRadius.circular(10),
                                           boxShadow: [
                                             BoxShadow(
                                               color: Colors.grey.shade300,
@@ -137,15 +231,17 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                                         InkWell(
                                           onTap: () {
                                             defauilUrl = getGiftedViewCubit
-                                                .viewGift
-                                                ?.privateData?[widget.imageIndex]
-                                                .formdata?[index]
-                                                .webViewLink ??
+                                                    .viewGift
+                                                    ?.privateData?[
+                                                        widget.imageIndex]
+                                                    .formdata?[index]
+                                                    .webViewLink ??
                                                 '';
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
-                                                    builder: (context) => GooglePage()));
+                                                    builder: (context) =>
+                                                        GooglePage()));
                                             setState(() {});
                                           },
                                           child: Container(
@@ -155,37 +251,51 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                                               height: screenHeight(context,
                                                   dividedBy: 7),
                                               child: ClipRRect(
-                                                  borderRadius:
-                                                      const BorderRadius.only(
-                                                          topLeft:
-                                                              Radius.circular(10),
-                                                          bottomLeft:
-                                                              Radius.circular(
-                                                                  10)),
-                                                  child:  CachedNetworkImage(
-                                                    fit:  BoxFit.fill,
-                                                    height: 80,
-                                                    width: 180,
-                                                    imageUrl:   getGiftedViewCubit.viewGift?.privateData?[widget.imageIndex].formdata?[index].image ?? '',
-                                                    placeholder: (context, url) => spinkitLoader(context, ColorCodes.coral),
-                                                    errorWidget: (context, url, error) => Center(child: Image(image: AssetImage("assets/images/No-image-available.png"),)),
-                                                  ),
-                                                  // Image.network(
+                                                borderRadius:
+                                                    const BorderRadius.only(
+                                                        topLeft:
+                                                            Radius.circular(10),
+                                                        bottomLeft:
+                                                            Radius.circular(
+                                                                10)),
+                                                child: CachedNetworkImage(
+                                                  fit: BoxFit.fill,
+                                                  height: 80,
+                                                  width: 180,
+                                                  imageUrl: getGiftedViewCubit
+                                                          .viewGift
+                                                          ?.privateData?[
+                                                              widget.imageIndex]
+                                                          .formdata?[index]
+                                                          .image ??
+                                                      '',
+                                                  placeholder: (context, url) =>
+                                                      spinkitLoader(context,
+                                                          ColorCodes.coral),
+                                                  errorWidget:
+                                                      (context, url, error) =>
+                                                          Center(
+                                                              child: Image(
+                                                    image: AssetImage(
+                                                        "assets/images/No-image-available.png"),
+                                                  )),
+                                                ),
+                                                // Image.network(
 
                                                 //       errorBuilder: (context, object, stacktrace) {
-                                                  //   debugPrint("object : ${object.toString()}");
-                                                  //   debugPrint( "stacktrace : ${stacktrace.toString()}");
-                                                  //   return Center(child: Image(image: AssetImage("assets/images/gift.png")));
-                                                  // },
-                                                  //   fit: BoxFit.fill,
-                                                  //   height: 80,
-                                                  //   width: 180,
-                                                  // )
+                                                //   debugPrint("object : ${object.toString()}");
+                                                //   debugPrint( "stacktrace : ${stacktrace.toString()}");
+                                                //   return Center(child: Image(image: AssetImage("assets/images/gift.png")));
+                                                // },
+                                                //   fit: BoxFit.fill,
+                                                //   height: 80,
+                                                //   width: 180,
+                                                // )
                                               )),
                                         ),
                                         SizedBox(
-                                          width:
-                                              screenWidth(context, dividedBy: 30),
+                                          width: screenWidth(context,
+                                              dividedBy: 30),
                                         ),
                                         Column(
                                             mainAxisAlignment:
@@ -194,20 +304,28 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                                                 CrossAxisAlignment.start,
                                             children: [
                                               SizedBox(
-                                                height: screenHeight(context,dividedBy: 25),
-                                                width: screenWidth(context,dividedBy: 1.8),
+                                                height: screenHeight(context,
+                                                    dividedBy: 25),
+                                                width: screenWidth(context,
+                                                    dividedBy: 1.8),
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
                                                     SizedBox(
-                                                      width: screenWidth(context,dividedBy: 2),
+                                                      width: screenWidth(
+                                                          context,
+                                                          dividedBy: 2),
                                                       child: customText(
                                                           getGiftedViewCubit
-                                                              .viewGift
-                                                              ?.privateData?[
-                                                          widget.imageIndex]
-                                                              .formdata?[index]
-                                                              .title ??
+                                                                  .viewGift
+                                                                  ?.privateData?[
+                                                                      widget
+                                                                          .imageIndex]
+                                                                  .formdata?[
+                                                                      index]
+                                                                  .title ??
                                                               "",
                                                           overflowText: true,
                                                           Colors.black,
@@ -218,30 +336,41 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                                                     ),
                                                     GestureDetector(
                                                       onTap: () async {
-                                                        await Share.share(getGiftedViewCubit
-                                                            .viewGift
-                                                            ?.privateData?[widget.imageIndex]
-                                                            .formdata?[index]
-                                                            .webViewLink ??
-                                                            '');
+                                                        await Share.share(
+                                                            getGiftedViewCubit
+                                                                    .viewGift
+                                                                    ?.privateData?[
+                                                                        widget
+                                                                            .imageIndex]
+                                                                    .formdata?[
+                                                                        index]
+                                                                    .webViewLink ??
+                                                                '');
                                                         setState(() {});
                                                       },
                                                       child: SizedBox(
-                                                          height: screenHeight(context,
+                                                          height: screenHeight(
+                                                              context,
                                                               dividedBy: 50),
-                                                          width: screenHeight(context,
+                                                          width: screenHeight(
+                                                              context,
                                                               dividedBy: 50),
                                                           child: Image.asset(
-                                                              ImageConstants.share)),
+                                                              ImageConstants
+                                                                  .share)),
                                                     ),
                                                   ],
                                                 ),
                                               ),
                                               Container(
-                                                height: screenHeight(context,dividedBy: 30),
-                                                width: screenWidth(context,dividedBy: 1.8),
+                                                height: screenHeight(context,
+                                                    dividedBy: 30),
+                                                width: screenWidth(context,
+                                                    dividedBy: 1.8),
                                                 child: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
                                                     customText(
                                                         "\$${getGiftedViewCubit.viewGift?.privateData?[widget.imageIndex].formdata?[index].price ?? ""}",
@@ -249,34 +378,97 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                                                         12,
                                                         FontWeight.w400,
                                                         poppins),
-                                                    Icon(Icons.star,size: 17,color: getGiftedViewCubit.viewGift?.privateData?[widget.imageIndex].formdata?[index].starredGift == true ?ColorCodes.coral:Colors.white,)
+                                                    Icon(
+                                                      Icons.star,
+                                                      size: 17,
+                                                      color: getGiftedViewCubit
+                                                                  .viewGift
+                                                                  ?.privateData?[
+                                                                      widget
+                                                                          .imageIndex]
+                                                                  .formdata?[
+                                                                      index]
+                                                                  .starredGift ==
+                                                              true
+                                                          ? ColorCodes.coral
+                                                          : Colors.white,
+                                                    )
                                                   ],
                                                 ),
                                               ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  String folderId =
+                                                      getGiftedViewCubit
+                                                              .viewGift
+                                                              ?.privateData?[
+                                                                  widget
+                                                                      .imageIndex]
+                                                              .id ??
+                                                          '';
+                                                  String formDataId =
+                                                      getGiftedViewCubit
+                                                              .viewGift
+                                                              ?.privateData?[
+                                                                  widget
+                                                                      .imageIndex]
+                                                              .formdata?[index]
+                                                              .id ??
+                                                          '';
+                                                  String currentNotes =
+                                                      getGiftedViewCubit
+                                                              .viewGift
+                                                              ?.privateData?[
+                                                                  widget
+                                                                      .imageIndex]
+                                                              .formdata?[index]
+                                                              .notes ??
+                                                          '';
 
-                                              Container(
-                                                height: screenHeight(context,
-                                                    dividedBy: 30),
-                                                width: screenWidth(context,
-                                                    dividedBy: 1.8),
-                                                padding: EdgeInsets.only(
-                                                    left: screenWidth(context,
-                                                        dividedBy: 60)),
-                                                alignment: Alignment.centerLeft,
-                                                decoration: BoxDecoration(
-                                                    color: Colors.white,
-                                                    borderRadius:
-                                                        BorderRadius.circular(5),
-                                                    border: Border.all(
-                                                        width: 1.2,
+                                                  _showEditNotesDialog(
+                                                      currentNotes,
+                                                      formDataId,
+                                                      folderId);
+                                                },
+                                                child: Container(
+                                                  height: screenHeight(context,
+                                                      dividedBy: 30),
+                                                  width: screenWidth(context,
+                                                      dividedBy: 1.8),
+                                                  padding: EdgeInsets.only(
+                                                      left: screenWidth(context,
+                                                          dividedBy: 60)),
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white,
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              5),
+                                                      border: Border.all(
+                                                          width: 1.2,
+                                                          color: ColorCodes
+                                                              .greyButton)),
+                                                  child: Row(
+                                                    children: [
+                                                      Expanded(
+                                                        child: customText(
+                                                            "Notes: ${getGiftedViewCubit.viewGift?.privateData?[widget.imageIndex].formdata?[index].notes ?? ""}",
+                                                            Colors.black,
+                                                            10,
+                                                            FontWeight.w100,
+                                                            poppins),
+                                                      ),
+                                                      Icon(
+                                                        Icons.edit,
+                                                        size: 16,
                                                         color: ColorCodes
-                                                            .greyButton)),
-                                                child: customText(
-                                                    "Notes: ${getGiftedViewCubit.viewGift?.privateData?[widget.imageIndex].formdata?[index].notes ?? ""}",
-                                                    Colors.black,
-                                                    10,
-                                                    FontWeight.w100,
-                                                    poppins),
+                                                            .greyButton,
+                                                      ),
+                                                      SizedBox(width: 8),
+                                                    ],
+                                                  ),
+                                                ),
                                               )
                                             ])
                                       ]))),
@@ -286,8 +478,9 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                             ]),
                           );
                         }),
-                  )
-                : Expanded(
+                  );
+                } else {
+                  return Expanded(
                     child: Container(
                       width: screenWidth(context, dividedBy: 1),
                       child: Column(
@@ -314,9 +507,11 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                               height: screenHeight(context, dividedBy: 35)),
                           GestureDetector(
                             onTap: () {
-                              Navigator.push(context, MaterialPageRoute(builder: (context) {
-                                return GooglePage();
-                              },));
+                              Navigator.push(context, MaterialPageRoute(
+                                builder: (context) {
+                                  return GooglePage();
+                                },
+                              ));
                             },
                             child: Container(
                               width: screenWidth(context, dividedBy: 3.2),
@@ -330,10 +525,15 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                               FontWeight.w100, poppins),
                           SizedBox(
                               height: screenHeight(context, dividedBy: 35)),
-                          GestureDetector(onTap: () {
-                            Navigator.push(context, MaterialPageRoute(builder: (context) => GfterStoryViewPage(),));
-                            bottombarblack=true;
-                          },
+                          GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => GfterStoryViewPage(),
+                                  ));
+                              bottombarblack = true;
+                            },
                             child: Container(
                               width: screenWidth(context, dividedBy: 3.8),
                               height: screenHeight(context, dividedBy: 7.5),
@@ -350,7 +550,10 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                         ],
                       ),
                     ),
-                  ),
+                  );
+                }
+              },
+            ),
           ],
         ),
       ),
