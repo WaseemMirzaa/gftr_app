@@ -79,8 +79,9 @@ dependencies:
   flutter_html: ^3.0.0-beta.2
   flutter_sms:
     git:
-      url: https://github.com/leochiu-work/flutter_sms.git
-      ref: master
+      url: https://github.com/faizan-19/flutter_sms.git
+      ref: 3596ee3
+    
   timezone: ^0.10.1
   cloud_firestore_web: ^4.4.11
   # google_sign_in: ^5.0.2
