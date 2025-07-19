@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:app_settings/app_settings.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:gftr/View/Screens/ManageBottom/notificationpageview.dart';
 import 'package:gftr/main.dart';
-import 'package:open_app_settings/open_app_settings.dart';
 
 /// Handles all notification-related work.
 class NotificationServices {
@@ -123,10 +123,11 @@ class NotificationServices {
           final granted = await flutterLocalNotifications
               .resolvePlatformSpecificImplementation<
                   AndroidFlutterLocalNotificationsPlugin>()
-              ?.requestPermission();
+              ?.requestNotificationsPermission();
 
           if (granted != true) {
-            await OpenAppSettings.openNotificationSettings();
+            await AppSettings.openAppSettings(
+                type: AppSettingsType.notification);
           }
         }
       }
@@ -162,7 +163,7 @@ class NotificationServices {
         print('⚠️ User granted provisional permission');
       } else if (settings.authorizationStatus == AuthorizationStatus.denied) {
         print('❌ User denied permission');
-        await OpenAppSettings.openNotificationSettings();
+        await AppSettings.openAppSettings(type: AppSettingsType.notification);
       } else {
         print('❓ Permission status: ${settings.authorizationStatus}');
       }

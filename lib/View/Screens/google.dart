@@ -11,9 +11,9 @@ import 'package:flutter/material.dart';
 import 'package:gftr/Helper/appConfig.dart';
 import 'package:gftr/Helper/colorConstants.dart';
 import 'package:gftr/View/Widgets/customText.dart';
-import 'package:metadata_extract/metadata_extract.dart';
 import 'package:html/parser.dart' as parser;
 import 'package:html/dom.dart' as dom;
+import 'package:metadata_fetch/metadata_fetch.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 String defauilUrl = 'https://www.google.com/search';
@@ -54,7 +54,7 @@ class _GooglePageState extends State<GooglePage> {
     print(' url : ${url}');
     print("Welcome to other preformat");
     final response = await http.get(Uri.parse(url));
-    var _reDocument = responseToDocument(response);
+    var _reDocument = MetadataFetch.responseToDocument(response);
     var data = MetadataParser.parse(_reDocument);
     print("Data : $data");
     dom.Document html = dom.Document.html(response.body);

@@ -30,6 +30,7 @@ class ApiConstants {
   static const google_login = '${baseUrls}loginsuccess';
 
   //gift Manager
+  static const editGiftNotes = '${baseUrls}editgiftnotes';
   static const addFolder = '${baseUrls}addgift'; //post
   static const renameFolder = '${baseUrls}renamegift';
   static const deleteGift = '${baseUrls}deletegift';

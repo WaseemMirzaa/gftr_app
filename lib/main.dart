@@ -25,6 +25,7 @@ import 'package:gftr/ViewModel/Cubits/contactVerfy.dart';
 import 'package:gftr/ViewModel/Cubits/events_view.dart';
 import 'package:gftr/ViewModel/Cubits/folderSetting.dart';
 import 'package:gftr/ViewModel/Cubits/folderview_cubit.dart';
+import 'package:gftr/ViewModel/Cubits/editgiftnotes_cubit.dart';
 import 'package:gftr/ViewModel/Cubits/forgotPassword.dart';
 import 'package:gftr/ViewModel/Cubits/getContact.dart';
 import 'package:gftr/ViewModel/Cubits/getGifting.dart';
@@ -141,6 +142,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
           BlocProvider(create: (context) => GetGiftedViewCubit()),
           BlocProvider(create: (context) => GetGiftedDeleteCubit()),
           BlocProvider(create: (context) => FolderViewDeleteCubit()),
+          BlocProvider(create: (context) => EditGiftNotesCubit()),
           BlocProvider(create: (context) => ContactVierfyCubit()),
           BlocProvider(create: (context) => VerifyForgotOtpCubit()),
           BlocProvider(create: (context) => ResendOtpCubit()),
@@ -168,7 +170,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         ],
         child: MaterialApp(
           navigatorKey: notificationRouteKey,
-
           debugShowCheckedModeBanner: false,
           onGenerateRoute: (RouteSettings settings) {
             switch (settings.name) {

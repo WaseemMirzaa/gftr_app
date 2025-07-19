@@ -1,9 +1,9 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:metadata_extract/metadata_extract.dart';
 
 import 'package:http/http.dart' as http;
+import 'package:metadata_fetch/metadata_fetch.dart';
 
 class MyApp2 extends StatefulWidget {
   @override
@@ -16,22 +16,25 @@ class _MyApp2State extends State<MyApp2> {
       "https://i.ytimg.com/vi/z8wrRRR7_qU/maxresdefault.jpg";
   final String _url1 =
       "https://www.espn.in/football/soccer-transfers/story/4163866/transfer-talk-lionel-messi-tells-barcelona-hes-more-likely-to-leave-then-stay";
-  final String _url2 = "https://speakerdeck.com/themsaid/the-power-of-laravel-queues";
-  final String _url3 = "https://twitter.com/laravelphp/status/1222535498880692225";
+  final String _url2 =
+      "https://speakerdeck.com/themsaid/the-power-of-laravel-queues";
+  final String _url3 =
+      "https://twitter.com/laravelphp/status/1222535498880692225";
   final String _url4 = "https://www.youtube.com/watch?v=W1pNjxmNHNQ";
-  final String _url5 = "https://www.brainyquote.com/topics/mo tivational-quotes";
+  final String _url5 =
+      "https://www.brainyquote.com/topics/mo tivational-quotes";
 
   fetchData() async {
     var response = await http.get(Uri.parse(
         'https://dl.flipkart.com/dl/van-heusen-academy-full-sleeve-solid-men-sweatshirt/p/itm782051c95ff2a?pid=SWSGHWJ6BGPHEAA5&cmpid=product.share.pp&_refId=PP.63847424-6010-4a75-a04c-a82c3a3f8180.SWSGHWJ6BGPHEAA5&_appId=MR'));
     // Covert Response to a Document. The utility function `responseToDocument` is provided or you can use own decoder/parser.
-    var document = responseToDocument(response);
+    var document = MetadataFetch.responseToDocument(response);
 
     // get metadata
     var data = MetadataParser.parse(document);
-    log(data.description??'');
-    log(data.image??'');
-    log(data.title??'');
+    log(data.description ?? '');
+    log(data.image ?? '');
+    log(data.title ?? '');
   }
 
   @override

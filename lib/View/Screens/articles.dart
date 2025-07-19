@@ -2,18 +2,15 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:gftr/Helper/apiConstants.dart';
 import 'package:gftr/Helper/appConfig.dart';
 import 'package:gftr/Helper/colorConstants.dart';
 import 'package:gftr/Helper/imageConstants.dart';
 import 'package:gftr/View/Screens/ManageBottom/Thegiftrguids.dart';
-import 'package:gftr/View/Screens/ManageBottom/gftrStoryViewPage.dart';
 import 'package:gftr/View/Screens/google.dart';
 import 'package:gftr/View/Widgets/customLoader.dart';
 import 'package:gftr/View/Widgets/customText.dart';
 import 'package:gftr/ViewModel/Cubits/All_Giftss.dart';
 import 'package:gftr/ViewModel/Cubits/gftrStories.dart';
-import 'package:html/parser.dart' as htmlParser;
 
 class ArticlesPage extends StatefulWidget {
   const ArticlesPage({Key? key}) : super(key: key);
@@ -104,8 +101,22 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                 .toList() ??
                             [];
 
-                        // Store the full article objects, not just titles
-                        resultSearch = matchingArticles;
+                        // Get matching gifts from "Saved by a" section
+                        var matchingGifts = fetch_all_giftsCubit.allgifts?.data
+                                ?.where((gift) =>
+                                    gift.title
+                                        ?.toLowerCase()
+                                        .contains(val.toLowerCase()) ??
+                                    false)
+                                .toList() ??
+                            [];
+
+                        // Combine both results
+                        resultSearch = [];
+                        resultSearch.addAll(matchingArticles.map(
+                            (article) => {'type': 'article', 'data': article}));
+                        resultSearch.addAll(matchingGifts
+                            .map((gift) => {'type': 'gift', 'data': gift}));
                       }
                       setState(() {});
                     },
@@ -143,15 +154,27 @@ class _ArticlesPageState extends State<ArticlesPage> {
                   Expanded(
                       child: ListView.builder(
                           itemCount: resultSearch.length,
-                          itemBuilder: (context, index) => Padding(
+                          itemBuilder: (context, index) {
+                            var item = resultSearch[index];
+                            var type = item['type'];
+                            var data = item['data'];
+
+                            if (type == 'article') {
+                              return Padding(
                                 padding: EdgeInsets.symmetric(
                                     horizontal:
                                         screenWidth(context, dividedBy: 30)),
                                 child: GestureDetector(
                                     onTap: () {
+                                      // Find the original index of this article
+                                      var originalIndex = gftrStoriesCubit
+                                              .gftrStories?.data?.post
+                                              ?.indexWhere((article) =>
+                                                  article == data) ??
+                                          0;
                                       Navigator.push(context, MaterialPageRoute(
                                         builder: (context) {
-                                          return giftr_details(index);
+                                          return giftr_details(originalIndex);
                                         },
                                       ));
                                     },
@@ -174,7 +197,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                                   BorderRadius.circular(15),
                                               image: DecorationImage(
                                                 image: NetworkImage(
-                                                  "${resultSearch[index].image}",
+                                                  "${data.image}",
                                                 ),
                                                 fit: BoxFit.cover,
                                               ),
@@ -201,9 +224,7 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                                                 .circular(8),
                                                       ),
                                                       child: Text(
-                                                        resultSearch[index]
-                                                                .title ??
-                                                            "",
+                                                        data.title ?? "",
                                                         style: TextStyle(
                                                           fontSize: 14,
                                                           fontWeight:
@@ -238,7 +259,146 @@ class _ArticlesPageState extends State<ArticlesPage> {
                                         ),
                                       ],
                                     )),
-                              )))
+                              );
+                            } else if (type == 'gift') {
+                              return Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal:
+                                        screenWidth(context, dividedBy: 30)),
+                                child: GestureDetector(
+                                    onTap: () {
+                                      defauilUrl = data.webViewLink ?? '';
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  GooglePage()));
+                                    },
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 0.3,
+                                          color: Colors.black,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.all(8.0),
+                                          child: Container(
+                                            height: screenHeight(context,
+                                                dividedBy: 6),
+                                            width: double.infinity,
+                                            decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(15),
+                                              image: DecorationImage(
+                                                image: NetworkImage(
+                                                  "${data.image}",
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                            child: Stack(
+                                              children: [
+                                                Align(
+                                                  alignment:
+                                                      Alignment.bottomLeft,
+                                                  child: Padding(
+                                                    padding:
+                                                        const EdgeInsets.all(
+                                                            12.0),
+                                                    child: Container(
+                                                      padding: const EdgeInsets
+                                                          .symmetric(
+                                                          horizontal: 12,
+                                                          vertical: 8),
+                                                      decoration: BoxDecoration(
+                                                        color: Colors.black
+                                                            .withOpacity(0.6),
+                                                        borderRadius:
+                                                            BorderRadius
+                                                                .circular(8),
+                                                      ),
+                                                      child: Column(
+                                                        crossAxisAlignment:
+                                                            CrossAxisAlignment
+                                                                .start,
+                                                        mainAxisSize:
+                                                            MainAxisSize.min,
+                                                        children: [
+                                                          Text(
+                                                            data.title ?? "",
+                                                            style: TextStyle(
+                                                              fontSize: 14,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .w500,
+                                                              color:
+                                                                  Colors.white,
+                                                              shadows: [
+                                                                Shadow(
+                                                                  color: Colors
+                                                                      .black
+                                                                      .withOpacity(
+                                                                          0.6),
+                                                                  offset:
+                                                                      Offset(
+                                                                          2, 2),
+                                                                  blurRadius: 4,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            maxLines: 2,
+                                                            overflow:
+                                                                TextOverflow
+                                                                    .ellipsis,
+                                                          ),
+                                                          if (data.price !=
+                                                              null)
+                                                            Text(
+                                                              "\$${data.price}",
+                                                              style: TextStyle(
+                                                                fontSize: 12,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w400,
+                                                                color: Colors
+                                                                    .white,
+                                                                shadows: [
+                                                                  Shadow(
+                                                                    color: Colors
+                                                                        .black
+                                                                        .withOpacity(
+                                                                            0.6),
+                                                                    offset:
+                                                                        Offset(
+                                                                            2,
+                                                                            2),
+                                                                    blurRadius:
+                                                                        4,
+                                                                  ),
+                                                                ],
+                                                              ),
+                                                            ),
+                                                        ],
+                                                      ),
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Container(
+                                          height: 0.3,
+                                          color: Colors.black,
+                                        ),
+                                      ],
+                                    )),
+                              );
+                            }
+                            return Container(); // Fallback
+                          }))
                 else
                   Expanded(
                     child: Center(

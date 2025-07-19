@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/dom.dart' as dom;
+import 'package:metadata_fetch/metadata_fetch.dart';
 
 import 'dart:async';
 import 'package:webview_flutter/webview_flutter.dart';
 
-import 'package:metadata_extract/metadata_extract.dart';
 import 'package:gftr/Helper/appConfig.dart';
 import 'package:gftr/Helper/colorConstants.dart';
 import 'package:gftr/Helper/imageConstants.dart';
@@ -54,16 +54,20 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
               Container(
                 height: screenHeight(context, dividedBy: 15),
                 child: Padding(
-                    padding: EdgeInsets.only(left: screenWidth(context, dividedBy: 40)),
+                    padding: EdgeInsets.only(
+                        left: screenWidth(context, dividedBy: 40)),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         GestureDetector(
                           onTap: () => Navigator.pop(context),
-                          child: const Icon(Icons.arrow_back_ios_outlined, size: 20),
+                          child: const Icon(Icons.arrow_back_ios_outlined,
+                              size: 20),
                         ),
                         customText(
-                          gftrStoriesCubit.gftrStories?.data?.post?[curpage].title ?? 'Article',
+                          gftrStoriesCubit
+                                  .gftrStories?.data?.post?[curpage].title ??
+                              'Article',
                           Colors.black,
                           25,
                           FontWeight.bold,
@@ -283,8 +287,9 @@ class _Gift_DitailsState extends State<Gift_Ditails> {
                                                                   .parse(blogItem
                                                                       .platformlink!));
                                                           var document =
-                                                              responseToDocument(
-                                                                  response);
+                                                              MetadataFetch
+                                                                  .responseToDocument(
+                                                                      response);
                                                           var metadata =
                                                               MetadataParser
                                                                   .parse(
@@ -685,7 +690,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   Future<void> fetchData({required String url}) async {
     try {
       final response = await http.get(Uri.parse(url));
-      var reDocument = responseToDocument(response);
+      var reDocument = MetadataFetch.responseToDocument(response);
       var data = MetadataParser.parse(reDocument);
 
       dom.Document html = dom.Document.html(response.body);

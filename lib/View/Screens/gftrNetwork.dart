@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_dialogs/flutter_dialogs.dart';
+import 'package:flutter_sms/flutter_sms.dart';
 import 'package:gftr/Helper/apiConstants.dart';
 import 'package:gftr/Model/decryption.dart';
 import 'package:gftr/Model/get_sll_users.dart';
@@ -24,7 +25,6 @@ import 'package:gftr/ViewModel/apiServices.dart';
 import 'package:mailer/mailer.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
 import 'package:mailer/smtp_server/gmail.dart';
-import 'package:flutter_sms/flutter_sms.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../Widgets/customLoader.dart';
 
