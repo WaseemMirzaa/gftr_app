@@ -9,6 +9,7 @@ import 'package:gftr/Helper/colorConstants.dart';
 import 'package:gftr/Model/groups.dart';
 import 'package:gftr/View/Widgets/customLoader.dart';
 import 'package:gftr/View/Widgets/customText.dart';
+import 'package:gftr/View/Widgets/expandableNotesWidget.dart';
 import 'package:gftr/ViewModel/Cubits/All_Giftss.dart';
 import 'package:share_plus/share_plus.dart';
 
@@ -17,10 +18,11 @@ import '../../ViewModel/Cubits/folderview_cubit.dart';
 import 'google.dart';
 
 class IdeaGrannyTrish extends StatefulWidget {
-  String name;
-  List<Myidea>? PublicData;
+  final String name;
+  final List<Myidea>? PublicData;
 
-  IdeaGrannyTrish({Key? key, required this.name, required this.PublicData})
+  const IdeaGrannyTrish(
+      {Key? key, required this.name, required this.PublicData})
       : super(key: key);
 
   @override
@@ -361,34 +363,73 @@ class _IdeaGrannyTrishState extends State<IdeaGrannyTrish> {
                                                         ),
                                                       ),
                                                       Container(
-                                                        height: screenHeight(
-                                                            context,
-                                                            dividedBy: 30),
                                                         width: screenWidth(
                                                             context,
                                                             dividedBy: 1.8),
-                                                        padding: EdgeInsets.only(
-                                                            left: screenWidth(
-                                                                context,
-                                                                dividedBy: 60)),
-                                                        alignment: Alignment
-                                                            .centerLeft,
+                                                        padding: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    screenWidth(
+                                                                        context,
+                                                                        dividedBy:
+                                                                            60),
+                                                                vertical: 8),
                                                         decoration: BoxDecoration(
                                                             color: Colors.white,
                                                             borderRadius:
                                                                 BorderRadius
                                                                     .circular(
-                                                                        5),
+                                                                        8),
                                                             border: Border.all(
                                                                 width: 1.2,
                                                                 color: ColorCodes
                                                                     .greyButton)),
-                                                        child: customText(
-                                                            "Notes: ${widget.PublicData?[index].notes ?? ""}",
-                                                            Colors.black,
-                                                            10,
-                                                            FontWeight.w100,
-                                                            poppins),
+                                                        child: Column(
+                                                          crossAxisAlignment:
+                                                              CrossAxisAlignment
+                                                                  .start,
+                                                          children: [
+                                                            Row(
+                                                              children: [
+                                                                Icon(
+                                                                  Icons.notes,
+                                                                  size: 14,
+                                                                  color: ColorCodes
+                                                                      .greyButton,
+                                                                ),
+                                                                SizedBox(
+                                                                    width: 6),
+                                                                Text(
+                                                                  "Notes:",
+                                                                  style:
+                                                                      TextStyle(
+                                                                    color: ColorCodes
+                                                                        .greyButton,
+                                                                    fontSize:
+                                                                        10,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w600,
+                                                                    fontFamily:
+                                                                        poppins,
+                                                                  ),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            SizedBox(height: 4),
+                                                            ExpandableNotesWidget(
+                                                              notes: widget
+                                                                      .PublicData?[
+                                                                          index]
+                                                                      .notes ??
+                                                                  "",
+                                                              onEdit: () {
+                                                                // Add edit functionality here if needed
+                                                                // For now, it's just displaying notes
+                                                              },
+                                                            ),
+                                                          ],
+                                                        ),
                                                       )
                                                     ],
                                                   ),

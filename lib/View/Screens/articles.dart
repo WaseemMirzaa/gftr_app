@@ -38,6 +38,34 @@ class _ArticlesPageState extends State<ArticlesPage> {
     setState(() {});
   }
 
+  List<Map<String, dynamic>> _buildSearchResultsList() {
+    List<Map<String, dynamic>> combinedList = [];
+
+    // Get articles and gifts separately
+    List<Map<String, dynamic>> articles = resultSearch
+        .where((item) => item['type'] == 'article')
+        .cast<Map<String, dynamic>>()
+        .toList();
+    List<Map<String, dynamic>> gifts = resultSearch
+        .where((item) => item['type'] == 'gift')
+        .cast<Map<String, dynamic>>()
+        .toList();
+
+    // Add Articles section if there are articles
+    if (articles.isNotEmpty) {
+      combinedList.add({'isHeader': true, 'title': 'Articles'});
+      combinedList.addAll(articles);
+    }
+
+    // Add Saved by a section if there are gifts
+    if (gifts.isNotEmpty) {
+      combinedList.add({'isHeader': true, 'title': 'Saved by a Gftr'});
+      combinedList.addAll(gifts);
+    }
+
+    return combinedList;
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -125,37 +153,61 @@ class _ArticlesPageState extends State<ArticlesPage> {
                       hintStyle: TextStyle(fontFamily: poppins),
                       border: InputBorder.none,
                       prefixIcon: Padding(
-                        padding: const EdgeInsets.all(15.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16.0, vertical: 12.0),
                         child: Image.asset(
                           ImageConstants.search,
-                          height: 4,
-                          width: 4,
+                          height: 20,
+                          width: 20,
                           color: ColorCodes.greyButton,
                         ),
                       ),
+                      contentPadding: EdgeInsets.symmetric(
+                          vertical: 15.0, horizontal: 16.0),
                     ),
                   )),
               SizedBox(
                 height: screenHeight(context, dividedBy: 50),
               ),
-              Padding(
-                padding:
-                    EdgeInsets.only(left: screenWidth(context, dividedBy: 30)),
-                child: SizedBox(
-                    width: screenWidth(context, dividedBy: 1),
-                    child: customText("Articles", Colors.black, 20,
-                        FontWeight.w300, madeOuterSans)),
-              ),
-              SizedBox(
-                height: screenHeight(context, dividedBy: 60),
-              ),
+              if (search.text.isEmpty)
+                Padding(
+                  padding: EdgeInsets.only(
+                      left: screenWidth(context, dividedBy: 30)),
+                  child: SizedBox(
+                      width: screenWidth(context, dividedBy: 1),
+                      child: customText("Articles", Colors.black, 20,
+                          FontWeight.w300, madeOuterSans)),
+                ),
+              if (search.text.isEmpty)
+                SizedBox(
+                  height: screenHeight(context, dividedBy: 60),
+                ),
               if (search.text.isNotEmpty)
                 if (resultSearch.isNotEmpty)
                   Expanded(
                       child: ListView.builder(
-                          itemCount: resultSearch.length,
+                          itemCount: _buildSearchResultsList().length,
                           itemBuilder: (context, index) {
-                            var item = resultSearch[index];
+                            var item = _buildSearchResultsList()[index];
+
+                            // Check if this is a header
+                            if (item['isHeader'] == true) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                  left: screenWidth(context, dividedBy: 30),
+                                  top: index == 0
+                                      ? 0
+                                      : screenHeight(context, dividedBy: 50),
+                                  bottom: screenHeight(context, dividedBy: 60),
+                                ),
+                                child: SizedBox(
+                                  width: screenWidth(context, dividedBy: 1),
+                                  child: customText(item['title'], Colors.black,
+                                      20, FontWeight.w300, madeOuterSans),
+                                ),
+                              );
+                            }
+
                             var type = item['type'];
                             var data = item['data'];
 
