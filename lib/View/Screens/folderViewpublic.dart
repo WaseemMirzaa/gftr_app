@@ -7,6 +7,7 @@ import 'package:gftr/Helper/imageConstants.dart';
 import 'package:gftr/View/Screens/google.dart';
 import 'package:gftr/View/Widgets/customLoader.dart';
 import 'package:gftr/View/Widgets/customText.dart';
+import 'package:gftr/View/Widgets/expandableNotesWidget.dart';
 import 'package:gftr/ViewModel/Cubits/GetGifted/getgiftedview_dart.dart';
 import 'package:gftr/ViewModel/Cubits/folderview_cubit.dart';
 import 'package:gftr/ViewModel/Cubits/editgiftnotes_cubit.dart';
@@ -49,6 +50,8 @@ class _FolderPublicViewState extends State<FolderPublicView> {
       context: context,
       builder: (BuildContext dialogContext) {
         return AlertDialog(
+          backgroundColor: Colors.white,
+          insetPadding: EdgeInsets.all(20),
           title: Text('Edit Notes'),
           content: TextField(
             controller: notesController,
@@ -56,7 +59,7 @@ class _FolderPublicViewState extends State<FolderPublicView> {
               hintText: 'Enter your notes...',
               border: OutlineInputBorder(),
             ),
-            maxLines: 3,
+            maxLines: 6,
           ),
           actions: [
             TextButton(
@@ -213,7 +216,7 @@ class _FolderPublicViewState extends State<FolderPublicView> {
                                   ),
                                   child: Container(
                                       height:
-                                          screenHeight(context, dividedBy: 8),
+                                          screenHeight(context, dividedBy: 7),
                                       width:
                                           screenWidth(context, dividedBy: 1.1),
                                       decoration: BoxDecoration(
@@ -414,44 +417,46 @@ class _FolderPublicViewState extends State<FolderPublicView> {
                                                       formDataId,
                                                       folderId);
                                                 },
-                                                child: Container(
-                                                  height: screenHeight(context,
-                                                      dividedBy: 30),
-                                                  width: screenWidth(context,
-                                                      dividedBy: 1.8),
-                                                  padding: EdgeInsets.only(
-                                                      left: screenWidth(context,
-                                                          dividedBy: 60)),
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      border: Border.all(
-                                                          width: 1.2,
-                                                          color: ColorCodes
-                                                              .greyButton)),
-                                                  child: Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: customText(
-                                                            "Notes: ${getGiftedViewCubit.viewGift?.publicData?[widget.imageIndex].formdata?[index].notes ?? ""}",
-                                                            Colors.black,
-                                                            10,
-                                                            FontWeight.w100,
-                                                            poppins),
-                                                      ),
-                                                      Icon(
-                                                        Icons.edit,
-                                                        size: 16,
-                                                        color: ColorCodes
-                                                            .greyButton,
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                    ],
-                                                  ),
+                                                child: ExpandableNotesWidget(
+                                                  notes: getGiftedViewCubit
+                                                          .viewGift
+                                                          ?.publicData?[
+                                                              widget.imageIndex]
+                                                          .formdata?[index]
+                                                          .notes ??
+                                                      "",
+                                                  onEdit: () {
+                                                    String folderId =
+                                                        getGiftedViewCubit
+                                                                .viewGift
+                                                                ?.publicData?[widget
+                                                                    .imageIndex]
+                                                                .id ??
+                                                            '';
+                                                    String formDataId =
+                                                        getGiftedViewCubit
+                                                                .viewGift
+                                                                ?.publicData?[widget
+                                                                    .imageIndex]
+                                                                .formdata?[
+                                                                    index]
+                                                                .id ??
+                                                            '';
+                                                    String currentNotes =
+                                                        getGiftedViewCubit
+                                                                .viewGift
+                                                                ?.publicData?[widget
+                                                                    .imageIndex]
+                                                                .formdata?[
+                                                                    index]
+                                                                .notes ??
+                                                            '';
+
+                                                    _showEditNotesDialog(
+                                                        currentNotes,
+                                                        formDataId,
+                                                        folderId);
+                                                  },
                                                 ),
                                               )
                                             ])

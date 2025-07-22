@@ -107,10 +107,7 @@ class _InboxPageState extends State<InboxPage> {
               width: screenWidth(context, dividedBy: 1.1),
               child: customText("Messages", Colors.black, 16, FontWeight.w500,
                   madeOuterSans)),
-          Container(
-            color: Colors.white,
-            margin: EdgeInsets.only(top: 5),
-            height: screenHeight(context, dividedBy: 2.9),
+          Expanded(
             child: BlocBuilder<GroupViewCubit, GroupViewState>(
                 builder: (context, state) {
               if (state is GroupViewLoading) {
@@ -293,193 +290,215 @@ class _InboxPageState extends State<InboxPage> {
               width: screenWidth(context, dividedBy: 1.1),
               child: customText("Notifications", Colors.black, 16,
                   FontWeight.bold, madeOuterSans)),
-          BlocBuilder<NotificationViewCubit, NotificationViewState>(
-              builder: (context, state) {
-            log("Notification $state");
-            if (state is NotificationViewLoading) {
-              return Center(
-                child: spinkitLoader(context, ColorCodes.coral),
-              );
-            } else if (state is NotificationViewError) {
-              return Expanded(
-                child: Center(
+          SizedBox(
+            height: 10,
+          ),
+          Expanded(
+            child: BlocBuilder<NotificationViewCubit, NotificationViewState>(
+                builder: (context, state) {
+              log("Notification $state");
+              if (state is NotificationViewLoading) {
+                return Center(
+                  child: spinkitLoader(context, ColorCodes.coral),
+                );
+              } else if (state is NotificationViewError) {
+                return Center(
                     child: customText("No Data Found!", Colors.black, 14,
-                        FontWeight.w300, poppins)),
-              );
-            } else if (state is NotificationViewSuccess) {
-              return Expanded(
-                child: ListView.builder(
-                    physics: BouncingScrollPhysics(),
-                    itemCount: notificationViewCubit
-                        .myNotifications?.receivedRequestBy?.length,
-                    shrinkWrap: true,
-                    padding: EdgeInsets.zero,
-                    itemBuilder: (context, index) {
-                      return Column(children: [
-                        Container(
-                          height: screenHeight(context, dividedBy: 7),
-                          width: screenWidth(context, dividedBy: 1.1),
-                          decoration: BoxDecoration(
-                              boxShadow: shadow,
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10)),
-                          child: Column(
-                            children: [
-                              SizedBox(
-                                height: screenHeight(context, dividedBy: 90),
-                              ),
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                        FontWeight.w300, poppins));
+              } else if (state is NotificationViewSuccess) {
+                return (notificationViewCubit
+                                .myNotifications?.receivedRequestBy ??
+                            [])
+                        .isEmpty
+                    ? Center(
+                        child: customText("No Notifications", Colors.black, 14,
+                            FontWeight.w300, poppins),
+                      )
+                    : ListView.builder(
+                        physics: BouncingScrollPhysics(),
+                        itemCount: notificationViewCubit
+                            .myNotifications?.receivedRequestBy?.length,
+                        shrinkWrap: true,
+                        padding: EdgeInsets.zero,
+                        itemBuilder: (context, index) {
+                          return Column(children: [
+                            Container(
+                              height: screenHeight(context, dividedBy: 7),
+                              width: screenWidth(context, dividedBy: 1.1),
+                              decoration: BoxDecoration(
+                                  boxShadow: shadow,
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10)),
+                              child: Column(
                                 children: [
                                   SizedBox(
-                                    width: screenWidth(context, dividedBy: 50),
-                                  ),
-                                  Container(
                                     height:
-                                        screenHeight(context, dividedBy: 15),
-                                    width: screenHeight(context, dividedBy: 15),
-                                    decoration: BoxDecoration(
-                                        shape: BoxShape.circle,
-                                        border: GradientBoxBorder(
-                                            width: 2,
-                                            gradient: coralTealColor)),
-                                    child: ClipRRect(
-                                        borderRadius:
-                                            BorderRadius.circular(100),
-                                        child: Image.network(
-                                          "${ApiConstants.baseUrlsSocket}${notificationViewCubit.myNotifications?.receivedRequestBy?[index].avatar}",
-                                          fit: BoxFit.cover,
-                                        )),
+                                        screenHeight(context, dividedBy: 90),
                                   ),
-                                  SizedBox(
-                                    width: screenWidth(context, dividedBy: 50),
+                                  Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            screenWidth(context, dividedBy: 50),
+                                      ),
+                                      Container(
+                                        height: screenHeight(context,
+                                            dividedBy: 15),
+                                        width: screenHeight(context,
+                                            dividedBy: 15),
+                                        decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            border: GradientBoxBorder(
+                                                width: 2,
+                                                gradient: coralTealColor)),
+                                        child: ClipRRect(
+                                            borderRadius:
+                                                BorderRadius.circular(100),
+                                            child: Image.network(
+                                              "${ApiConstants.baseUrlsSocket}${notificationViewCubit.myNotifications?.receivedRequestBy?[index].avatar}",
+                                              fit: BoxFit.cover,
+                                            )),
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            screenWidth(context, dividedBy: 50),
+                                      ),
+                                      SizedBox(
+                                        width: screenWidth(context,
+                                            dividedBy: 1.8),
+                                        child: customText(
+                                            notificationViewCubit
+                                                    .myNotifications
+                                                    ?.receivedRequestBy?[index]
+                                                    .text ??
+                                                '',
+                                            Colors.black,
+                                            13,
+                                            FontWeight.w400,
+                                            poppins,
+                                            maxLines: 2),
+                                      ),
+                                      // SizedBox(
+                                      //   width: screenWidth(context, dividedBy: 40),
+                                      // ),
+                                      Flexible(
+                                        child: customText(
+                                            notificationViewCubit
+                                                    .myNotifications
+                                                    ?.receivedRequestBy?[index]
+                                                    .rektime
+                                                    .toString() ??
+                                                '',
+                                            ColorCodes.greyText,
+                                            12,
+                                            FontWeight.w500,
+                                            poppins),
+                                      ),
+                                    ],
                                   ),
-                                  SizedBox(
-                                    width: screenWidth(context, dividedBy: 1.8),
-                                    child: customText(
-                                        notificationViewCubit
-                                                .myNotifications
-                                                ?.receivedRequestBy?[index]
-                                                .text ??
-                                            '',
-                                        Colors.black,
-                                        13,
-                                        FontWeight.w400,
-                                        poppins,
-                                        maxLines: 2),
-                                  ),
-                                  // SizedBox(
-                                  //   width: screenWidth(context, dividedBy: 40),
-                                  // ),
-                                  Flexible(
-                                    child: customText(
-                                        notificationViewCubit
-                                                .myNotifications
-                                                ?.receivedRequestBy?[index]
-                                                .rektime
-                                                .toString() ??
-                                            '',
-                                        ColorCodes.greyText,
-                                        12,
-                                        FontWeight.w500,
-                                        poppins),
-                                  ),
+                                  Row(
+                                    children: [
+                                      SizedBox(
+                                        width:
+                                            screenWidth(context, dividedBy: 7),
+                                        height: screenHeight(context,
+                                            dividedBy: 20),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          upadetInviteCubit
+                                              .getUpdateInvite(context,
+                                                  invite: true,
+                                                  id: notificationViewCubit
+                                                          .myNotifications
+                                                          ?.receivedRequestBy?[
+                                                              index]
+                                                          .groupId ??
+                                                      '')
+                                              .then((value) {
+                                            setState(() {
+                                              groupViewCubit.getGroups();
+                                              notificationViewCubit
+                                                  .getMyNotifitication();
+                                            });
+                                          });
+                                        },
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          height: screenHeight(
+                                            context,
+                                            dividedBy: 30,
+                                          ),
+                                          width: screenWidth(context,
+                                              dividedBy: 4.5),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              color: ColorCodes.coral),
+                                          child: customText(
+                                              "Confirm",
+                                              Colors.white,
+                                              10,
+                                              FontWeight.w100,
+                                              poppins),
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width:
+                                            screenWidth(context, dividedBy: 40),
+                                      ),
+                                      GestureDetector(
+                                        onTap: () {
+                                          upadetInviteCubit
+                                              .getUpdateInvite(context,
+                                                  invite: false,
+                                                  id: notificationViewCubit
+                                                          .myNotifications
+                                                          ?.receivedRequestBy?[
+                                                              index]
+                                                          .groupId ??
+                                                      '')
+                                              .then((value) =>
+                                                  notificationViewCubit
+                                                      .getMyNotifitication());
+                                        },
+                                        child: Container(
+                                          alignment: Alignment.center,
+                                          height: screenHeight(
+                                            context,
+                                            dividedBy: 30,
+                                          ),
+                                          width: screenWidth(context,
+                                              dividedBy: 4.5),
+                                          decoration: BoxDecoration(
+                                              borderRadius:
+                                                  BorderRadius.circular(8),
+                                              boxShadow: shadow,
+                                              color: Colors.white),
+                                          child: customText(
+                                              "Cancel",
+                                              ColorCodes.coral,
+                                              10,
+                                              FontWeight.w100,
+                                              poppins),
+                                        ),
+                                      ),
+                                    ],
+                                  )
                                 ],
                               ),
-                              Row(
-                                children: [
-                                  SizedBox(
-                                    width: screenWidth(context, dividedBy: 7),
-                                    height:
-                                        screenHeight(context, dividedBy: 20),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      upadetInviteCubit
-                                          .getUpdateInvite(context,
-                                              invite: true,
-                                              id: notificationViewCubit
-                                                      .myNotifications
-                                                      ?.receivedRequestBy?[
-                                                          index]
-                                                      .groupId ??
-                                                  '')
-                                          .then((value) {
-                                        setState(() {
-                                          groupViewCubit.getGroups();
-                                          notificationViewCubit
-                                              .getMyNotifitication();
-                                        });
-                                      });
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      height: screenHeight(
-                                        context,
-                                        dividedBy: 30,
-                                      ),
-                                      width:
-                                          screenWidth(context, dividedBy: 4.5),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          color: ColorCodes.coral),
-                                      child: customText("Confirm", Colors.white,
-                                          10, FontWeight.w100, poppins),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: screenWidth(context, dividedBy: 40),
-                                  ),
-                                  GestureDetector(
-                                    onTap: () {
-                                      upadetInviteCubit
-                                          .getUpdateInvite(context,
-                                              invite: false,
-                                              id: notificationViewCubit
-                                                      .myNotifications
-                                                      ?.receivedRequestBy?[
-                                                          index]
-                                                      .groupId ??
-                                                  '')
-                                          .then((value) => notificationViewCubit
-                                              .getMyNotifitication());
-                                    },
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      height: screenHeight(
-                                        context,
-                                        dividedBy: 30,
-                                      ),
-                                      width:
-                                          screenWidth(context, dividedBy: 4.5),
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(8),
-                                          boxShadow: shadow,
-                                          color: Colors.white),
-                                      child: customText(
-                                          "Cancel",
-                                          ColorCodes.coral,
-                                          10,
-                                          FontWeight.w100,
-                                          poppins),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            ],
-                          ),
-                        ),
-                        SizedBox(
-                          height: screenHeight(context, dividedBy: 50),
-                        )
-                      ]);
-                    }),
-              );
-            }
-            return Container();
-          })
+                            ),
+                            SizedBox(
+                              height: screenHeight(context, dividedBy: 50),
+                            )
+                          ]);
+                        });
+              }
+              return Container();
+            }),
+          )
         ]));
   }
 }

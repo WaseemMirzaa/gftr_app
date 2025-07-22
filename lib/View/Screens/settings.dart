@@ -1251,6 +1251,44 @@ class _SettingsPageState extends State<SettingsPage> {
   //   );
   // }
 
+  // Helper method to filter out duplicate remind me events based on ID and content
+  List<dynamic> _getUniqueRemindMeEvents(List<dynamic> remindMeList) {
+    print(
+        "🔍 _getUniqueRemindMeEvents: Input list has ${remindMeList.length} events");
+
+    final uniqueEvents = <String, dynamic>{};
+    final seen = <String>{};
+
+    for (int i = 0; i < remindMeList.length; i++) {
+      var event = remindMeList[i];
+      if (event?.id != null) {
+        // Use event ID as primary key
+        String eventKey = event.id;
+
+        // Also check for content duplicates (same name + date)
+        String contentKey =
+            "${event.dayName ?? ''}_${event.dayDate?.toString() ?? ''}";
+
+        print(
+            "🔍 Event $i: ID=${event.id}, Name=${event.dayName}, ContentKey=$contentKey");
+
+        // Only add if we haven't seen this event ID or this content combination
+        if (!uniqueEvents.containsKey(eventKey) && !seen.contains(contentKey)) {
+          uniqueEvents[eventKey] = event;
+          seen.add(contentKey);
+          print("✅ Added unique event: ${event.dayName}");
+        } else {
+          print(
+              "❌ Skipped duplicate event: ${event.dayName} (ID: ${event.id})");
+        }
+      }
+    }
+
+    print(
+        "🔍 _getUniqueRemindMeEvents: Output list has ${uniqueEvents.length} unique events");
+    return uniqueEvents.values.toList();
+  }
+
   Widget giftingDays(String text, String date, String Eid) {
     return GestureDetector(
       onTap: () {
@@ -1761,7 +1799,7 @@ class _SettingsPageState extends State<SettingsPage> {
           setState(() {});
         },
         child: Container(
-          color: Colors.white,
+            color: Colors.white,
             height: screenHeight(context),
             width: screenWidth(context),
             child: BlocBuilder<ViewSettingCubit, ViewSettingState>(
@@ -2614,18 +2652,21 @@ class _SettingsPageState extends State<SettingsPage> {
                             child: Wrap(
                               spacing: 8,
                               runSpacing: 8,
-                              children:
-                                  viewSettingCubit.viewSetting?.data?.remindMe
-                                          .map(
-                                            (event) => giftingDays(
-                                              event.dayName ?? '',
-                                              "${event.dayDate.month.toString().padLeft(2, '0')}/"
-                                              "${event.dayDate.day.toString().padLeft(2, '0')}",
-                                              event.id,
-                                            ),
-                                          )
-                                          .toList() ??
-                                      [],
+                              children: viewSettingCubit
+                                          .viewSetting?.data?.remindMe !=
+                                      null
+                                  ? _getUniqueRemindMeEvents(viewSettingCubit
+                                          .viewSetting!.data!.remindMe)
+                                      .map(
+                                        (event) => giftingDays(
+                                          event.dayName ?? '',
+                                          "${event.dayDate.month.toString().padLeft(2, '0')}/"
+                                          "${event.dayDate.day.toString().padLeft(2, '0')}",
+                                          event.id,
+                                        ),
+                                      )
+                                      .toList()
+                                  : [],
                             ),
                           ),
 

@@ -7,6 +7,7 @@ import 'package:gftr/Helper/imageConstants.dart';
 import 'package:gftr/View/Screens/google.dart';
 import 'package:gftr/View/Widgets/customLoader.dart';
 import 'package:gftr/View/Widgets/customText.dart';
+import 'package:gftr/View/Widgets/expandableNotesWidget.dart';
 import 'package:gftr/ViewModel/Cubits/GetGifted/getgiftedview_dart.dart';
 import 'package:gftr/ViewModel/Cubits/folderview_cubit.dart';
 import 'package:gftr/ViewModel/Cubits/editgiftnotes_cubit.dart';
@@ -213,7 +214,7 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                                   ),
                                   child: Container(
                                       height:
-                                          screenHeight(context, dividedBy: 8),
+                                          screenHeight(context, dividedBy: 7),
                                       width:
                                           screenWidth(context, dividedBy: 1.1),
                                       decoration: BoxDecoration(
@@ -430,44 +431,49 @@ class _FolderPrivateViewState extends State<FolderPrivateView> {
                                                       formDataId,
                                                       folderId);
                                                 },
-                                                child: Container(
-                                                  height: screenHeight(context,
-                                                      dividedBy: 30),
-                                                  width: screenWidth(context,
-                                                      dividedBy: 1.8),
-                                                  padding: EdgeInsets.only(
-                                                      left: screenWidth(context,
-                                                          dividedBy: 60)),
-                                                  alignment:
-                                                      Alignment.centerLeft,
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white,
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              5),
-                                                      border: Border.all(
-                                                          width: 1.2,
-                                                          color: ColorCodes
-                                                              .greyButton)),
-                                                  child: Row(
-                                                    children: [
-                                                      Expanded(
-                                                        child: customText(
-                                                            "Notes: ${getGiftedViewCubit.viewGift?.privateData?[widget.imageIndex].formdata?[index].notes ?? ""}",
-                                                            Colors.black,
-                                                            10,
-                                                            FontWeight.w100,
-                                                            poppins),
-                                                      ),
-                                                      Icon(
-                                                        Icons.edit,
-                                                        size: 16,
-                                                        color: ColorCodes
-                                                            .greyButton,
-                                                      ),
-                                                      SizedBox(width: 8),
-                                                    ],
-                                                  ),
+                                                child: ExpandableNotesWidget(
+                                                  notes: getGiftedViewCubit
+                                                          .viewGift
+                                                          ?.privateData?[
+                                                              widget.imageIndex]
+                                                          .formdata?[index]
+                                                          .notes ??
+                                                      "",
+                                                  onEdit: () {
+                                                    String folderId =
+                                                        getGiftedViewCubit
+                                                                .viewGift
+                                                                ?.privateData?[
+                                                                    widget
+                                                                        .imageIndex]
+                                                                .id ??
+                                                            '';
+                                                    String formDataId =
+                                                        getGiftedViewCubit
+                                                                .viewGift
+                                                                ?.privateData?[
+                                                                    widget
+                                                                        .imageIndex]
+                                                                .formdata?[
+                                                                    index]
+                                                                .id ??
+                                                            '';
+                                                    String currentNotes =
+                                                        getGiftedViewCubit
+                                                                .viewGift
+                                                                ?.privateData?[
+                                                                    widget
+                                                                        .imageIndex]
+                                                                .formdata?[
+                                                                    index]
+                                                                .notes ??
+                                                            '';
+
+                                                    _showEditNotesDialog(
+                                                        currentNotes,
+                                                        formDataId,
+                                                        folderId);
+                                                  },
                                                 ),
                                               )
                                             ])
