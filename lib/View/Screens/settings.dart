@@ -1850,15 +1850,21 @@ class _SettingsPageState extends State<SettingsPage> {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.start,
                                   children: [
+                                    // privacyOptions2(
+                                    //   "GFTR Group Only",
+                                    //   only_or_any == false
+                                    //       ? coralTealColor
+                                    //       : whiteColor,
+                                    //   only_or_any == false
+                                    //       ? transparentColor
+                                    //       : coralTealColor,
+                                    //   only_or_any!,
+                                    // ),
                                     privacyOptions2(
                                       "GFTR Group Only",
-                                      only_or_any == false
-                                          ? coralTealColor
-                                          : whiteColor,
-                                      only_or_any == false
-                                          ? transparentColor
-                                          : coralTealColor,
-                                      only_or_any!,
+                                      true ? coralTealColor : whiteColor,
+                                      true ? transparentColor : coralTealColor,
+                                      true || only_or_any!,
                                     ),
 
                                     // TODO: COMMENTED BY UMAIR DEV

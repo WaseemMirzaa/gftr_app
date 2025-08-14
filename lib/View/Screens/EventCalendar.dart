@@ -371,15 +371,15 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
 
               // Check if this is a remind me event or a regular local event
               bool isRemindMeEvent = event['source'] == 'remindMe';
-
-              allEvents.add({
-                'type': isRemindMeEvent ? 'remindMe' : 'local',
-                'data': event,
-                'date': displayDate,
-                'title': event['eventTitle'] ?? '',
-                'id': isRemindMeEvent ? event['id'] : null,
-                'sortDate': eventDateOnly,
-              });
+              if (event['source'] == 'remindMe')
+                allEvents.add({
+                  'type': !isRemindMeEvent ? 'remindMe' : 'local',
+                  'data': event,
+                  'date': displayDate,
+                  'title': event['eventTitle'] ?? '',
+                  'id': isRemindMeEvent ? event['id'] : null,
+                  'sortDate': eventDateOnly,
+                });
             }
           } catch (e) {
             print("Error parsing local event date key: $dateKey - $e");

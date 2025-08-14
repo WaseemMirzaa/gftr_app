@@ -14,14 +14,18 @@ import 'package:gftr/View/Widgets/roundedAppBar.dart';
 import 'package:gftr/ViewModel/Cubits/Msgnotifications.dart';
 import 'package:gftr/ViewModel/Cubits/groupnotificationreply.dart';
 
-
 class GrannyTrishViePage extends StatefulWidget {
   String? groupName;
   List<Myidea>? gifts;
-  List<Myidea>? PublicData;
+  String groupId;
+  // List<Myidea>? PublicData;
   String? Adress;
   GrannyTrishViePage(
-      {Key? key,  this.groupName,  this.gifts,this.Adress,this.PublicData})
+      {Key? key,
+      this.groupName,
+      this.gifts,
+      this.Adress,
+      required this.groupId})
       : super(key: key);
 
   @override
@@ -31,32 +35,37 @@ class GrannyTrishViePage extends StatefulWidget {
 class _GrannyTrishViePageState extends State<GrannyTrishViePage> {
   int indexdata = 0;
   int selectedIndex = 4;
-  GroupReplyNotificationCubit groupReplyNotificationCubit = GroupReplyNotificationCubit();
+  GroupReplyNotificationCubit groupReplyNotificationCubit =
+      GroupReplyNotificationCubit();
   MessagnotiCubit messagnotiCubit = MessagnotiCubit();
   int value = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    groupReplyNotificationCubit = BlocProvider.of<GroupReplyNotificationCubit>(context);
+    groupReplyNotificationCubit =
+        BlocProvider.of<GroupReplyNotificationCubit>(context);
     messagnotiCubit = BlocProvider.of<MessagnotiCubit>(context);
     messagnotiCubit.messages();
     groupReplyNotificationCubit.getgroupRequestReplyNotification();
-    value = groupReplyNotificationCubit.groupRequestReplyNotification?.groupRequestReply?.length.toInt() ?? 0;
+    value = groupReplyNotificationCubit
+            .groupRequestReplyNotification?.groupRequestReply?.length
+            .toInt() ??
+        0;
     setState(() {});
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: indexdata == 2
             ? null
-            : appBar(context, searchbar: true, calender: true,value: value),
+            : appBar(context, searchbar: true, calender: true, value: value),
         drawer: drawerWidget(context),
         floatingActionButton: indexdata == 2
             ? null
             : FloatingActionButton(
-            backgroundColor: Colors.transparent,
-
+                backgroundColor: Colors.transparent,
                 child: Image.asset(ImageConstants.bottomNavFloat),
                 onPressed: () {
                   // _handleSignIn();
@@ -66,7 +75,8 @@ class _GrannyTrishViePageState extends State<GrannyTrishViePage> {
                           builder: (context) => GfterStoryViewPage()));
                   bottombarblack = true;
                 }),
-        floatingActionButtonLocation: FloatingActionButtonLocation.miniCenterDocked,
+        floatingActionButtonLocation:
+            FloatingActionButtonLocation.miniCenterDocked,
         resizeToAvoidBottomInset: false,
         bottomNavigationBar: indexdata == 2
             ? null
@@ -83,7 +93,12 @@ class _GrannyTrishViePageState extends State<GrannyTrishViePage> {
         body: BottomNavBar(
           selectedIndex: selectedIndex,
           screenextra: GftrGrannyTrish(
-              groupName: widget.groupName??'', gifts: widget.gifts??[], Add: widget.Adress ?? '',PublicData:widget.PublicData ?? []),
+            groupName: widget.groupName ?? '',
+            gifts: widget.gifts ?? [],
+            Add: widget.Adress ?? '',
+            groupId: widget.groupId,
+            // PublicData: widget.PublicData ?? []
+          ),
           screenList: const [
             GetGiftedPublicPage(),
             InboxPage(),

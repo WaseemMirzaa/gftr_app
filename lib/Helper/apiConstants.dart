@@ -31,6 +31,7 @@ class ApiConstants {
 
   //gift Manager
   static const editGiftNotes = '${baseUrls}editgiftnotes';
+  static const editGiftNotesForIdeas = '${baseUrls}editgiftnotesformyideas';
   static const addFolder = '${baseUrls}addgift'; //post
   static const renameFolder = '${baseUrls}renamegift';
   static const deleteGift = '${baseUrls}deletegift';

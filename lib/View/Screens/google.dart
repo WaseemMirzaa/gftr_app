@@ -264,12 +264,13 @@ class _GooglePageState extends State<GooglePage> {
             padding: EdgeInsets.all(15),
             child: GestureDetector(
               onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => GfterStoryViewPage(),
-                  ),
-                );
+                // Navigator.pushReplacement(
+                //   context,
+                //   MaterialPageRoute(
+                //     builder: (context) => GfterStoryViewPage(),
+                //   ),
+                // );
+                Navigator.of(context).pop();
                 bottombarblack = true;
                 isSearchbar = true;
               },
