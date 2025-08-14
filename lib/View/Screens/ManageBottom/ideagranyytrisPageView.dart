@@ -12,20 +12,22 @@ import 'package:gftr/View/Widgets/roundedAppBar.dart';
 
 import '../../../Model/groups.dart';
 
-
-
 class IdeaGrannyTrishViePage extends StatefulWidget {
   String Groupsname;
-  List<Myidea>? PublicData;
+  // List<Myidea>? PublicData;
+  String groupId;
 
-  IdeaGrannyTrishViePage({Key? key ,required this.Groupsname,required this.PublicData}) : super(key: key);
+  IdeaGrannyTrishViePage(
+      {Key? key, required this.Groupsname, required this.groupId})
+      : super(key: key);
 
   @override
   State<IdeaGrannyTrishViePage> createState() => _IdeaGrannyTrishViePageState();
 }
 
 class _IdeaGrannyTrishViePageState extends State<IdeaGrannyTrishViePage> {
-  int indexdata = 0;int selectedIndex = 4;
+  int indexdata = 0;
+  int selectedIndex = 4;
 
   @override
   Widget build(BuildContext context) {
@@ -33,29 +35,39 @@ class _IdeaGrannyTrishViePageState extends State<IdeaGrannyTrishViePage> {
         appBar: indexdata == 2
             ? null
             : appBar(context, searchbar: true, calender: true),
-        drawer: drawerWidget(context),floatingActionButton:indexdata == 2
-        ? null
-        : FloatingActionButton(
-        backgroundColor: Colors.transparent,
-        child: Image.asset(ImageConstants.bottomNavFloat),
-        onPressed: () {
-          // _handleSignIn();
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) =>  GfterStoryViewPage()));     bottombarblack = true;
-        }),
-        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-        bottomNavigationBar:indexdata == 2
+        drawer: drawerWidget(context),
+        floatingActionButton: indexdata == 2
             ? null
-            : bottomNavigationBarManage(bottomindex: indexdata, selectedIndex: selectedIndex,
-          onTap: (index) {
-            indexdata = index;
-            selectedIndex=indexdata;
-            setState(() {});
-          },
-        ),
-        body: BottomNavBar(selectedIndex: selectedIndex,
-          screenextra: IdeaGrannyTrish(PublicData: widget.PublicData ?? [],name: widget.Groupsname ?? ''),
-          screenList:  [
+            : FloatingActionButton(
+                backgroundColor: Colors.transparent,
+                child: Image.asset(ImageConstants.bottomNavFloat),
+                onPressed: () {
+                  // _handleSignIn();
+                  Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => GfterStoryViewPage()));
+                  bottombarblack = true;
+                }),
+        floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+        bottomNavigationBar: indexdata == 2
+            ? null
+            : bottomNavigationBarManage(
+                bottomindex: indexdata,
+                selectedIndex: selectedIndex,
+                onTap: (index) {
+                  indexdata = index;
+                  selectedIndex = indexdata;
+                  setState(() {});
+                },
+              ),
+        body: BottomNavBar(
+          selectedIndex: selectedIndex,
+          screenextra: IdeaGrannyTrish(
+              groupId: widget.groupId,
+              // PublicData: widget.PublicData ?? [],
+              name: widget.Groupsname ?? ''),
+          screenList: [
             GetGiftedPublicPage(),
             InboxPage(),
             GooglePage(),

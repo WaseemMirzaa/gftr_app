@@ -11,19 +11,25 @@ import 'package:gftr/View/Widgets/customLoader.dart';
 import 'package:gftr/View/Widgets/customText.dart';
 import 'package:gftr/View/Widgets/expandableNotesWidget.dart';
 import 'package:gftr/ViewModel/Cubits/All_Giftss.dart';
+import 'package:gftr/ViewModel/Cubits/editgiftnotes_cubit.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../Helper/imageConstants.dart';
 import '../../ViewModel/Cubits/folderview_cubit.dart';
+import '../../ViewModel/Cubits/groupscubit.dart';
 import 'google.dart';
 
 class IdeaGrannyTrish extends StatefulWidget {
   final String name;
-  final List<Myidea>? PublicData;
+  final String groupId;
+  // final List<Myidea>? PublicData;
 
-  const IdeaGrannyTrish(
-      {Key? key, required this.name, required this.PublicData})
-      : super(key: key);
+  const IdeaGrannyTrish({
+    Key? key,
+    required this.name,
+    required this.groupId,
+    // required this.PublicData
+  }) : super(key: key);
 
   @override
   State<IdeaGrannyTrish> createState() => _IdeaGrannyTrishState();
@@ -31,26 +37,59 @@ class IdeaGrannyTrish extends StatefulWidget {
 
 class _IdeaGrannyTrishState extends State<IdeaGrannyTrish> {
   late FolderViewDeleteCubit folderViewDeleteCubit;
+  late GroupViewCubit groupViewCubit;
+  EditGiftNotesCubit editGiftNotesCubit = EditGiftNotesCubit();
+
+  // Get the specific group's gift ideas based on groupId
+  List<Myidea> get currentGroupGiftIdeas {
+    if (groupViewCubit.groups?.groupDetails != null) {
+      for (var group in groupViewCubit.groups!.groupDetails!) {
+        if (group.id == widget.groupId) {
+          return group.myideas;
+        }
+      }
+    }
+    return [];
+  }
 
   @override
   void initState() {
     super.initState();
     folderViewDeleteCubit = BlocProvider.of<FolderViewDeleteCubit>(context);
+    groupViewCubit = BlocProvider.of<GroupViewCubit>(context);
+
+    // Fetch fresh data when screen loads
+    groupViewCubit.getGroups();
   }
 
   // Add BlocListener for handling delete states
   @override
   Widget build(BuildContext context) {
-    return BlocListener<FolderViewDeleteCubit, FolderViewDeleteState>(
-      listener: (context, state) {
-        if (state is FolderViewDeleteSuccess) {
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Item deleted successfully')));
-        } else if (state is FolderViewDeleteError) {
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text('Failed to delete item')));
-        }
-      },
+    return MultiBlocListener(
+      listeners: [
+        BlocListener<FolderViewDeleteCubit, FolderViewDeleteState>(
+          listener: (context, state) {
+            if (state is FolderViewDeleteSuccess) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Item deleted successfully')));
+              // Refresh data after successful delete
+              groupViewCubit.getGroups();
+            } else if (state is FolderViewDeleteError) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Failed to delete item')));
+            }
+          },
+        ),
+        BlocListener<EditGiftNotesCubit, EditGiftNotesState>(
+          bloc: editGiftNotesCubit,
+          listener: (context, state) {
+            if (state is EditGiftNotesSuccess) {
+              // Refresh data after successful note update
+              groupViewCubit.getGroups();
+            }
+          },
+        ),
+      ],
       child: Scaffold(
         body: SizedBox(
             height: screenHeight(context),
@@ -82,28 +121,53 @@ class _IdeaGrannyTrishState extends State<IdeaGrannyTrish> {
               SizedBox(
                 height: screenHeight(context, dividedBy: 70),
               ),
-              BlocBuilder<Fetch_All_GiftsCubit, Fetch_All_GiftsState>(
-                builder: (context, state) {
-                  log("NoGroupsCubit $state");
-                  if (state is Fetch_All_GiftsLoading) {
-                    return Center(
-                      child: spinkitLoader(context, ColorCodes.coral),
-                    );
-                  } else if (state is Fetch_All_GiftsError) {
-                    return Center(
-                      child: customText("Not Data Found!", Colors.black, 15,
-                          FontWeight.w500, poppins),
-                    );
-                  } else if (state is Fetch_All_GiftsSuccess) {
-                    return Expanded(
+              // Use BlocBuilder to fetch and display data from GroupViewCubit
+              Expanded(
+                child: BlocBuilder<GroupViewCubit, GroupViewState>(
+                  bloc: groupViewCubit,
+                  builder: (context, state) {
+                    if (state is GroupViewLoading) {
+                      return Center(
+                        child: spinkitLoader(context, ColorCodes.coral),
+                      );
+                    } else if (state is GroupViewError) {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            customText("Failed to load data!", Colors.black, 15,
+                                FontWeight.w500, poppins),
+                            SizedBox(height: 20),
+                            ElevatedButton(
+                              onPressed: () => groupViewCubit.getGroups(),
+                              child: Text('Retry'),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else if (state is GroupViewSuccess) {
+                      final giftIdeas = currentGroupGiftIdeas;
+
+                      if (giftIdeas.isEmpty) {
+                        return Center(
+                          child: customText("No ideas found!", Colors.black, 15,
+                              FontWeight.w500, poppins),
+                        );
+                      }
+
+                      return RefreshIndicator(
+                        onRefresh: () async {
+                          groupViewCubit.getGroups();
+                        },
                         child: ListView.builder(
-                            itemCount: widget.PublicData?.length,
+                            itemCount: giftIdeas.length,
                             physics: BouncingScrollPhysics(),
                             padding: EdgeInsets.only(
                                 left: screenWidth(context, dividedBy: 30),
                                 right: screenWidth(context, dividedBy: 30),
                                 bottom: screenWidth(context, dividedBy: 6)),
                             itemBuilder: (context, index) {
+                              final giftIdea = giftIdeas[index];
                               return Dismissible(
                                   key: UniqueKey(),
                                   direction: DismissDirection.endToStart,
@@ -158,33 +222,14 @@ class _IdeaGrannyTrishState extends State<IdeaGrannyTrish> {
                                     );
                                   },
                                   onDismissed: (direction) {
-                                    // Add your delete functionality here
-                                    folderViewDeleteCubit
-                                        .folderViewDeleteGift(
-                                      folderViewId:
-                                          widget.PublicData?[index].id ?? '',
-                                      giftfolderId:
-                                          widget.PublicData?[index].id ?? '',
-                                    )
-                                        .then((value) {
-                                      // Refresh the list after deletion
-                                      setState(() {
-                                        widget.PublicData?.removeAt(index);
-                                      });
-                                    });
+                                    // Delete functionality using cubit
+                                    folderViewDeleteCubit.folderViewDeleteGift(
+                                      folderViewId: giftIdea.id,
+                                      giftfolderId: giftIdea.id,
+                                    );
                                   },
                                   child: GestureDetector(
-                                      onTap: () {
-                                        defauilUrl = widget.PublicData?[index]
-                                                .webViewLink ??
-                                            '';
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    GooglePage()));
-                                        setState(() {});
-                                      },
+                                      onTap: () {},
                                       child: Container(
                                         margin: EdgeInsets.only(
                                             bottom: screenWidth(context,
@@ -194,7 +239,7 @@ class _IdeaGrannyTrishState extends State<IdeaGrannyTrish> {
                                                 BorderRadius.circular(10)),
                                         child: Container(
                                             height: screenHeight(context,
-                                                dividedBy: 8),
+                                                dividedBy: 7),
                                             width: screenWidth(context,
                                                 dividedBy: 1.1),
                                             decoration: BoxDecoration(
@@ -211,85 +256,98 @@ class _IdeaGrannyTrishState extends State<IdeaGrannyTrish> {
                                                 ]),
                                             child: Row(
                                               children: [
-                                                CachedNetworkImage(
-                                                  height: 80,
-                                                  width: 130,
-                                                  imageUrl: widget
-                                                          .PublicData?[index]
-                                                          .image ??
-                                                      '',
-                                                  imageBuilder:
-                                                      (context, imageProvider) {
-                                                    return Container(
-                                                      margin: EdgeInsets.only(
-                                                          right: 10),
-                                                      height: screenHeight(
-                                                          context,
-                                                          dividedBy: 8.05),
-                                                      width: screenWidth(
-                                                          context,
-                                                          dividedBy: 3.5),
-                                                      decoration: BoxDecoration(
-                                                          borderRadius:
-                                                              BorderRadius
-                                                                  .circular(10),
-                                                          image: DecorationImage(
-                                                              image:
-                                                                  imageProvider,
-                                                              fit:
-                                                                  BoxFit.fill)),
-                                                    );
+                                                InkWell(
+                                                  onTap: () {
+                                                    defauilUrl =
+                                                        giftIdea.webViewLink;
+                                                    Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                GooglePage()));
+                                                    setState(() {});
                                                   },
-                                                  placeholder: (context, url) =>
-                                                      customLoader(context),
-                                                  errorWidget:
-                                                      (context, url, error) =>
-                                                          Image(
-                                                    image: AssetImage(
-                                                        "assets/images/gift.png"),
-                                                    fit: BoxFit.fill,
+                                                  child: CachedNetworkImage(
+                                                    height: 80,
+                                                    width: 130,
+                                                    imageUrl: giftIdea.image,
+                                                    imageBuilder: (context,
+                                                        imageProvider) {
+                                                      return Container(
+                                                        margin: EdgeInsets.only(
+                                                            right: 10),
+                                                        height: screenHeight(
+                                                            context,
+                                                            dividedBy: 8.05),
+                                                        width: screenWidth(
+                                                            context,
+                                                            dividedBy: 3.5),
+                                                        decoration: BoxDecoration(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        10),
+                                                            image: DecorationImage(
+                                                                image:
+                                                                    imageProvider,
+                                                                fit: BoxFit
+                                                                    .fill)),
+                                                      );
+                                                    },
+                                                    placeholder: (context,
+                                                            url) =>
+                                                        customLoader(context),
+                                                    errorWidget:
+                                                        (context, url, error) =>
+                                                            Image(
+                                                      image: AssetImage(
+                                                          "assets/images/gift.png"),
+                                                      fit: BoxFit.fill,
+                                                    ),
                                                   ),
                                                 ),
+                                                SizedBox(
+                                                  width: screenWidth(context,
+                                                      dividedBy: 49),
+                                                ),
                                                 Expanded(
-                                                  child: Column(
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .only(
-                                                                top: 15.0),
-                                                        child: Row(
+                                                  child: Padding(
+                                                    padding:
+                                                        EdgeInsets.all(8.0),
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
                                                           children: [
-                                                            SizedBox(
-                                                              width:
-                                                                  screenWidth(
-                                                                      context,
-                                                                      dividedBy:
-                                                                          2),
-                                                              child:
-                                                                  AutoSizeText(
-                                                                widget
-                                                                        .PublicData?[
-                                                                            index]
-                                                                        .title ??
-                                                                    '',
-                                                                maxLines: 1,
-                                                                style:
-                                                                    TextStyle(
-                                                                  overflow:
-                                                                      TextOverflow
-                                                                          .ellipsis,
-                                                                  color: Colors
-                                                                      .black,
-                                                                  fontSize: 14,
-                                                                  fontWeight:
-                                                                      FontWeight
-                                                                          .w500,
-                                                                  fontFamily:
-                                                                      poppins,
+                                                            Expanded(
+                                                              child: SizedBox(
+                                                                width:
+                                                                    screenWidth(
+                                                                        context,
+                                                                        dividedBy:
+                                                                            2),
+                                                                child:
+                                                                    AutoSizeText(
+                                                                  giftIdea
+                                                                      .title,
+                                                                  maxLines: 1,
+                                                                  style:
+                                                                      TextStyle(
+                                                                    overflow:
+                                                                        TextOverflow
+                                                                            .ellipsis,
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        14,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .w500,
+                                                                    fontFamily:
+                                                                        poppins,
+                                                                  ),
                                                                 ),
                                                               ),
                                                             ),
@@ -299,15 +357,11 @@ class _IdeaGrannyTrishState extends State<IdeaGrannyTrish> {
                                                             GestureDetector(
                                                               onTap: () async {
                                                                 await Share.share(
-                                                                    widget
-                                                                            .PublicData?[
-                                                                                index]
-                                                                            .webViewLink ??
-                                                                        '',
-                                                                    subject: widget
-                                                                            .PublicData?[index]
-                                                                            .title ??
-                                                                        '');
+                                                                    giftIdea
+                                                                        .webViewLink,
+                                                                    subject:
+                                                                        giftIdea
+                                                                            .title);
                                                                 setState(() {});
                                                               },
                                                               child: SizedBox(
@@ -325,127 +379,156 @@ class _IdeaGrannyTrishState extends State<IdeaGrannyTrish> {
                                                             ),
                                                           ],
                                                         ),
-                                                      ),
-                                                      SizedBox(height: 5),
-                                                      Container(
-                                                        height: screenHeight(
-                                                            context,
-                                                            dividedBy: 30),
-                                                        width: screenWidth(
-                                                            context,
-                                                            dividedBy: 1.8),
-                                                        child: Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            customText(
-                                                                "\$${widget.PublicData?[index].price}",
-                                                                Colors.black26,
-                                                                10,
-                                                                FontWeight.w100,
-                                                                poppins),
-                                                            Icon(
-                                                              Icons.star,
-                                                              size: 17,
-                                                              color: widget
-                                                                          .PublicData?[
-                                                                              index]
-                                                                          .starredGift ==
-                                                                      true
-                                                                  ? ColorCodes
-                                                                      .coral
-                                                                  : Colors
-                                                                      .white,
-                                                            ),
-                                                            SizedBox(width: 8),
-                                                          ],
+                                                        SizedBox(height: 5),
+                                                        Container(
+                                                          height: screenHeight(
+                                                              context,
+                                                              dividedBy: 30),
+                                                          width: screenWidth(
+                                                              context,
+                                                              dividedBy: 1.8),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .spaceBetween,
+                                                            children: [
+                                                              customText(
+                                                                  "\$${giftIdea.price}",
+                                                                  Colors
+                                                                      .black26,
+                                                                  10,
+                                                                  FontWeight
+                                                                      .w100,
+                                                                  poppins),
+                                                              Icon(
+                                                                Icons.star,
+                                                                size: 17,
+                                                                color: giftIdea
+                                                                        .starredGift
+                                                                    ? ColorCodes
+                                                                        .coral
+                                                                    : Colors
+                                                                        .white,
+                                                              ),
+                                                              SizedBox(
+                                                                  width: 8),
+                                                            ],
+                                                          ),
                                                         ),
-                                                      ),
-                                                      Container(
-                                                        width: screenWidth(
-                                                            context,
-                                                            dividedBy: 1.8),
-                                                        padding: EdgeInsets
-                                                            .symmetric(
-                                                                horizontal:
-                                                                    screenWidth(
-                                                                        context,
-                                                                        dividedBy:
-                                                                            60),
-                                                                vertical: 8),
-                                                        decoration: BoxDecoration(
-                                                            color: Colors.white,
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        8),
-                                                            border: Border.all(
-                                                                width: 1.2,
-                                                                color: ColorCodes
-                                                                    .greyButton)),
-                                                        child: Column(
+                                                        Column(
                                                           crossAxisAlignment:
                                                               CrossAxisAlignment
                                                                   .start,
                                                           children: [
-                                                            Row(
-                                                              children: [
-                                                                Icon(
-                                                                  Icons.notes,
-                                                                  size: 14,
-                                                                  color: ColorCodes
-                                                                      .greyButton,
-                                                                ),
-                                                                SizedBox(
-                                                                    width: 6),
-                                                                Text(
-                                                                  "Notes:",
-                                                                  style:
-                                                                      TextStyle(
-                                                                    color: ColorCodes
-                                                                        .greyButton,
-                                                                    fontSize:
-                                                                        10,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .w600,
-                                                                    fontFamily:
-                                                                        poppins,
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            SizedBox(height: 4),
                                                             ExpandableNotesWidget(
-                                                              notes: widget
-                                                                      .PublicData?[
-                                                                          index]
-                                                                      .notes ??
-                                                                  "",
+                                                              notes: giftIdea
+                                                                  .notes,
                                                               onEdit: () {
-                                                                // Add edit functionality here if needed
-                                                                // For now, it's just displaying notes
+                                                                String
+                                                                    folderId =
+                                                                    giftIdea.id;
+                                                                String
+                                                                    currentNotes =
+                                                                    giftIdea
+                                                                        .notes;
+
+                                                                _showEditNotesDialog(
+                                                                    currentNotes,
+                                                                    giftIdea
+                                                                        .giftFolderId,
+                                                                    folderId);
                                                               },
                                                             ),
                                                           ],
-                                                        ),
-                                                      )
-                                                    ],
+                                                        )
+                                                      ],
+                                                    ),
                                                   ),
                                                 )
                                               ],
                                             )),
                                       )));
-                            }));
-                  }
-                  return Center(
-                    child: spinkitLoader(context, ColorCodes.coral),
-                  );
-                },
+                            }),
+                      );
+                    }
+
+                    return Center(
+                      child: customText("Loading...", Colors.black, 15,
+                          FontWeight.w500, poppins),
+                    );
+                  },
+                ),
               )
             ])),
       ),
+    );
+  }
+
+  void _showEditNotesDialog(
+      String currentNotes, String folderId, String giftIdeaId) {
+    TextEditingController notesController =
+        TextEditingController(text: currentNotes);
+
+    showDialog(
+      context: context,
+      builder: (BuildContext dialogContext) {
+        return AlertDialog(
+          title: Text('Edit Notes'),
+          content: TextField(
+            controller: notesController,
+            decoration: InputDecoration(
+              hintText: 'Enter your notes...',
+              border: OutlineInputBorder(),
+            ),
+            maxLines: 3,
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(),
+              child: Text('Cancel'),
+            ),
+            BlocConsumer<EditGiftNotesCubit, EditGiftNotesState>(
+              bloc: editGiftNotesCubit,
+              listener: (context, state) {
+                if (state is EditGiftNotesSuccess) {
+                  Navigator.of(dialogContext).pop();
+                  // Data refresh is handled by the BlocListener in the main build method
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Notes updated successfully!'),
+                      backgroundColor: Colors.green,
+                    ),
+                  );
+                } else if (state is EditGiftNotesError) {
+                  // Error toast is already shown in the cubit
+                }
+              },
+              builder: (context, state) {
+                return TextButton(
+                  onPressed: state is EditGiftNotesLoading
+                      ? null
+                      : () {
+                          editGiftNotesCubit.editGiftNotes(
+                              folderId:
+                                  folderId, // Use the group ID from widget
+                              formDataId: giftIdeaId,
+                              // This is the gift idea ID
+                              notes: notesController.text,
+                              isForIdeas: true);
+                        },
+                  child: state is EditGiftNotesLoading
+                      ? SizedBox(
+                          width: 20,
+                          height: 20,
+                          child: CircularProgressIndicator(strokeWidth: 2),
+                        )
+                      : Text('Save'),
+                );
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }

@@ -198,28 +198,29 @@ class Myidea {
   bool starredGift;
   String webViewLink;
   String markGift;
+  String giftFolderId;
 
-  Myidea({
-    required this.id,
-    required this.title,
-    required this.price,
-    required this.notes,
-    required this.image,
-    required this.starredGift,
-    required this.webViewLink,
-    required this.markGift,
-  });
+  Myidea(
+      {required this.id,
+      required this.title,
+      required this.price,
+      required this.notes,
+      required this.image,
+      required this.starredGift,
+      required this.webViewLink,
+      required this.markGift,
+      required this.giftFolderId});
 
   factory Myidea.fromJson(Map<String, dynamic> json) => Myidea(
-        id: json["id"] ?? "",
-        title: json["title"] ?? "",
-        price: json["price"] ?? "",
-        notes: json["notes"] ?? "",
-        image: json["image"] ?? "",
-        starredGift: json["starredGift"] ?? false,
-        webViewLink: json["webViewLink"] ?? "",
-        markGift: json["markGift"] ?? "",
-      );
+      id: json["id"] ?? "",
+      title: json["title"] ?? "",
+      price: json["price"] ?? "",
+      notes: json["notes"] ?? "",
+      image: json["image"] ?? "",
+      starredGift: json["starredGift"] ?? false,
+      webViewLink: json["webViewLink"] ?? "",
+      markGift: json["markGift"] ?? "",
+      giftFolderId: json['giftFolderId'] ?? "");
   Map<String, dynamic> toJson() => {
         "id": id,
         "title": title,
@@ -231,9 +232,6 @@ class Myidea {
         "markGift": markGift,
       };
 }
-
-
-
 
 // // To parse this JSON data, do
 // //

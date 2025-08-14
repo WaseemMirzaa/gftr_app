@@ -119,11 +119,16 @@ class _GetGiftingState extends State<GetGiftingPage> {
                                                         ?.groupDetails?[index]
                                                         .publicDatas ??
                                                     [],
-                                                PublicData: groupViewCubit
+                                                // PublicData: groupViewCubit
+                                                //         .groups
+                                                //         ?.groupDetails?[index]
+                                                //         .myideas ??
+                                                //     [],
+                                                groupId: groupViewCubit
                                                         .groups
                                                         ?.groupDetails?[index]
-                                                        .myideas ??
-                                                    [],
+                                                        .id ??
+                                                    '',
                                                 Adress:
                                                     "${groupViewCubit.groups?.groupDetails?[index].address.street ?? ''}, ${groupViewCubit.groups?.groupDetails?[index].address.unit ?? ''}, ${groupViewCubit.groups?.groupDetails?[index].address.city ?? ''}, ${groupViewCubit.groups?.groupDetails?[index].address.state ?? ''}, ${groupViewCubit.groups?.groupDetails?[index].address.zipcore ?? ''}, ${groupViewCubit.groups?.groupDetails?[index].address.country ?? ''}",
                                               ),

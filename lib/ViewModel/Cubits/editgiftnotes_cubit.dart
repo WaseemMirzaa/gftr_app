@@ -19,11 +19,11 @@ class EditGiftNotesSuccess extends EditGiftNotesState {}
 class EditGiftNotesCubit extends Cubit<EditGiftNotesState> {
   EditGiftNotesCubit() : super(EditGiftNotesInitial());
 
-  Future<void> editGiftNotes({
-    required String folderId,
-    required String formDataId,
-    required String notes,
-  }) async {
+  Future<void> editGiftNotes(
+      {required String folderId,
+      required String formDataId,
+      required String notes,
+      bool isForIdeas = false}) async {
     log("EditGiftNotes - folderId: $folderId, formDataId: $formDataId, notes: $notes");
     emit(EditGiftNotesLoading());
 
@@ -38,7 +38,9 @@ class EditGiftNotesCubit extends Cubit<EditGiftNotesState> {
       Encryption? response = await DioClient().encryptData(body);
       if (response != null && response.status!) {
         Decryption? data = await DioClient().decryptData(
-          "${ApiConstants.editGiftNotes}/$folderId",
+          isForIdeas
+              ? "${ApiConstants.editGiftNotesForIdeas}/$folderId"
+              : "${ApiConstants.editGiftNotes}/$folderId",
           response.data!,
         );
 
