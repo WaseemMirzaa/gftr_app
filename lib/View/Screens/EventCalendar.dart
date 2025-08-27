@@ -98,7 +98,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
       sharedPrefsService.removeData("events");
       setState(() {});
     } else {
-      final encodedMap = await sharedPrefsService.getStringData("events");
+      final encodedMap = await sharedPrefsService.getStringData("Eventss");
       if (encodedMap != null && encodedMap.isNotEmpty) {
         print("encode map:$encodedMap");
         try {
@@ -147,7 +147,7 @@ class _EventCalendarScreenState extends State<EventCalendarScreen> {
 
   // Method to refresh events from SharedPreferences
   void refreshEventsFromSharedPrefs() async {
-    final encodedMap = await sharedPrefsService.getStringData("events");
+    final encodedMap = await sharedPrefsService.getStringData("Eventss");
     if (encodedMap != null && encodedMap.isNotEmpty) {
       try {
         Map<String, dynamic> newEvents = jsonDecode(encodedMap);

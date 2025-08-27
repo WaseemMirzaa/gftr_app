@@ -94,23 +94,23 @@ class _ContactPageState extends State<ContactPage> {
                           child: Row(
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                customText("Contact", Colors.black, 25,
+                                customText("Contact us!", Colors.black, 25,
                                     FontWeight.w200, madeOuterSans),
                                 SizedBox(
                                   width: screenWidth(context, dividedBy: 50),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      top: screenWidth(context, dividedBy: 50)),
-                                  child: SizedBox(
-                                      height:
-                                          screenHeight(context, dividedBy: 22),
-                                      width:
-                                          screenHeight(context, dividedBy: 22),
-                                      child: Image.asset(
-                                          ImageConstants.gftrBlack,
-                                          color: Colors.black)),
-                                )
+                                // Padding(
+                                //   padding: EdgeInsets.only(
+                                //       top: screenWidth(context, dividedBy: 50)),
+                                //   child: SizedBox(
+                                //       height:
+                                //           screenHeight(context, dividedBy: 22),
+                                //       width:
+                                //           screenHeight(context, dividedBy: 22),
+                                //       child: Image.asset(
+                                //           ImageConstants.gftrBlack,
+                                //           color: Colors.black)),
+                                // )
                               ])),
                       Padding(
                         padding: EdgeInsets.only(
