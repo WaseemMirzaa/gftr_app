@@ -264,15 +264,19 @@ class _GooglePageState extends State<GooglePage> {
             padding: EdgeInsets.all(15),
             child: GestureDetector(
               onTap: () {
-                // Navigator.pushReplacement(
-                //   context,
-                //   MaterialPageRoute(
-                //     builder: (context) => GfterStoryViewPage(),
-                //   ),
-                // );
-                Navigator.of(context).pop();
+                // For GooglePage accessed via bottom navigation, navigate to home instead of popping
+                print("GooglePage: Close button pressed, navigating to home");
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => GfterStoryViewPage(),
+                  ),
+                );
+                // Update global state for bottom navigation
                 bottombarblack = true;
                 isSearchbar = true;
+                print(
+                    "GooglePage: Updated bottombarblack=$bottombarblack, isSearchbar=$isSearchbar");
               },
               child: SizedBox(
                   height: screenHeight(context, dividedBy: 40),
