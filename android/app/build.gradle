@@ -25,8 +25,8 @@ if (flutterVersionName == null) {
 
 android {
     namespace 'com.example.gftr'
-    compileSdkVersion 35
-    ndkVersion "25.1.8937393"
+    compileSdkVersion 36
+    ndkVersion "27.0.12077973"
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_17
@@ -44,8 +44,8 @@ android {
 
     defaultConfig {
         applicationId "com.example.gftr"
-        minSdkVersion 23
-        targetSdkVersion 33
+        minSdkVersion flutter.minSdkVersion
+        targetSdkVersion 36
         versionCode 1
         versionName flutterVersionName
         multiDexEnabled true
@@ -88,6 +88,6 @@ dependencies {
     implementation "androidx.room:room-runtime:2.5.0"
     annotationProcessor "androidx.room:room-compiler:2.5.0"
     implementation 'androidx.multidex:multidex:2.0.1'
-    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    // implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.1.4'
 }
