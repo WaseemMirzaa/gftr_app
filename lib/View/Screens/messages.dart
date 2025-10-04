@@ -9,6 +9,7 @@ import 'package:gftr/View/Widgets/customText.dart';
 import 'package:gftr/View/Widgets/drawer.dart';
 import 'package:gftr/ViewModel/Cubits/Msgnotifications.dart';
 import 'package:gradient_borders/box_borders/gradient_box_border.dart';
+import 'package:intl/intl.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:socket_io_client/socket_io_client.dart';
 import '../../Helper/appConfig.dart';
@@ -37,7 +38,7 @@ class _MessagesPageState extends State<MessagesPage> {
   FocusNode focusNode = FocusNode();
   List messages = [];
   bool emojiShowing = false;
-  bool? isConcted;
+  bool? isConnected;
   bool? isActive;
 
   // String? roomId;
@@ -65,8 +66,8 @@ class _MessagesPageState extends State<MessagesPage> {
     //socket = io('/', { "query": { "recipientId": widget.userId } });
     socket.connect();
     socket.onConnect((_) {
-      isConcted = socket.connected;
-      log("Socket connected: $isConcted 👍👍👍");
+      isConnected = socket.connected;
+      log("Socket connected: $isConnected 👍👍👍");
       print('Connection established');
     });
     isActive = socket.active;
@@ -326,7 +327,8 @@ class _MessagesPageState extends State<MessagesPage> {
                                         ? EdgeInsets.only(right: 15)
                                         : EdgeInsets.only(left: 15),
                                     child: customText(
-                                        snapshot.data[index]['time'],
+                                        formatMessageTime(
+                                            snapshot.data[index]['createdAt']),
                                         ColorCodes.greyText,
                                         10,
                                         FontWeight.w100,
@@ -455,5 +457,16 @@ class _MessagesPageState extends State<MessagesPage> {
                     ))),
           ])),
     );
+  }
+
+  String formatMessageTime(String utcString) {
+    // Parse UTC string
+    DateTime utcTime = DateTime.parse(utcString);
+
+    // Convert to local
+    DateTime localTime = utcTime.toLocal();
+
+    // Format to hh:mm a (like 02:15 PM)
+    return DateFormat('hh:mm a').format(localTime);
   }
 }
