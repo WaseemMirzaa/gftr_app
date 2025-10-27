@@ -549,26 +549,34 @@ class _WebViewScreenState extends State<WebViewScreen> {
   List<String> productImage = [];
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
+
+    // Initialize the controller once to avoid rebuilding the WebView controller
     _controller = WebViewController()
-      ..setBackgroundColor(
-        const Color(0x00000000),
-      )
+      ..setBackgroundColor(const Color(0x00000000))
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..enableZoom(true)
-      ..setNavigationDelegate(
-        NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
-          onPageFinished: (String url) {
+      ..setNavigationDelegate(NavigationDelegate(
+        onProgress: (int progress) {
+          // Update loading bar if needed
+        },
+        onPageFinished: (String url) {
+          if (mounted) {
             setState(() {
               isLoading = false;
             });
-          },
-        ),
-      )
-      ..loadRequest(Uri.parse(widget.url));
+          }
+        },
+      ));
+
+    // Load the initial URL
+    _controller.loadRequest(Uri.parse(widget.url));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // Controller is initialized in initState to prevent blinking/recreation on rebuilds
     return Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
