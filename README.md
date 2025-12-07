@@ -51,7 +51,7 @@ From birthdays and anniversaries to personal milestones, GFTR ensures you never 
 
 * **Framework:** Flutter
 * **Language:** Dart
-* **Backend:** MySQL
+* **Backend:** NodeJS
 * **Database:** MySQL
 * **Platform:** Android & iOS
 
